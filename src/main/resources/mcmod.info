@@ -1,0 +1,16 @@
+[
+{
+  "modid": "simplesteel",
+  "name": "Simple Steel",
+  "description": "",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["canitzp", "Gamer025"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

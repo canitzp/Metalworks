@@ -1,0 +1,10 @@
+itemGroup.simplesteel=Simple Steel
+
+tile.simplesteel:blast_furnace.name=Blast furnace
+
+item.simplesteel:steel_ingot.name=Steel Ingot
+item.simplesteel:steel_nugget.name=Steel Nugget
+item.simplesteel:metal_shielding.name=Metal Shielding
+item.simplesteel:control_circuit.name=Control Circuit
+
+container.jei.simplesteel.blast_furnace.name=Blast Furnace

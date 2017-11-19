@@ -1,0 +1,48 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "up": "simplesteel:blocks/blast_furnace_top_off",
+      "down": "simplesteel:blocks/blast_furnace_bottom",
+      "north": "simplesteel:blocks/blast_furnace_front_off",
+      "east": "simplesteel:blocks/blast_furnace_side_off",
+      "west": "#east",
+      "south": "#east",
+      "particle": "#up"
+    },
+    "model": "cube",
+    "transform": "forge:default-block"
+  },
+  "variants": {
+    "facing": {
+      "north": {
+        "y": 0
+      },
+      "south": {
+        "y": 180
+      },
+      "west": {
+        "y": 270
+      },
+      "east": {
+        "y": 90
+      }
+    },
+    "active": {
+      "true": {
+        "textures": {
+          "north": "simplesteel:blocks/blast_furnace_front_on",
+          "up": "simplesteel:blocks/blast_furnace_top_on",
+          "east": "simplesteel:blocks/blast_furnace_side_on"
+        }
+      },
+      "false": {}
+    },
+    "normal": [
+      {}
+    ],
+    "inventory": [
+      {}
+    ]
+  }
+}
