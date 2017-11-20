@@ -1,5 +1,7 @@
 package de.canitzp.simplesteel;
 
+import de.canitzp.simplesteel.item.ItemCollection;
+import de.canitzp.simplesteel.item.ItemPickaxeBase;
 import de.canitzp.simplesteel.machine.blastfurnace.BlockBlastFurnace;
 import de.canitzp.simplesteel.machine.blastfurnace.TileBlastFurnace;
 import net.minecraft.block.Block;
@@ -7,15 +9,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -36,6 +37,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Registry {
 
     public static final Map<ResourceLocation, IRecipe> RECIPES = new ConcurrentHashMap<>();
+
+    public static final Item.ToolMaterial MATERIAL_STEEL = EnumHelper.addToolMaterial("steel", 2, 1024, 7.0F, 5.0F, 16);
 
     public static final CreativeTabs TAB = new CreativeTabs(SimpleSteel.MODID) {
         @Override
@@ -75,6 +78,8 @@ public class Registry {
         setCreativeTab(TAB);
     }};
 
+    public static ItemCollection steelTools = new ItemCollection(MATERIAL_STEEL);
+
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event){
         IForgeRegistry<Block> reg = event.getRegistry();
@@ -91,6 +96,7 @@ public class Registry {
         reg.register(steelNugget);
         reg.register(metalShielding);
         reg.register(controlCircuit);
+        steelTools.register(reg);
     }
 
     @SubscribeEvent
@@ -118,6 +124,7 @@ public class Registry {
         ModelLoader.setCustomModelResourceLocation(steelNugget, 0, new ModelResourceLocation(steelNugget.getRegistryName(), "invenory"));
         ModelLoader.setCustomModelResourceLocation(metalShielding, 0, new ModelResourceLocation(metalShielding.getRegistryName(), "invenory"));
         ModelLoader.setCustomModelResourceLocation(controlCircuit, 0, new ModelResourceLocation(controlCircuit.getRegistryName(), "invenory"));
+        steelTools.bakeModels();
     }
 
 }
