@@ -10,6 +10,8 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -35,6 +37,7 @@ public class BlockBlastFurnace extends BlockContainer {
         this.setRegistryName(new ResourceLocation(SimpleSteel.MODID, "blast_furnace"));
         this.setUnlocalizedName(this.getRegistryName().toString());
         this.setHarvestLevel("pickaxe", 2);
+        this.setHardness(4.5F);
         this.setCreativeTab(Registry.TAB);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ACTIVE, false));
     }
@@ -89,4 +92,11 @@ public class BlockBlastFurnace extends BlockContainer {
         return state;
     }
 
+    @Override
+    public void breakBlock(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull IBlockState state) {
+        if(!world.isRemote && world.getTileEntity(pos) instanceof TileBlastFurnace){
+            InventoryHelper.dropInventoryItems(world, pos, ((TileBlastFurnace) world.getTileEntity(pos)).inventory);
+        }
+        super.breakBlock(world, pos, state);
+    }
 }

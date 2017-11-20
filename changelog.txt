@@ -1,2 +1,7 @@
+1.1.0 - Tool Update:
+    -Added Steel Sword, Pickaxe, Axe, Shovel
+    -Fixed Shift click freeze inside the Blast Furnace Gui
+    -Fixed some syncing issues and infinite coal usage
+
 1.0.0:
     -Everything is new

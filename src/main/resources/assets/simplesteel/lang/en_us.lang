@@ -6,5 +6,9 @@ item.simplesteel:steel_ingot.name=Steel Ingot
 item.simplesteel:steel_nugget.name=Steel Nugget
 item.simplesteel:metal_shielding.name=Metal Shielding
 item.simplesteel:control_circuit.name=Control Circuit
+item.simplesteel:steel_pickaxe.name=Steel Pickaxe
+item.simplesteel:steel_axe.name=Steel Axe
+item.simplesteel:steel_sword.name=Steel Sword
+item.simplesteel:steel_shovel.name=Steel Shovel
 
 container.jei.simplesteel.blast_furnace.name=Blast Furnace

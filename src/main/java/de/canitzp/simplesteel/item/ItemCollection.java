@@ -7,6 +7,7 @@ import net.minecraft.item.*;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.Map;
@@ -17,12 +18,15 @@ import java.util.Map;
 //TODO maybe add shears too? or fishing rod?
 public class ItemCollection {
 
+    private Item.ToolMaterial material;
+
     private ItemPickaxe pickaxe;
     private ItemSword sword;
     private ItemSpade shovel;
     private ItemAxe axe;
 
     public ItemCollection(Item.ToolMaterial material){
+        this.material = material;
         this.pickaxe = new Pickaxe(material){{
             this.setRegistryName(new ResourceLocation(SimpleSteel.MODID, material.name() + "_pickaxe"));
             this.setUnlocalizedName(this.getRegistryName().toString());
@@ -56,8 +60,15 @@ public class ItemCollection {
         ModelLoader.setCustomModelResourceLocation(axe, 0, new ModelResourceLocation(axe.getRegistryName(), "invenory"));
     }
 
-    public void registerRecipes(final Map<ResourceLocation, IRecipe> recipes){
-
+    public void registerRecipes(final Map<ResourceLocation, IRecipe> recipes, Object ingotStackOrString){
+        recipes.put(new ResourceLocation(SimpleSteel.MODID, "pickaxe_" + this.material.name()),
+                new ShapedOreRecipe(null, pickaxe, "mmm", " s ", " s ", 'm', ingotStackOrString, 's', "stickWood"));
+        recipes.put(new ResourceLocation(SimpleSteel.MODID, "axe_" + this.material.name()),
+                new ShapedOreRecipe(null, axe, "mm", "ms", " s", 'm', ingotStackOrString, 's', "stickWood"));
+        recipes.put(new ResourceLocation(SimpleSteel.MODID, "sword_" + this.material.name()),
+                new ShapedOreRecipe(null, sword, "m", "m", "s", 'm', ingotStackOrString, 's', "stickWood"));
+        recipes.put(new ResourceLocation(SimpleSteel.MODID, "shovel_" + this.material.name()),
+                new ShapedOreRecipe(null, shovel, "m", "s", "s", 'm', ingotStackOrString, 's', "stickWood"));
     }
 
     public ItemPickaxe getPickaxe() {

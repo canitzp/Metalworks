@@ -94,15 +94,9 @@ public class TileBlastFurnace extends TileEntity implements ITickable{
     @Override
     public void update() {
         if(!world.isRemote){
-            if(this.fuelLeft <= 0){
-                ItemStack fuel = this.inventory.getStackInSlot(FUEL);
-                if(!fuel.isEmpty()){
-                    this.fuelLeft = this.fuelMax = TileEntityFurnace.getItemBurnTime(fuel);
-                    fuel.shrink(1);
-                    this.sync(false);
-                }
-            } else {
+            if(this.fuelLeft > 0){
                 fuelLeft--;
+                this.sync(this.fuelLeft < 10);
             }
             if(this.recipeID != null){
                 if(this.burnLeft <= 0){
@@ -144,9 +138,19 @@ public class TileBlastFurnace extends TileEntity implements ITickable{
                 ItemStack input1 = this.inventory.getStackInSlot(INPUT1);
                 ItemStack input2 = this.inventory.getStackInSlot(INPUT2);
                 ItemStack input3 = this.inventory.getStackInSlot(INPUT3);
-                if(this.fuelLeft > 0 && (!input1.isEmpty() || !input2.isEmpty() || !input3.isEmpty())){
+                if((!input1.isEmpty() || !input2.isEmpty() || !input3.isEmpty())){
                     RecipeBlastFurnace recipe = SimpleSteelRecipeHandler.getBlastFurnaceRecipe(input1, input2, input3);
                     if(recipe != null && recipe.isOutputMergeable(this.inventory.getStackInSlot(OUTPUT1), this.inventory.getStackInSlot(OUTPUT2))){
+                        if(this.fuelLeft <= 0){
+                            ItemStack fuel = this.inventory.getStackInSlot(FUEL);
+                            if(!fuel.isEmpty()){
+                                this.fuelLeft = this.fuelMax = TileEntityFurnace.getItemBurnTime(fuel);
+                                fuel.shrink(1);
+                                this.sync(false);
+                            } else {
+                                return;
+                            }
+                        }
                         this.recipeID = SimpleSteelRecipeHandler.getIdForBlastFurnaceRecipe(recipe);
                         this.burnLeft = this.maxBurn = recipe.getBurnTime();
                         if(!input1.isEmpty()){

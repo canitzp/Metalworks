@@ -111,6 +111,7 @@ public class Registry {
                 new ShapedOreRecipe(null, controlCircuit, "ggg", "rsr", "nnn", 'g', "dyeGreen", 'r', "dustRedstone", 's', "dustGlowstone", 'n', "nuggetGold"));
         RECIPES.put(new ResourceLocation(SimpleSteel.MODID, "blast_furnace_1"),
                 new ShapedOreRecipe(null, blastFurnace, "mmm", "fcf", "mmm", 'm', metalShielding, 'f', Blocks.FURNACE, 'c', "circuitBasic"));
+        steelTools.registerRecipes(RECIPES, "ingotSteel");
 
         for(Map.Entry<ResourceLocation, IRecipe> recipes : RECIPES.entrySet()){
             event.getRegistry().register(recipes.getValue().setRegistryName(recipes.getKey()));

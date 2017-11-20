@@ -44,4 +44,17 @@ public class ContainerBlastFurnace extends Container {
         return true;
     }
 
+    @Override
+    public ItemStack transferStackInSlot(EntityPlayer player, int index) {
+        Slot slot = this.inventorySlots.get(index);
+        if(slot != null && slot.getHasStack()){
+            ItemStack stack = slot.getStack().copy();
+            if(TileEntityFurnace.isItemFuel(stack)){
+                if(!mergeItemStack(slot.getStack(), TileBlastFurnace.FUEL, TileBlastFurnace.FUEL, false)){
+                    return ItemStack.EMPTY;
+                }
+            }
+        }
+        return ItemStack.EMPTY;
+    }
 }
