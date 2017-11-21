@@ -7,6 +7,8 @@ import net.minecraft.item.*;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.registries.IForgeRegistry;
 
@@ -16,7 +18,7 @@ import java.util.Map;
  * @author canitzp
  */
 //TODO maybe add shears too? or fishing rod?
-public class ItemCollection {
+public class ItemToolCollection {
 
     private Item.ToolMaterial material;
 
@@ -25,7 +27,7 @@ public class ItemCollection {
     private ItemSpade shovel;
     private ItemAxe axe;
 
-    public ItemCollection(Item.ToolMaterial material){
+    public ItemToolCollection(Item.ToolMaterial material){
         this.material = material;
         this.pickaxe = new Pickaxe(material){{
             this.setRegistryName(new ResourceLocation(SimpleSteel.MODID, material.name() + "_pickaxe"));
@@ -53,6 +55,7 @@ public class ItemCollection {
         reg.registerAll(pickaxe, shovel, sword, axe);
     }
 
+    @SideOnly(Side.CLIENT)
     public void bakeModels(){
         ModelLoader.setCustomModelResourceLocation(pickaxe, 0, new ModelResourceLocation(pickaxe.getRegistryName(), "invenory"));
         ModelLoader.setCustomModelResourceLocation(shovel, 0, new ModelResourceLocation(shovel.getRegistryName(), "invenory"));

@@ -10,5 +10,9 @@ item.simplesteel:steel_pickaxe.name=Steel Pickaxe
 item.simplesteel:steel_axe.name=Steel Axe
 item.simplesteel:steel_sword.name=Steel Sword
 item.simplesteel:steel_shovel.name=Steel Shovel
+item.simplesteel:steel_feet.name=Steel Boots
+item.simplesteel:steel_chest.name=Steel Chestplate
+item.simplesteel:steel_legs.name=Steel Leggings
+item.simplesteel:steel_head.name=Steel Helmet
 
 container.jei.simplesteel.blast_furnace.name=Blast Furnace
