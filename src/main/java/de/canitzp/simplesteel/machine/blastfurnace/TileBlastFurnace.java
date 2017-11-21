@@ -129,8 +129,14 @@ public class TileBlastFurnace extends TileEntity implements ITickable{
                 } else {
                     if(fuelLeft > 0){
                         this.burnLeft--;
-                    } else if(this.burnLeft < this.maxBurn) {
-                        this.burnLeft++;
+                    } else {
+                        ItemStack fuel = this.inventory.getStackInSlot(FUEL);
+                        if(!fuel.isEmpty()){
+                            this.fuelLeft = this.fuelMax = TileEntityFurnace.getItemBurnTime(fuel);
+                            fuel.shrink(1);
+                        } else if(this.burnLeft < this.maxBurn) {
+                            this.burnLeft++;
+                        }
                     }
                     this.sync(false);
                 }

@@ -1,3 +1,8 @@
+1.2.0 - Armor Update:
+    -Added Steel Helmet, Chestplate, Leggings and Boots
+    -Added the german translation
+    -Fixed a bug, where the coal does not refuel itself if the recipe isn't finished
+
 1.1.0 - Tool Update:
     -Added Steel Sword, Pickaxe, Axe, Shovel
     -Fixed Shift click freeze inside the Blast Furnace Gui
