@@ -87,7 +87,7 @@ public class BlockBlastFurnace extends BlockContainer {
     public IBlockState getActualState(@Nonnull IBlockState state, IBlockAccess world, BlockPos pos) {
         TileEntity tile = world.getTileEntity(pos);
         if(tile instanceof TileBlastFurnace){
-            state = state.withProperty(ACTIVE, ((TileBlastFurnace) tile).burnLeft > 0);
+            state = state.withProperty(ACTIVE, ((TileBlastFurnace) tile).burnLeft > 0 && ((TileBlastFurnace) tile).energy.getEnergyStored() >= ((TileBlastFurnace) tile).energyUsage);
         }
         return state;
     }

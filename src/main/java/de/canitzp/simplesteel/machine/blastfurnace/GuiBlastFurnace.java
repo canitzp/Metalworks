@@ -1,6 +1,8 @@
 package de.canitzp.simplesteel.machine.blastfurnace;
 
+import com.google.common.collect.Lists;
 import de.canitzp.simplesteel.SimpleSteel;
+import de.canitzp.simplesteel.Util;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,9 +35,9 @@ public class GuiBlastFurnace extends GuiContainer {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(LOC);
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
-        if(tile.fuelMax > 0){
-            int i = (int) ((tile.fuelLeft / (tile.fuelMax * 1.0F)) * 43);
-            this.drawTexturedModalRect(this.guiLeft + 17, this.guiTop + 30 + 43 - i, 176, 43 - i, 4, i);
+        if(tile.energy.getMaxEnergyStored() > 0){
+            int i = (int) ((tile.energy.getEnergyStored() / (tile.energy.getMaxEnergyStored() * 1.0F)) * 62);
+            this.drawTexturedModalRect(this.guiLeft + 11, this.guiTop + 11 + 62 - i, 0, 166 + 62 - i, 16, i);
         }
         if(tile.maxBurn > 0){
             int i = (int) ((tile.burnLeft / (tile.maxBurn  * 1.0F)) * 26);
@@ -47,8 +49,8 @@ public class GuiBlastFurnace extends GuiContainer {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
         super.renderHoveredToolTip(mouseX, mouseY);
-        if(mouseX >= this.guiLeft + 17 && mouseX <= this.guiLeft + 17 + 4 && mouseY >= this.guiTop + 30 && mouseY <= this.guiTop + 30 + 43){
-            this.drawHoveringText(String.valueOf(tile.fuelLeft), mouseX, mouseY);
+        if(mouseX >= this.guiLeft + 11 && mouseX <= this.guiLeft + 11 + 16 && mouseY >= this.guiTop + 11 && mouseY <= this.guiTop + 11 + 62){
+            this.drawHoveringText(Lists.newArrayList(Util.formatEnergy(this.tile.energy), "Usage: " + Util.formatEnergy(this.tile.energyUsage)), mouseX, mouseY);
         }
     }
 }

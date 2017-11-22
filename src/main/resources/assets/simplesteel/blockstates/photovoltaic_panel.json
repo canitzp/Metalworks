@@ -1,0 +1,20 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "up": "simplesteel:blocks/photovoltaic_panel_top",
+      "down": "simplesteel:blocks/photovoltaic_panel_bottom",
+      "north": "simplesteel:blocks/photovoltaic_panel_side",
+      "east": "#north",
+      "west": "#north",
+      "south": "#north",
+      "particle": "#up"
+    },
+    "model": "cube",
+    "transform": "forge:default-block"
+  },
+  "variants": {
+    "normal": [{}],
+    "inventory": [{}]
+  }
+}

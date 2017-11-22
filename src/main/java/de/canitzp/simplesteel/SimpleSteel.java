@@ -49,8 +49,8 @@ public class SimpleSteel {
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event){
-        SimpleSteelRecipeHandler.addBlastFurnaceRecipe(new RecipeBlastFurnace(new OreDictStack("ingotIron").setStacksize(2), new OreDictStack(Items.COAL).setStacksize(3), OreDictStack.EMPTY, new ItemStack(Registry.steelIngot), ItemStack.EMPTY, 0, 400));
-        SimpleSteelRecipeHandler.addBlastFurnaceRecipe(new RecipeBlastFurnace(new OreDictStack("ingotIron").setStacksize(3), new OreDictStack("gemDiamond"), OreDictStack.EMPTY, new ItemStack(Registry.metalShielding, 4), new ItemStack(Items.IRON_NUGGET), 25, 250));
+        SimpleSteelRecipeHandler.addBlastFurnaceRecipe(new RecipeBlastFurnace(new OreDictStack("ingotIron").setStacksize(2), new OreDictStack(Items.COAL).setStacksize(3), OreDictStack.EMPTY, new ItemStack(Registry.steelIngot), ItemStack.EMPTY, 0, 400, -1));
+        SimpleSteelRecipeHandler.addBlastFurnaceRecipe(new RecipeBlastFurnace(new OreDictStack("ingotIron").setStacksize(3), new OreDictStack("gemDiamond"), OreDictStack.EMPTY, new ItemStack(Registry.metalShielding, 4), new ItemStack(Items.IRON_NUGGET), 25, 250, -1));
     }
 
 }

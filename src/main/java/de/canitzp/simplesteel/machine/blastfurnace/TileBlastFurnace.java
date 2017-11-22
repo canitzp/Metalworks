@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -17,11 +18,15 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import org.apache.commons.lang3.Validate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -36,6 +41,21 @@ public class TileBlastFurnace extends TileEntity implements ITickable{
     public static final int OUTPUT2 = 4;
     public static final int FUEL = 5;
 
+    public EnergyStorage energy = new EnergyStorage(10000, 1500){
+        @Override
+        public int receiveEnergy(int maxReceive, boolean simulate) {
+            int i = super.receiveEnergy(maxReceive, simulate);
+            TileBlastFurnace.this.sync(true);
+            return i;
+        }
+
+        @Override
+        public int extractEnergy(int maxExtract, boolean simulate) {
+            int i = super.extractEnergy(maxExtract, simulate);
+            TileBlastFurnace.this.sync(true);
+            return i;
+        }
+    };
     public SidedBasicInv inventory = new SidedBasicInv("blast_furnace", 6) {
         @Override
         public boolean canInsertItem(int index, @Nonnull ItemStack stack, @Nonnull EnumFacing side) {
@@ -64,7 +84,7 @@ public class TileBlastFurnace extends TileEntity implements ITickable{
     };
     private SidedWrapper wrapper = new SidedWrapper(this.inventory, EnumFacing.NORTH);
     private String recipeID = null;
-    public int maxBurn, burnLeft, fuelLeft, fuelMax;
+    public int maxBurn, burnLeft, energyUsage;
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
@@ -72,8 +92,8 @@ public class TileBlastFurnace extends TileEntity implements ITickable{
         this.recipeID = compound.hasKey("RecipeUUID", Constants.NBT.TAG_STRING) ? compound.getString("RecipeUUID") : null;
         this.maxBurn = compound.getInteger("MaxBurn");
         this.burnLeft = compound.getInteger("BurnLeft");
-        this.fuelLeft = compound.getInteger("FuelLeft");
-        this.fuelMax = compound.getInteger("FuelMax");
+        this.energyUsage = compound.getInteger("EnergyUsagePerTick");
+        CapabilityEnergy.ENERGY.readNBT(this.energy, null, compound.hasKey("Energy") ? compound.getTag("Energy") : new NBTTagInt(0));
         this.inventory.readTag(compound);
     }
 
@@ -85,8 +105,8 @@ public class TileBlastFurnace extends TileEntity implements ITickable{
         }
         compound.setInteger("MaxBurn", this.maxBurn);
         compound.setInteger("BurnLeft", this.burnLeft);
-        compound.setInteger("FuelLeft", this.fuelLeft);
-        compound.setInteger("FuelMax", this.fuelMax);
+        compound.setInteger("EnergyUsagePerTick", this.energyUsage);
+        compound.setTag("Energy", Validate.notNull(CapabilityEnergy.ENERGY.writeNBT(this.energy, null)));
         this.inventory.writeTag(compound);
         return super.writeToNBT(compound);
     }
@@ -94,13 +114,9 @@ public class TileBlastFurnace extends TileEntity implements ITickable{
     @Override
     public void update() {
         if(!world.isRemote){
-            if(this.fuelLeft > 0){
-                fuelLeft--;
-                this.sync(this.fuelLeft < 10);
-            }
             if(this.recipeID != null){
                 if(this.burnLeft <= 0){
-                    this.burnLeft = this.maxBurn = 0;
+                    this.burnLeft = this.maxBurn = this.energyUsage = 0;
                     RecipeBlastFurnace recipe = SimpleSteelRecipeHandler.getBlastFurnaceRecipeForId(this.recipeID);
                     if(recipe != null){
                         ItemStack out1 = this.inventory.getStackInSlot(OUTPUT1);
@@ -127,16 +143,11 @@ public class TileBlastFurnace extends TileEntity implements ITickable{
                     this.recipeID = null;
                     this.sync(true);
                 } else {
-                    if(fuelLeft > 0){
+                    if(this.energy.extractEnergy(this.energyUsage, true) == this.energyUsage){
+                        this.energy.extractEnergy(this.energyUsage, false);
                         this.burnLeft--;
-                    } else {
-                        ItemStack fuel = this.inventory.getStackInSlot(FUEL);
-                        if(!fuel.isEmpty()){
-                            this.fuelLeft = this.fuelMax = TileEntityFurnace.getItemBurnTime(fuel);
-                            fuel.shrink(1);
-                        } else if(this.burnLeft < this.maxBurn) {
-                            this.burnLeft++;
-                        }
+                    } else if(this.burnLeft < this.maxBurn) {
+                        this.burnLeft++;
                     }
                     this.sync(false);
                 }
@@ -146,19 +157,10 @@ public class TileBlastFurnace extends TileEntity implements ITickable{
                 ItemStack input3 = this.inventory.getStackInSlot(INPUT3);
                 if((!input1.isEmpty() || !input2.isEmpty() || !input3.isEmpty())){
                     RecipeBlastFurnace recipe = SimpleSteelRecipeHandler.getBlastFurnaceRecipe(input1, input2, input3);
-                    if(recipe != null && recipe.isOutputMergeable(this.inventory.getStackInSlot(OUTPUT1), this.inventory.getStackInSlot(OUTPUT2))){
-                        if(this.fuelLeft <= 0){
-                            ItemStack fuel = this.inventory.getStackInSlot(FUEL);
-                            if(!fuel.isEmpty()){
-                                this.fuelLeft = this.fuelMax = TileEntityFurnace.getItemBurnTime(fuel);
-                                fuel.shrink(1);
-                                this.sync(false);
-                            } else {
-                                return;
-                            }
-                        }
+                    if(recipe != null && recipe.isOutputMergeable(this.inventory.getStackInSlot(OUTPUT1), this.inventory.getStackInSlot(OUTPUT2)) && this.energy.extractEnergy(recipe.getEnergyUsage(), true) == recipe.getEnergyUsage()){
                         this.recipeID = SimpleSteelRecipeHandler.getIdForBlastFurnaceRecipe(recipe);
                         this.burnLeft = this.maxBurn = recipe.getBurnTime();
+                        this.energyUsage = recipe.getEnergyUsage();
                         if(!input1.isEmpty()){
                             recipe.shrink(input1);
                         }
@@ -176,15 +178,18 @@ public class TileBlastFurnace extends TileEntity implements ITickable{
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || capability == CapabilityEnergy.ENERGY;
     }
 
     @Nullable
     @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
         if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
             return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(this.wrapper);
+        }
+        if(capability == CapabilityEnergy.ENERGY){
+            return CapabilityEnergy.ENERGY.cast(this.energy);
         }
         return super.getCapability(capability, facing);
     }

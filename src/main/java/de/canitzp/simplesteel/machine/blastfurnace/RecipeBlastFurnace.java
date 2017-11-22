@@ -8,17 +8,20 @@ import net.minecraft.item.ItemStack;
  */
 public class RecipeBlastFurnace {
 
+    public static final int DEFAULT_ENERGY_USAGE = 100;
+
     private final String id;
 
     private OreDictStack[] inputs;
     private ItemStack[] outputs;
-    private int secondOutputChance, burnTime;
+    private int secondOutputChance, burnTime, energyUsage;
 
-    public RecipeBlastFurnace(OreDictStack input1, OreDictStack input2, OreDictStack input3, ItemStack output1, ItemStack output2, int out2Chance, int burnTime){
+    public RecipeBlastFurnace(OreDictStack input1, OreDictStack input2, OreDictStack input3, ItemStack output1, ItemStack output2, int out2Chance, int burnTime, int energyUsagePerTick){
         this.inputs = new OreDictStack[]{input1, input2, input3};
         this.outputs = new ItemStack[]{output1, output2};
         this.secondOutputChance = out2Chance;
         this.burnTime = burnTime;
+        this.energyUsage = energyUsagePerTick > 0 ? energyUsagePerTick : DEFAULT_ENERGY_USAGE;
         this.id = String.format("%s#%s#%s#%s#%s#%d#%d", input1.getName(), input2.getName(), input3.getName(), output1.getUnlocalizedName(), output2.getUnlocalizedName(), out2Chance, burnTime);
     }
 
@@ -36,6 +39,10 @@ public class RecipeBlastFurnace {
 
     public int getBurnTime() {
         return burnTime;
+    }
+
+    public int getEnergyUsage() {
+        return energyUsage;
     }
 
     public boolean isRecipe(ItemStack input1, ItemStack input2, ItemStack input3){

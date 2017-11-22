@@ -1,21 +1,36 @@
 package de.canitzp.simplesteel;
 
 import de.canitzp.simplesteel.item.ItemArmorCollection;
+import de.canitzp.simplesteel.item.ItemBase;
+import de.canitzp.simplesteel.item.ItemBattery;
 import de.canitzp.simplesteel.item.ItemToolCollection;
 import de.canitzp.simplesteel.machine.blastfurnace.BlockBlastFurnace;
 import de.canitzp.simplesteel.machine.blastfurnace.TileBlastFurnace;
+import de.canitzp.simplesteel.machine.photovoltaicpanel.BlockPhotovoltaicPanel;
+import de.canitzp.simplesteel.machine.photovoltaicpanel.TilePhotovoltaicPanel;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.ItemMeshDefinition;
+import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -27,6 +42,8 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.IForgeRegistry;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -49,36 +66,18 @@ public class Registry {
     };
 
     public static BlockBlastFurnace blastFurnace = new BlockBlastFurnace();
+    public static BlockPhotovoltaicPanel photovoltaicPanel = new BlockPhotovoltaicPanel();
 
-    public static Item steelIngot = new Item(){{
-        setRegistryName(new ResourceLocation(SimpleSteel.MODID, "steel_ingot"));
-        setUnlocalizedName(this.getRegistryName().toString());
-        setCreativeTab(TAB);
-    }
+    public static Item steelIngot = new ItemBase("steel_ingot"){
         @Override
         public float getSmeltingExperience(ItemStack item) {
             return 1.0F;
         }
     };
-
-    public static Item steelNugget = new Item(){{
-        setRegistryName(new ResourceLocation(SimpleSteel.MODID, "steel_nugget"));
-        setUnlocalizedName(this.getRegistryName().toString());
-        setCreativeTab(TAB);
-    }};
-
-    public static Item metalShielding = new Item(){{
-        setRegistryName(new ResourceLocation(SimpleSteel.MODID, "metal_shielding"));
-        setUnlocalizedName(this.getRegistryName().toString());
-        setCreativeTab(TAB);
-    }};
-
-    public static Item controlCircuit = new Item(){{
-        setRegistryName(new ResourceLocation(SimpleSteel.MODID, "control_circuit"));
-        setUnlocalizedName(this.getRegistryName().toString());
-        setCreativeTab(TAB);
-    }};
-
+    public static Item steelNugget = new ItemBase("steel_nugget");
+    public static Item metalShielding = new ItemBase("metal_shielding");
+    public static Item controlCircuit = new ItemBase("control_circuit");
+    public static Item batteryLowDensity = new ItemBattery("battery_low_density", 25000);
     public static ItemToolCollection steelTools = new ItemToolCollection(MATERIAL_STEEL);
     public static ItemArmorCollection steelArmor = new ItemArmorCollection(ARMOR_STEEL);
 
@@ -86,18 +85,22 @@ public class Registry {
     public static void registerBlocks(RegistryEvent.Register<Block> event){
         IForgeRegistry<Block> reg = event.getRegistry();
         reg.register(blastFurnace);
+        reg.register(photovoltaicPanel);
         GameRegistry.registerTileEntity(TileBlastFurnace.class, SimpleSteel.MODID + ":blast_furnace");
+        GameRegistry.registerTileEntity(TilePhotovoltaicPanel.class, SimpleSteel.MODID + ":photovoltaic_panel");
     }
 
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event){
         IForgeRegistry<Item> reg = event.getRegistry();
         reg.register(new ItemBlock(blastFurnace).setRegistryName(blastFurnace.getRegistryName()));
+        reg.register(new ItemBlock(photovoltaicPanel).setRegistryName(photovoltaicPanel.getRegistryName()));
 
         reg.register(steelIngot);
         reg.register(steelNugget);
         reg.register(metalShielding);
         reg.register(controlCircuit);
+        reg.register(batteryLowDensity);
         steelTools.register(reg);
         steelArmor.register(reg);
     }
@@ -126,12 +129,30 @@ public class Registry {
     @SubscribeEvent
     public static void registerModels(ModelRegistryEvent event){
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(blastFurnace), 0, new ModelResourceLocation(blastFurnace.getRegistryName(), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(photovoltaicPanel), 0, new ModelResourceLocation(photovoltaicPanel.getRegistryName(), "inventory"));
         ModelLoader.setCustomModelResourceLocation(steelIngot, 0, new ModelResourceLocation(steelIngot.getRegistryName(), "invenory"));
         ModelLoader.setCustomModelResourceLocation(steelNugget, 0, new ModelResourceLocation(steelNugget.getRegistryName(), "invenory"));
         ModelLoader.setCustomModelResourceLocation(metalShielding, 0, new ModelResourceLocation(metalShielding.getRegistryName(), "invenory"));
         ModelLoader.setCustomModelResourceLocation(controlCircuit, 0, new ModelResourceLocation(controlCircuit.getRegistryName(), "invenory"));
         steelTools.bakeModels();
         steelArmor.bakeModels();
+        for(int i = 0; i < 11; i++){
+            ModelBakery.registerItemVariants(batteryLowDensity, new ModelResourceLocation(new ResourceLocation(SimpleSteel.MODID, "battery/state_" + i), "inventory"));
+        }
+        ModelLoader.setCustomMeshDefinition(batteryLowDensity, new ItemMeshDefinition() {
+            @Nonnull
+            @Override
+            public ModelResourceLocation getModelLocation(@Nonnull ItemStack stack) {
+                if(stack.hasCapability(CapabilityEnergy.ENERGY, null)){
+                    IEnergyStorage storage = stack.getCapability(CapabilityEnergy.ENERGY, null);
+                    if(storage != null){
+                        int i = (int) ((storage.getEnergyStored() / (storage.getMaxEnergyStored() * 1.0F)) * 10);
+                        return new ModelResourceLocation(new ResourceLocation(SimpleSteel.MODID, "battery/state_" + i), "inventory");
+                    }
+                }
+                return new ModelResourceLocation(new ResourceLocation(SimpleSteel.MODID, "battery/state_0"), "inventory");
+            }
+        });
     }
 
 }

@@ -20,7 +20,7 @@ public class ContainerBlastFurnace extends Container {
         this.addSlotToContainer(new Slot(tile.inventory, TileBlastFurnace.INPUT3, 101, 11));
         this.addSlotToContainer(new SlotFurnaceOutput(player, tile.inventory, TileBlastFurnace.OUTPUT1, 71, 57));
         this.addSlotToContainer(new SlotFurnaceOutput(player, tile.inventory, TileBlastFurnace.OUTPUT2, 91, 57));
-        this.addSlotToContainer(new Slot(tile.inventory, TileBlastFurnace.FUEL, 11, 11){
+        this.addSlotToContainer(new Slot(tile.inventory, TileBlastFurnace.FUEL, 27, 57){
             @Override
             public boolean isItemValid(ItemStack stack) {
                 return TileEntityFurnace.isItemFuel(stack);

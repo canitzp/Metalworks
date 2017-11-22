@@ -1,6 +1,7 @@
 itemGroup.simplesteel=Simple Steel
 
 tile.simplesteel:blast_furnace.name=Blast furnace
+tile.simplesteel:photovoltaic_panel.name=Photovoltaic Panel
 
 item.simplesteel:steel_ingot.name=Steel Ingot
 item.simplesteel:steel_nugget.name=Steel Nugget
@@ -14,5 +15,6 @@ item.simplesteel:steel_feet.name=Steel Boots
 item.simplesteel:steel_chest.name=Steel Chestplate
 item.simplesteel:steel_legs.name=Steel Leggings
 item.simplesteel:steel_head.name=Steel Helmet
+item.simplesteel:battery_low_density.name=Battery
 
 container.jei.simplesteel.blast_furnace.name=Blast Furnace
