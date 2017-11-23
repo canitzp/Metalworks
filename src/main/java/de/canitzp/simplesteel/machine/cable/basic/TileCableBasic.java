@@ -3,9 +3,13 @@ package de.canitzp.simplesteel.machine.cable.basic;
 import de.canitzp.simplesteel.Util;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.energy.IEnergyStorage;
 import org.apache.commons.lang3.ArrayUtils;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 
 /**
@@ -41,7 +45,36 @@ public class TileCableBasic extends TileEntity {
         }
     }
 
+    @Override
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+        return capability == CapabilityEnergy.ENERGY;
+    }
+
+    @Nullable
+    @Override
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+        return capability == CapabilityEnergy.ENERGY ? CapabilityEnergy.ENERGY.cast(this.sidedEnergy[facing != null ? facing.ordinal() : 0]) : null;
+    }
+
     private int receiveEnergy(EnumFacing from, int energy, boolean simulate){
+        if(!world.isRemote){
+            int originEnergy = energy;
+            for(EnumFacing side : EnumFacing.values()){
+                if(side != from){
+                    TileEntity tile = this.world.getTileEntity(this.pos.offset(side));
+                    if(tile != null && tile.hasCapability(CapabilityEnergy.ENERGY, side.getOpposite())){
+                        IEnergyStorage storage = tile.getCapability(CapabilityEnergy.ENERGY, side.getOpposite());
+                        if(storage != null && storage.canReceive()){
+                            energy -= storage.receiveEnergy(energy, simulate);
+                            if(energy <= 0){
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            return originEnergy - energy;
+        }
         return 0;
     }
 

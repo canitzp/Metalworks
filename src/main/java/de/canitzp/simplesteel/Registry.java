@@ -6,6 +6,8 @@ import de.canitzp.simplesteel.item.ItemBattery;
 import de.canitzp.simplesteel.item.ItemToolCollection;
 import de.canitzp.simplesteel.machine.blastfurnace.BlockBlastFurnace;
 import de.canitzp.simplesteel.machine.blastfurnace.TileBlastFurnace;
+import de.canitzp.simplesteel.machine.cable.basic.BlockCableBasic;
+import de.canitzp.simplesteel.machine.cable.basic.TileCableBasic;
 import de.canitzp.simplesteel.machine.photovoltaicpanel.BlockPhotovoltaicPanel;
 import de.canitzp.simplesteel.machine.photovoltaicpanel.TilePhotovoltaicPanel;
 import net.minecraft.block.Block;
@@ -67,6 +69,7 @@ public class Registry {
 
     public static BlockBlastFurnace blastFurnace = new BlockBlastFurnace();
     public static BlockPhotovoltaicPanel photovoltaicPanel = new BlockPhotovoltaicPanel();
+    public static BlockCableBasic cableBasic = new BlockCableBasic();
 
     public static Item steelIngot = new ItemBase("steel_ingot"){
         @Override
@@ -86,8 +89,10 @@ public class Registry {
         IForgeRegistry<Block> reg = event.getRegistry();
         reg.register(blastFurnace);
         reg.register(photovoltaicPanel);
+        reg.register(cableBasic);
         GameRegistry.registerTileEntity(TileBlastFurnace.class, SimpleSteel.MODID + ":blast_furnace");
         GameRegistry.registerTileEntity(TilePhotovoltaicPanel.class, SimpleSteel.MODID + ":photovoltaic_panel");
+        GameRegistry.registerTileEntity(TileCableBasic.class, SimpleSteel.MODID + ":cable_basic");
     }
 
     @SubscribeEvent
@@ -95,6 +100,7 @@ public class Registry {
         IForgeRegistry<Item> reg = event.getRegistry();
         reg.register(new ItemBlock(blastFurnace).setRegistryName(blastFurnace.getRegistryName()));
         reg.register(new ItemBlock(photovoltaicPanel).setRegistryName(photovoltaicPanel.getRegistryName()));
+        reg.register(new ItemBlock(cableBasic).setRegistryName(cableBasic.getRegistryName()));
 
         reg.register(steelIngot);
         reg.register(steelNugget);
@@ -130,6 +136,7 @@ public class Registry {
     public static void registerModels(ModelRegistryEvent event){
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(blastFurnace), 0, new ModelResourceLocation(blastFurnace.getRegistryName(), "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(photovoltaicPanel), 0, new ModelResourceLocation(photovoltaicPanel.getRegistryName(), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(cableBasic), 0, new ModelResourceLocation(cableBasic.getRegistryName(), "inventory"));
         ModelLoader.setCustomModelResourceLocation(steelIngot, 0, new ModelResourceLocation(steelIngot.getRegistryName(), "invenory"));
         ModelLoader.setCustomModelResourceLocation(steelNugget, 0, new ModelResourceLocation(steelNugget.getRegistryName(), "invenory"));
         ModelLoader.setCustomModelResourceLocation(metalShielding, 0, new ModelResourceLocation(metalShielding.getRegistryName(), "invenory"));

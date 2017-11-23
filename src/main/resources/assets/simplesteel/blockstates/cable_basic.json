@@ -1,0 +1,61 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "particle": "simplesteel:blocks/cable_basic_extension"
+    },
+    "model": "simplesteel:cable_basic",
+    "transform": "forge:default-block"
+  },
+  "variants": {
+    "normal": [{}],
+    "inventory": [{}],
+    "north": {
+      "true": {
+        "submodel": "simplesteel:cable_basic_extension",
+        "y": 180
+      },
+      "false": {}
+    },
+    "south": {
+      "true": {
+        "submodel": "simplesteel:cable_basic_extension"
+      },
+      "false": {}
+    },
+    "west": {
+      "true": {
+        "submodel": "simplesteel:cable_basic_extension",
+        "y": 270
+      },
+      "false": {}
+    },
+    "east": {
+      "true": {
+        "submodel": "simplesteel:cable_basic_extension",
+        "y": 90
+      },
+      "false": {}
+    },
+    "up": {
+      "true": {
+        "submodel": "simplesteel:cable_basic_extension",
+        "x": 90
+      },
+      "false": {}
+    },
+    "down": {
+      "true": {
+        "submodel": "simplesteel:cable_basic_extension",
+        "x": 270
+      },
+      "false": {}
+    },
+    "straight_ns": {
+      "true": {
+        "model": "simplesteel:cable_basic_straight"
+      },
+      "false": {}
+    }
+  }
+}

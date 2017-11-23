@@ -1,5 +1,6 @@
 package de.canitzp.simplesteel.machine.photovoltaicpanel;
 
+import de.canitzp.simplesteel.CustomEnergyStorage;
 import de.canitzp.simplesteel.Util;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -22,7 +23,12 @@ public class TilePhotovoltaicPanel extends TileEntity implements ITickable{
     // but since a day in minecraft is only 12 minutes long, I recalculate this with the minecraft values:
     // 393.2W/day (day=12; in reality a day has 1440 minutes) -> 32.76W/minute -> 546.1mW/second -> 27.3mW/tick
     // I now talked to some people and we decided to ste the conversion rate to 1W equals 300RF(293.04), after my calculations
-    private EnergyStorage energy = new EnergyStorage(8);
+    private CustomEnergyStorage energy = new CustomEnergyStorage(8){
+        @Override
+        public boolean canReceive() {
+            return false;
+        }
+    };
 
     @Override
     public void update() {
@@ -31,7 +37,7 @@ public class TilePhotovoltaicPanel extends TileEntity implements ITickable{
                 this.cachedCanProduce = Util.isDayTime(this.world) && Util.canBlockSeeSky(this.world, this.pos);
             }
             if(this.cachedCanProduce){
-                energy.receiveEnergy(8, false);
+                energy.forceReceive(8, false);
             }
             if(this.energy.getEnergyStored() > 0){
                 Util.pushEnergy(this.world, this.pos, this.energy, EnumFacing.UP);
