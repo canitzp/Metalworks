@@ -1,7 +1,7 @@
 {
 	"__comment": "Designed by Canitzp with Cubik Studio - https://cubik.studio",
 	"textures": {
-		"atlas": "simplesteel:blocks/cable_basic_extension"
+		"atlas": "simplesteel:blocks/cable_basic_straight"
 	},
 	"elements": [ 	 
 		{
@@ -9,12 +9,12 @@
 			"from": [ 7.5, 7.5, 0 ],
 			"to": [ 8.5, 8.5, 16 ],
 			"faces": {
-				"down": { "uv": [ 4, 5, 5, 12 ], "texture": "#atlas" },
-				"up": { "uv": [ 5, 5, 6, 12 ], "texture": "#atlas" },
-				"north": { "uv": [ 4, 4, 5, 5 ], "texture": "#atlas" },
-				"south": { "uv": [ 4, 3, 5, 4 ], "texture": "#atlas" },
-				"west": { "uv": [ 6, 11, 13, 12 ], "texture": "#atlas" },
-				"east": { "uv": [ 6, 10, 13, 11 ], "texture": "#atlas" }
+				"down": { "uv": [ 2, 4, 2.5, 12 ], "texture": "#atlas" },
+				"up": { "uv": [ 2.5, 4, 3, 12 ], "texture": "#atlas" },
+				"north": { "uv": [ 14, 15.5, 14.5, 16 ], "texture": "#atlas" },
+				"south": { "uv": [ 14, 15, 14.5, 15.5 ], "texture": "#atlas" },
+				"west": { "uv": [ 3, 11.5, 11, 12 ], "texture": "#atlas" },
+				"east": { "uv": [ 3, 11, 11, 11.5 ], "texture": "#atlas" }
 			}
 		},
 		{
@@ -22,12 +22,12 @@
 			"from": [ 7, 6.5, 0 ],
 			"to": [ 9, 7.5, 16 ],
 			"faces": {
-				"down": { "uv": [ 0, 10, 2, 16 ], "texture": "#atlas" },
-				"up": { "uv": [ 0, 4, 2, 10 ], "texture": "#atlas" },
-				"north": { "uv": [ 0, 3, 2, 4 ], "texture": "#atlas" },
-				"south": { "uv": [ 0, 2, 2, 3 ], "texture": "#atlas" },
-				"west": { "uv": [ 6, 9, 12, 10 ], "texture": "#atlas" },
-				"east": { "uv": [ 6, 8, 12, 9 ], "texture": "#atlas" }
+				"down": { "uv": [ 0, 8, 1, 16 ], "texture": "#atlas" },
+				"up": { "uv": [ 0, 0, 1, 8 ], "texture": "#atlas" },
+				"north": { "uv": [ 10, 15.5, 11, 16 ], "texture": "#atlas" },
+				"south": { "uv": [ 10, 15, 11, 15.5 ], "texture": "#atlas" },
+				"west": { "uv": [ 3, 10.5, 11, 11 ], "texture": "#atlas" },
+				"east": { "uv": [ 3, 10, 11, 10.5 ], "texture": "#atlas" }
 			}
 		},
 		{
@@ -35,12 +35,12 @@
 			"from": [ 7, 8.5, 0 ],
 			"to": [ 9, 9.5, 16 ],
 			"faces": {
-				"down": { "uv": [ 2, 10, 4, 16 ], "texture": "#atlas" },
-				"up": { "uv": [ 2, 4, 4, 10 ], "texture": "#atlas" },
-				"north": { "uv": [ 0, 1, 2, 2 ], "texture": "#atlas" },
-				"south": { "uv": [ 0, 0, 2, 1 ], "texture": "#atlas" },
-				"west": { "uv": [ 6, 7, 12, 8 ], "texture": "#atlas" },
-				"east": { "uv": [ 6, 6, 12, 7 ], "texture": "#atlas" }
+				"down": { "uv": [ 1, 8, 2, 16 ], "texture": "#atlas" },
+				"up": { "uv": [ 1, 0, 2, 8 ], "texture": "#atlas" },
+				"north": { "uv": [ 11, 15.5, 12, 16 ], "texture": "#atlas" },
+				"south": { "uv": [ 11, 15, 12, 15.5 ], "texture": "#atlas" },
+				"west": { "uv": [ 3, 9.5, 11, 10 ], "texture": "#atlas" },
+				"east": { "uv": [ 3, 9, 11, 9.5 ], "texture": "#atlas" }
 			}
 		},
 		{
@@ -48,12 +48,12 @@
 			"from": [ 6.5, 7, 0 ],
 			"to": [ 7.5, 9, 16 ],
 			"faces": {
-				"down": { "uv": [ 6, 0, 7, 6 ], "texture": "#atlas" },
-				"up": { "uv": [ 7, 0, 8, 6 ], "texture": "#atlas" },
-				"north": { "uv": [ 2, 2, 3, 4 ], "texture": "#atlas" },
-				"south": { "uv": [ 3, 2, 4, 4 ], "texture": "#atlas" },
-				"west": { "uv": [ 4, 14, 10, 16 ], "texture": "#atlas" },
-				"east": { "uv": [ 10, 14, 16, 16 ], "texture": "#atlas" }
+				"down": { "uv": [ 3, 1, 3.5, 9 ], "texture": "#atlas" },
+				"up": { "uv": [ 3.5, 1, 4, 9 ], "texture": "#atlas" },
+				"north": { "uv": [ 12, 15, 12.5, 16 ], "texture": "#atlas" },
+				"south": { "uv": [ 12.5, 15, 13, 16 ], "texture": "#atlas" },
+				"west": { "uv": [ 2, 15, 10, 16 ], "texture": "#atlas" },
+				"east": { "uv": [ 2, 14, 10, 15 ], "texture": "#atlas" }
 			}
 		},
 		{
@@ -61,12 +61,12 @@
 			"from": [ 8.5, 7, 0 ],
 			"to": [ 9.5, 9, 16 ],
 			"faces": {
-				"down": { "uv": [ 8, 0, 9, 6 ], "texture": "#atlas" },
-				"up": { "uv": [ 9, 0, 10, 6 ], "texture": "#atlas" },
-				"north": { "uv": [ 2, 0, 3, 2 ], "texture": "#atlas" },
-				"south": { "uv": [ 3, 0, 4, 2 ], "texture": "#atlas" },
-				"west": { "uv": [ 4, 12, 10, 14 ], "texture": "#atlas" },
-				"east": { "uv": [ 10, 12, 16, 14 ], "texture": "#atlas" }
+				"down": { "uv": [ 4, 1, 4.5, 9 ], "texture": "#atlas" },
+				"up": { "uv": [ 4.5, 1, 5, 9 ], "texture": "#atlas" },
+				"north": { "uv": [ 13, 15, 13.5, 16 ], "texture": "#atlas" },
+				"south": { "uv": [ 13.5, 15, 14, 16 ], "texture": "#atlas" },
+				"west": { "uv": [ 2, 13, 10, 14 ], "texture": "#atlas" },
+				"east": { "uv": [ 2, 12, 10, 13 ], "texture": "#atlas" }
 			}
 		}
 	]

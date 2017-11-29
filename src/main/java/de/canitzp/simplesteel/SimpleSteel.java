@@ -3,6 +3,7 @@ package de.canitzp.simplesteel;
 import de.canitzp.simplesteel.machine.blastfurnace.RecipeBlastFurnace;
 import de.canitzp.simplesteel.machine.blastfurnace.TileBlastFurnace;
 import de.canitzp.simplesteel.network.GuiHandler;
+import de.canitzp.simplesteel.network.NetworkHandler;
 import de.canitzp.simplesteel.recipe.OreDictStack;
 import de.canitzp.simplesteel.recipe.SimpleSteelRecipeHandler;
 import net.minecraft.init.Items;
@@ -42,6 +43,7 @@ public class SimpleSteel {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event){
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
+        NetworkHandler.init(event);
         OreDictionary.registerOre("ingotSteel", Registry.steelIngot);
         OreDictionary.registerOre("nuggetSteel", Registry.steelNugget);
         OreDictionary.registerOre("circuitBasic", Registry.controlCircuit);

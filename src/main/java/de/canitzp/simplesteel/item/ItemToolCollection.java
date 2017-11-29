@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * @author canitzp
  */
-//TODO maybe add shears too? or fishing rod?
+//TODO maybe update shears too? or fishing rod?
 public class ItemToolCollection {
 
     private Item.ToolMaterial material;

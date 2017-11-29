@@ -1,9 +1,6 @@
 package de.canitzp.simplesteel;
 
-import de.canitzp.simplesteel.item.ItemArmorCollection;
-import de.canitzp.simplesteel.item.ItemBase;
-import de.canitzp.simplesteel.item.ItemBattery;
-import de.canitzp.simplesteel.item.ItemToolCollection;
+import de.canitzp.simplesteel.item.*;
 import de.canitzp.simplesteel.machine.blastfurnace.BlockBlastFurnace;
 import de.canitzp.simplesteel.machine.blastfurnace.TileBlastFurnace;
 import de.canitzp.simplesteel.machine.cable.basic.BlockCableBasic;
@@ -76,11 +73,13 @@ public class Registry {
         public float getSmeltingExperience(ItemStack item) {
             return 1.0F;
         }
-    };
-    public static Item steelNugget = new ItemBase("steel_nugget");
-    public static Item metalShielding = new ItemBase("metal_shielding");
-    public static Item controlCircuit = new ItemBase("control_circuit");
-    public static Item batteryLowDensity = new ItemBattery("battery_low_density", 25000);
+    }.register();
+    public static Item steelNugget = new ItemBase("steel_nugget").register();
+    public static Item metalShielding = new ItemBase("metal_shielding").register();
+    public static Item controlCircuit = new ItemBase("control_circuit").register();
+    public static Item batteryLowDensity = new ItemBattery("battery_low_density", 25000).register();
+    public static Item photovoltaicCell = new ItemBase("photovoltaic_cell").register();
+    public static Item ironEnrichedSandDust = new ItemBase("iron_enriched_sand_dust").register();
     public static ItemToolCollection steelTools = new ItemToolCollection(MATERIAL_STEEL);
     public static ItemArmorCollection steelArmor = new ItemArmorCollection(ARMOR_STEEL);
 
@@ -102,11 +101,10 @@ public class Registry {
         reg.register(new ItemBlock(photovoltaicPanel).setRegistryName(photovoltaicPanel.getRegistryName()));
         reg.register(new ItemBlock(cableBasic).setRegistryName(cableBasic.getRegistryName()));
 
-        reg.register(steelIngot);
-        reg.register(steelNugget);
-        reg.register(metalShielding);
-        reg.register(controlCircuit);
-        reg.register(batteryLowDensity);
+        for(ItemBase item : ItemBase.ITEMS){
+            reg.register(item);
+        }
+
         steelTools.register(reg);
         steelArmor.register(reg);
     }
@@ -137,29 +135,14 @@ public class Registry {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(blastFurnace), 0, new ModelResourceLocation(blastFurnace.getRegistryName(), "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(photovoltaicPanel), 0, new ModelResourceLocation(photovoltaicPanel.getRegistryName(), "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(cableBasic), 0, new ModelResourceLocation(cableBasic.getRegistryName(), "inventory"));
-        ModelLoader.setCustomModelResourceLocation(steelIngot, 0, new ModelResourceLocation(steelIngot.getRegistryName(), "invenory"));
-        ModelLoader.setCustomModelResourceLocation(steelNugget, 0, new ModelResourceLocation(steelNugget.getRegistryName(), "invenory"));
-        ModelLoader.setCustomModelResourceLocation(metalShielding, 0, new ModelResourceLocation(metalShielding.getRegistryName(), "invenory"));
-        ModelLoader.setCustomModelResourceLocation(controlCircuit, 0, new ModelResourceLocation(controlCircuit.getRegistryName(), "invenory"));
+
+        for(ItemBase item : ItemBase.ITEMS){
+            item.registerClient();
+        }
+
         steelTools.bakeModels();
         steelArmor.bakeModels();
-        for(int i = 0; i < 11; i++){
-            ModelBakery.registerItemVariants(batteryLowDensity, new ModelResourceLocation(new ResourceLocation(SimpleSteel.MODID, "battery/state_" + i), "inventory"));
-        }
-        ModelLoader.setCustomMeshDefinition(batteryLowDensity, new ItemMeshDefinition() {
-            @Nonnull
-            @Override
-            public ModelResourceLocation getModelLocation(@Nonnull ItemStack stack) {
-                if(stack.hasCapability(CapabilityEnergy.ENERGY, null)){
-                    IEnergyStorage storage = stack.getCapability(CapabilityEnergy.ENERGY, null);
-                    if(storage != null){
-                        int i = (int) ((storage.getEnergyStored() / (storage.getMaxEnergyStored() * 1.0F)) * 10);
-                        return new ModelResourceLocation(new ResourceLocation(SimpleSteel.MODID, "battery/state_" + i), "inventory");
-                    }
-                }
-                return new ModelResourceLocation(new ResourceLocation(SimpleSteel.MODID, "battery/state_0"), "inventory");
-            }
-        });
+
     }
 
 }

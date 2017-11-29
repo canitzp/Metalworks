@@ -56,6 +56,20 @@
         "model": "simplesteel:cable_basic_straight"
       },
       "false": {}
+    },
+    "straight_we": {
+      "true": {
+        "model": "simplesteel:cable_basic_straight",
+        "y": 270
+      },
+      "false": {}
+    },
+    "straight_ud": {
+      "true": {
+        "model": "simplesteel:cable_basic_straight",
+        "x": 270
+      },
+      "false": {}
     }
   }
 }

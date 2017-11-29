@@ -1,6 +1,10 @@
 package de.canitzp.simplesteel.item;
 
+import de.canitzp.simplesteel.SimpleSteel;
 import de.canitzp.simplesteel.Util;
+import net.minecraft.client.renderer.ItemMeshDefinition;
+import net.minecraft.client.renderer.block.model.ModelBakery;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -9,8 +13,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.Constants;
@@ -32,6 +38,27 @@ public class ItemBattery extends ItemBase {
     public ItemBattery(String name, int maxEnergy) {
         super(name);
         this.maxEnergy = maxEnergy;
+    }
+
+    @Override
+    public void registerClient() {
+        for(int i = 0; i < 11; i++){
+            ModelBakery.registerItemVariants(this, new ModelResourceLocation(new ResourceLocation(SimpleSteel.MODID, "battery/state_" + i), "inventory"));
+        }
+        ModelLoader.setCustomMeshDefinition(this, new ItemMeshDefinition() {
+            @Nonnull
+            @Override
+            public ModelResourceLocation getModelLocation(@Nonnull ItemStack stack) {
+                if(stack.hasCapability(CapabilityEnergy.ENERGY, null)){
+                    IEnergyStorage storage = stack.getCapability(CapabilityEnergy.ENERGY, null);
+                    if(storage != null){
+                        int i = (int) ((storage.getEnergyStored() / (storage.getMaxEnergyStored() * 1.0F)) * 10);
+                        return new ModelResourceLocation(new ResourceLocation(SimpleSteel.MODID, "battery/state_" + i), "inventory");
+                    }
+                }
+                return new ModelResourceLocation(new ResourceLocation(SimpleSteel.MODID, "battery/state_0"), "inventory");
+            }
+        });
     }
 
     @Override

@@ -3,6 +3,7 @@ package de.canitzp.simplesteel.machine.blastfurnace;
 import de.canitzp.simplesteel.inventory.SidedBasicInv;
 import de.canitzp.simplesteel.inventory.SidedWrapper;
 import de.canitzp.simplesteel.SimpleSteel;
+import de.canitzp.simplesteel.machine.TileBase;
 import de.canitzp.simplesteel.recipe.SimpleSteelRecipeHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -20,7 +21,9 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.apache.commons.lang3.Validate;
 
@@ -32,7 +35,7 @@ import java.util.Random;
 /**
  * @author canitzp
  */
-public class TileBlastFurnace extends TileEntity implements ITickable{
+public class TileBlastFurnace extends TileBase implements ITickable{
 
     public static final int INPUT1 = 0;
     public static final int INPUT2 = 1;
@@ -45,14 +48,14 @@ public class TileBlastFurnace extends TileEntity implements ITickable{
         @Override
         public int receiveEnergy(int maxReceive, boolean simulate) {
             int i = super.receiveEnergy(maxReceive, simulate);
-            TileBlastFurnace.this.sync(true);
+            TileBlastFurnace.this.syncToClients();
             return i;
         }
 
         @Override
         public int extractEnergy(int maxExtract, boolean simulate) {
             int i = super.extractEnergy(maxExtract, simulate);
-            TileBlastFurnace.this.sync(true);
+            TileBlastFurnace.this.syncToClients();
             return i;
         }
     };
@@ -73,7 +76,7 @@ public class TileBlastFurnace extends TileEntity implements ITickable{
         public void markDirty() {
             super.markDirty();
             TileBlastFurnace.this.markDirty();
-            TileBlastFurnace.this.sync(true);
+            TileBlastFurnace.this.syncToClients();
         }
 
         @Override
@@ -86,34 +89,46 @@ public class TileBlastFurnace extends TileEntity implements ITickable{
     private String recipeID = null;
     public int maxBurn, burnLeft, energyUsage;
 
+    @Nullable
     @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        super.readFromNBT(compound);
-        this.recipeID = compound.hasKey("RecipeUUID", Constants.NBT.TAG_STRING) ? compound.getString("RecipeUUID") : null;
+    protected IItemHandler getInventory(@Nullable EnumFacing side) {
+        return this.wrapper;
+    }
+
+    @Nullable
+    @Override
+    protected IEnergyStorage getEnergy(@Nullable EnumFacing side) {
+        return this.energy;
+    }
+
+    @Override
+    public void readNBT(NBTTagCompound compound, NBTType type) {
         this.maxBurn = compound.getInteger("MaxBurn");
         this.burnLeft = compound.getInteger("BurnLeft");
         this.energyUsage = compound.getInteger("EnergyUsagePerTick");
-        CapabilityEnergy.ENERGY.readNBT(this.energy, null, compound.hasKey("Energy") ? compound.getTag("Energy") : new NBTTagInt(0));
-        this.inventory.readTag(compound);
+        this.readCapabilities(compound, null);
+        if(type != NBTType.SYNC && compound.hasKey("RecipeUUID", Constants.NBT.TAG_STRING)){
+            this.recipeID = compound.getString("RecipeUUID");
+        }
     }
 
-    @Nonnull
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        if(this.recipeID != null) {
-            compound.setString("RecipeUUID", this.recipeID);
-        }
+    public void writeNBT(NBTTagCompound compound, NBTType type) {
         compound.setInteger("MaxBurn", this.maxBurn);
         compound.setInteger("BurnLeft", this.burnLeft);
         compound.setInteger("EnergyUsagePerTick", this.energyUsage);
-        compound.setTag("Energy", Validate.notNull(CapabilityEnergy.ENERGY.writeNBT(this.energy, null)));
-        this.inventory.writeTag(compound);
-        return super.writeToNBT(compound);
+        this.writeCapabilities(compound, null);
+        if(type != NBTType.SYNC){
+            if(this.recipeID != null) {
+                compound.setString("RecipeUUID", this.recipeID);
+            }
+        }
     }
 
     @Override
     public void update() {
         if(!world.isRemote){
+            this.updateForSyncing();
             if(this.recipeID != null){
                 if(this.burnLeft <= 0){
                     this.burnLeft = this.maxBurn = this.energyUsage = 0;
@@ -141,7 +156,7 @@ public class TileBlastFurnace extends TileEntity implements ITickable{
                         System.out.println("A 'null' recipe was processed! This is maybe caused by a removed mod, while the burn progress.");
                     }
                     this.recipeID = null;
-                    this.sync(true);
+                    this.syncToClients();
                 } else {
                     if(this.energy.extractEnergy(this.energyUsage, true) == this.energyUsage){
                         this.energy.extractEnergy(this.energyUsage, false);
@@ -149,7 +164,7 @@ public class TileBlastFurnace extends TileEntity implements ITickable{
                     } else if(this.burnLeft < this.maxBurn) {
                         this.burnLeft++;
                     }
-                    this.sync(false);
+                    this.syncToClients();
                 }
             } else {
                 ItemStack input1 = this.inventory.getStackInSlot(INPUT1);
@@ -170,7 +185,7 @@ public class TileBlastFurnace extends TileEntity implements ITickable{
                         if(!input3.isEmpty()){
                             recipe.shrink(input3);
                         }
-                        this.sync(false);
+                        this.syncToClients();
                     }
                 }
             }
@@ -178,47 +193,9 @@ public class TileBlastFurnace extends TileEntity implements ITickable{
     }
 
     @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || capability == CapabilityEnergy.ENERGY;
-    }
-
-    @Nullable
-    @Override
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-        if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(this.wrapper);
-        }
-        if(capability == CapabilityEnergy.ENERGY){
-            return CapabilityEnergy.ENERGY.cast(this.energy);
-        }
-        return super.getCapability(capability, facing);
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+    public void onSyncPacket() {
         if(this.world != null && this.world.isRemote){
             this.world.markBlockRangeForRenderUpdate(this.pos, this.pos);
-        }
-        this.handleUpdateTag(pkt.getNbtCompound());
-    }
-
-    @Nullable
-    @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        return new SPacketUpdateTileEntity(this.getPos(), 0, this.writeToNBT(new NBTTagCompound()));
-    }
-
-    public void sync(boolean force){
-        if(this.world != null && !this.world.isRemote && (force || world.getTotalWorldTime() % 10 == 0)){
-            for(EntityPlayer player : this.getWorld().playerEntities){
-                if(player instanceof EntityPlayerMP){
-                    BlockPos pos = this.getPos();
-                    SPacketUpdateTileEntity packet = this.getUpdatePacket();
-                    if(player.getDistance(pos.getX(), pos.getY(), pos.getZ()) <= 64 && packet != null){
-                        ((EntityPlayerMP) player).connection.sendPacket(packet);
-                    }
-                }
-            }
         }
     }
 

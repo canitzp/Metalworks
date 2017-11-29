@@ -35,7 +35,7 @@ public class ContainerBlastFurnace extends Container {
             this.addSlotToContainer(new Slot(player.inventory, k, 8 + k * 18, 142));
         }
         if(!player.world.isRemote){
-            tile.sync(true);
+            tile.syncToClients();
         }
     }
 
