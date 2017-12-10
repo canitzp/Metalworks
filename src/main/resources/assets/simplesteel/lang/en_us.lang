@@ -23,7 +23,9 @@ item.simplesteel:photovoltaic_cell.name=Photovoltaic Cell
 item.simplesteel:quartz_sand_dust.name=Quartz Sand
 
 desc.simplesteel:geothermal_generator.name=Produces cheap energy out of blocks around it. NL Produces a very little amount of energy.
-desc.simplesteel:photovoltaic_panel.name=Produces cheap energy out of the sun. NL Peak energy: §c8 CF/t
+desc.simplesteel:photovoltaic_panel.name=Produces cheap energy out of the sun. NL Peak energy: §c8 CF/t§7 NL Formerly known as §oSolar Panel§r
+desc.simplesteel:duster.name=Grinds two materials down to a dust
+desc.simplesteel:blast_furnace.name=Heats items up to their melt point NL and combines them to cool them down
 desc.simplesteel:cable_basic.name=Transfer: §c1000 CF/t
 
 container.jei.simplesteel.blast_furnace.name=Blast Furnace

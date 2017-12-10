@@ -16,6 +16,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.IRecipe;
@@ -25,6 +26,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -78,10 +83,15 @@ public class Registry {
     }.register();
     public static Item quartzSandDust = new ItemBase("quartz_sand_dust").addOreName("dustQuartzSand").register();
     public static Item controlCircuit = new ItemBase("control_circuit").addOreName("circuitBasic").addRecipes("ggg", "rsr", "nnn", 'g', "dyeGreen", 'r', "dustRedstone", 's', "dustGlowstone", 'n', "nuggetGold").register();
-    public static Item batteryLowDensity = new ItemBattery("battery_low_density", 25000).addRecipes(" i ", "srs", "sms", 'i', "nuggetIron", 's', quartzSandDust, 'r', "blockRedstone", 'm', metalShielding).register();
-    public static Item photovoltaicCell = new ItemBase("photovoltaic_cell").addRecipes("isi", "sqs", "isi", 'i', "ingotIron", 's', quartzSandDust, 'q', "gemQuartz").register();
+    public static Item batteryLowDensity = new ItemBattery("battery_low_density", 25000).addRecipes(" i ", "srs", "sms", 'i', "nuggetIron", 's', "dustQuartzSand", 'r', "blockRedstone", 'm', metalShielding).register();
+    public static Item photovoltaicCell = new ItemBase("photovoltaic_cell").addRecipes("isi", "sqs", "isi", 'i', "ingotIron", 's', "dustQuartzSand", 'q', "gemQuartz").register();
 
-    public static BlockCableBasic cableBasic = new BlockCableBasic().register();
+    public static BlockCableBasic cableBasic = new BlockCableBasic(){
+        @Override
+        public void registerRecipes(List<IRecipe> recipes) {
+            recipes.add(new ShapedOreRecipe(null, new ItemStack(this, 8), " s ", "sws", " s ", 's', "dustQuartzSand", 'w', Blocks.WOOL));
+        }
+    }.register();
     public static BlockBlastFurnace blastFurnace = new BlockBlastFurnace().addRecipes("mmm", "fcf", "mmm", 'm', metalShielding, 'f', Blocks.FURNACE, 'c', "circuitBasic").register();
     public static BlockPhotovoltaicPanel photovoltaicPanel = new BlockPhotovoltaicPanel().addRecipes("ppp", "sis", "scs", 'p', photovoltaicCell, 'i', "blockIron", 'c', cableBasic, 's', metalShielding).register();
     public static BlockDuster duster = new BlockDuster().addRecipes("msm", "sis", "mcm", 'm', metalShielding, 's', "stone", 'i', "blockIron", 'c', "circuitBasic").register();
@@ -147,7 +157,19 @@ public class Registry {
     @SubscribeEvent
     public static void registerGeoBurnables(RegistryEvent.Register<IGeoburnable> event){
         IForgeRegistry<IGeoburnable> reg = event.getRegistry();
-        reg.register(new BlockGeoburnable(Blocks.MAGMA, 50, 1));
+        reg.register(new BlockGeoburnable(Blocks.MAGMA, 40, 1));
+        reg.register(new BlockGeoburnable(Blocks.FIRE, 80, 2){
+            @Override
+            public ItemStack getJEIIcon() {
+                return new ItemStack(Items.FLINT_AND_STEEL);
+            }
+        });
+        reg.register(new BlockGeoburnable(Blocks.LAVA, 160, 3){
+            @Override
+            public ItemStack getJEIIcon() {
+                return FluidUtil.getFilledBucket(new FluidStack(FluidRegistry.LAVA, Fluid.BUCKET_VOLUME));
+            }
+        });
     }
 
     @SideOnly(Side.CLIENT)

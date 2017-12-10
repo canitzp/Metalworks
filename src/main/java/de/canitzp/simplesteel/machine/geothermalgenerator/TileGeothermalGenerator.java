@@ -19,34 +19,39 @@ import javax.annotation.Nullable;
  */
 public class TileGeothermalGenerator extends TileBase implements ITickable{
 
-    public CustomEnergyStorage energy = new CustomEnergyStorage(100){
+    public CustomEnergyStorage energy = new CustomEnergyStorage(5000){
         @Override
         public boolean canReceive() {
             return false;
         }
     }.setTile(this);
-    public int burn = 0, energyPerTick = 0;
+    public int burn = 0, energyPerTick = 0, cooldown = 0;
 
     @Override
     public void update() {
         if(!this.world.isRemote){
             this.updateForSyncing();
             if(this.burn <= 0){
-                this.energyPerTick = 0;
-                for(EnumFacing side : EnumFacing.values()){
-                    if(side != EnumFacing.UP){
-                        for(IGeoburnable burnable : SimpleSteel.GEOBURNABLE_REGISTRY){
-                            BlockPos pos = this.pos.offset(side);
-                            IBlockState state = this.world.getBlockState(pos);
-                            if(burnable.isBurnable(state, side)){
-                                this.burn = burnable.getBurnTime(this.world, pos, state, side);
-                                if(this.burn > 0){
-                                    this.energyPerTick = burnable.getBurnEnergy(this.world, pos, state, side);
-                                    return;
+                if(this.cooldown <= 0){
+                    this.energyPerTick = 0;
+                    for(EnumFacing side : EnumFacing.values()){
+                        if(side != EnumFacing.UP){
+                            for(IGeoburnable burnable : SimpleSteel.GEOBURNABLE_REGISTRY){
+                                BlockPos pos = this.pos.offset(side);
+                                IBlockState state = this.world.getBlockState(pos);
+                                if(burnable.isBurnable(state, side)){
+                                    this.burn = burnable.getBurnTime(this.world, pos, state, side);
+                                    if(this.burn > 0){
+                                        this.energyPerTick = burnable.getBurnEnergy(this.world, pos, state, side);
+                                        this.cooldown = burnable.getCooldown(this.world, pos, state, side);
+                                        return;
+                                    }
                                 }
                             }
                         }
                     }
+                } else {
+                    this.cooldown--;
                 }
             } else {
                 this.burn--;
@@ -70,6 +75,7 @@ public class TileGeothermalGenerator extends TileBase implements ITickable{
         super.writeNBT(nbt, type);
         nbt.setInteger("Burn", this.burn);
         nbt.setInteger("EnergyGen", this.energyPerTick);
+        nbt.setInteger("Cooldown", this.cooldown);
     }
 
     @Override
@@ -77,6 +83,7 @@ public class TileGeothermalGenerator extends TileBase implements ITickable{
         super.readNBT(nbt, type);
         this.burn = nbt.getInteger("Burn");
         this.energyPerTick = nbt.getInteger("EnergyGen");
+        this.cooldown = nbt.getInteger("Cooldown");
     }
 
     @Override

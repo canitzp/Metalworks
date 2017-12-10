@@ -129,7 +129,7 @@ public abstract class SimpleSteelCategories<T extends IRecipeWrapper> implements
 
         @Override
         protected IDrawable createDrawable(IGuiHelper helper) {
-            return helper.createBlankDrawable(50, 40);
+            return helper.createBlankDrawable(50, 30);
         }
 
         @Override

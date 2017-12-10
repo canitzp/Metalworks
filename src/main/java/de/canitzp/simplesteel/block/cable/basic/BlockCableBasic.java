@@ -61,18 +61,8 @@ public class BlockCableBasic extends BlockContainerBase<BlockCableBasic> {
     }
 
     @Override
-    public boolean isFullBlock(IBlockState state) {
-        return false;
-    }
-
-    @Override
     public boolean isFullCube(IBlockState state) {
         return false;
-    }
-
-    @Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.MODEL;
     }
 
     @Override

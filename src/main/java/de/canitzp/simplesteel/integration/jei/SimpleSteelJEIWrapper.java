@@ -47,7 +47,8 @@ public abstract class SimpleSteelJEIWrapper<T> implements IRecipeWrapper{
 
         @Override
         public void drawInfo(Minecraft mc, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-            mc.fontRenderer.drawString("Burn time: " + recipe.getBurnTime(), 45, 30, 0xFFFFFF, false);
+            mc.fontRenderer.drawString("Burn time: " + recipe.getBurnTime(), 50, 25, 0xFFFFFF, false);
+            mc.fontRenderer.drawString("Energy   : " + recipe.getEnergyUsage(), 50, 35, 0xFFFFFF, false);
             if(!recipe.getOutputs()[1].isEmpty()){
                 mc.fontRenderer.drawString(recipe.getSecondOutputChance() + "%", 52, 52, 0xFFFFFF, false);
             }
@@ -72,7 +73,8 @@ public abstract class SimpleSteelJEIWrapper<T> implements IRecipeWrapper{
 
         @Override
         public void drawInfo(Minecraft mc, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-            mc.fontRenderer.drawString("Burn time: " + recipe.getTime(), 45, 30, 0xFFFFFF, false);
+            mc.fontRenderer.drawString("Burn time: " + recipe.getTime(), 45, 25, 0xFFFFFF, false);
+            mc.fontRenderer.drawString("Energy   : " + recipe.getEnergy(), 45, 35, 0xFFFFFF, false);
         }
     }
 
@@ -84,19 +86,14 @@ public abstract class SimpleSteelJEIWrapper<T> implements IRecipeWrapper{
 
         @Override
         public void getIngredients(IIngredients ingredients) {
-            if(this.recipe instanceof BlockGeoburnable){
-                ingredients.setInput(ItemStack.class, new ItemStack(((BlockGeoburnable) this.recipe).state.getBlock()));
-            }
+            ingredients.setInput(ItemStack.class, this.recipe.getJEIIcon());
         }
 
         @Override
         public void drawInfo(Minecraft mc, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-            if(this.recipe instanceof BlockGeoburnable){
-                mc.fontRenderer.drawString("Burn Time: " + ((BlockGeoburnable) this.recipe).burn, 21, 0, 0xFFFFFF, false);
-                mc.fontRenderer.drawString("Energy   : " + ((BlockGeoburnable) this.recipe).energy, 21, 9, 0xFFFFFF, false);
-            }
-
+            this.recipe.drawJEIText(mc.fontRenderer);
         }
+
     }
 
 }
