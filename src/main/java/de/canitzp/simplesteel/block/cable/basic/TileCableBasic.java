@@ -1,6 +1,6 @@
-package de.canitzp.simplesteel.machine.cable.basic;
+package de.canitzp.simplesteel.block.cable.basic;
 
-import de.canitzp.simplesteel.machine.cable.Network;
+import de.canitzp.simplesteel.block.cable.Network;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -19,7 +19,7 @@ public class TileCableBasic extends TileEntity{
     public EnergyStorage energy = new EnergyStorage(1000) {
         @Override
         public int receiveEnergy(int maxReceive, boolean simulate) {
-            return network != null ?  network.transmitEnergy(pos, maxReceive, simulate) : super.receiveEnergy(maxReceive, simulate);
+            return network != null ?  network.transmitEnergy(pos, maxReceive, simulate) : 0;
         }
 
         @Override

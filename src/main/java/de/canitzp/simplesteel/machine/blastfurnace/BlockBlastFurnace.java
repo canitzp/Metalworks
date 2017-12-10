@@ -2,6 +2,8 @@ package de.canitzp.simplesteel.machine.blastfurnace;
 
 import de.canitzp.simplesteel.Registry;
 import de.canitzp.simplesteel.SimpleSteel;
+import de.canitzp.simplesteel.block.BlockContainerBase;
+import de.canitzp.simplesteel.machine.duster.TileDuster;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
@@ -27,18 +29,15 @@ import javax.annotation.Nullable;
 /**
  * @author canitzp
  */
-public class BlockBlastFurnace extends BlockContainer {
+public class BlockBlastFurnace extends BlockContainerBase<BlockBlastFurnace> {
 
     public static final PropertyBool ACTIVE = PropertyBool.create("active");
     public static final PropertyEnum<EnumFacing> FACING = PropertyEnum.create("facing", EnumFacing.class, EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.EAST, EnumFacing.WEST);
 
     public BlockBlastFurnace() {
-        super(Material.IRON);
-        this.setRegistryName(new ResourceLocation(SimpleSteel.MODID, "blast_furnace"));
-        this.setUnlocalizedName(this.getRegistryName().toString());
+        super(Material.IRON, "blast_furnace");
         this.setHarvestLevel("pickaxe", 2);
         this.setHardness(4.5F);
-        this.setCreativeTab(Registry.TAB);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ACTIVE, false));
     }
 
@@ -64,15 +63,9 @@ public class BlockBlastFurnace extends BlockContainer {
         return super.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer).withProperty(FACING, placer.getHorizontalFacing().getOpposite());
     }
 
-    @Nullable
     @Override
-    public TileEntity createNewTileEntity(@Nonnull World world, int meta) {
-        return new TileBlastFurnace();
-    }
-
-    @Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.MODEL;
+    protected Class<? extends TileEntity> getTileEntityClass() {
+        return TileBlastFurnace.class;
     }
 
     @Override

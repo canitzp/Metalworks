@@ -3,9 +3,13 @@ package de.canitzp.simplesteel.integration.jei;
 import com.google.common.collect.Lists;
 import de.canitzp.simplesteel.Registry;
 import de.canitzp.simplesteel.SimpleSteel;
+import de.canitzp.simplesteel.machine.MachineRecipe;
 import de.canitzp.simplesteel.machine.blastfurnace.GuiBlastFurnace;
 import de.canitzp.simplesteel.machine.blastfurnace.RecipeBlastFurnace;
 import de.canitzp.simplesteel.machine.blastfurnace.TileBlastFurnace;
+import de.canitzp.simplesteel.machine.duster.GuiDuster;
+import de.canitzp.simplesteel.machine.duster.RecipeDuster;
+import de.canitzp.simplesteel.machine.geothermalgenerator.geoburnable.IGeoburnable;
 import de.canitzp.simplesteel.recipe.OreDictStack;
 import de.canitzp.simplesteel.recipe.SimpleSteelRecipeHandler;
 import mezz.jei.api.IModPlugin;
@@ -34,94 +38,32 @@ import java.util.List;
 public class SimpleSteelJEIPlugin implements IModPlugin{
 
     public static final String BLAST_FURNACE = SimpleSteel.MODID + ".blast_furnace";
+    public static final String DUSTER = SimpleSteel.MODID + ".duster";
+    public static final String GEOTHERMAL_GENERATOR = SimpleSteel.MODID + ".geothermal_generator";
 
     @Override
     public void registerCategories(IRecipeCategoryRegistration registry) {
-        registry.addRecipeCategories(new IRecipeCategory<BlastFurnaceRecipeWrapper>() {
-            final IDrawable drawable = registry.getJeiHelpers().getGuiHelper().createDrawable(GuiBlastFurnace.LOC, 59, 9, 60, 66);
-            @Nonnull
-            @Override
-            public String getUid() {
-                return BLAST_FURNACE;
-            }
-
-            @Nonnull
-            @Override
-            public String getTitle() {
-                return I18n.format("container.jei." + BLAST_FURNACE + ".name");
-            }
-
-            @Nonnull
-            @Override
-            public String getModName() {
-                return SimpleSteel.MODNAME;
-            }
-
-            @Nonnull
-            @Override
-            public IDrawable getBackground() {
-                return this.drawable;
-            }
-
-            @Override
-            public void setRecipe(@Nonnull IRecipeLayout recipeLayout, @Nonnull BlastFurnaceRecipeWrapper recipeWrapper, @Nonnull IIngredients ingredients) {
-                IGuiItemStackGroup group = recipeLayout.getItemStacks();
-                group.init(TileBlastFurnace.INPUT1, true, 1, 1);
-                group.set(TileBlastFurnace.INPUT1, recipeWrapper.recipe.getInputs()[0].getListForJEI());
-                if(recipeWrapper.recipe.getInputs()[1] != OreDictStack.EMPTY){
-                    group.init(TileBlastFurnace.INPUT2, true, 21, 1);
-                    group.set(TileBlastFurnace.INPUT2, recipeWrapper.recipe.getInputs()[1].getListForJEI());
-                }
-                if(recipeWrapper.recipe.getInputs()[2] != OreDictStack.EMPTY){
-                    group.init(TileBlastFurnace.INPUT3, true, 21, 1);
-                    group.set(TileBlastFurnace.INPUT3, recipeWrapper.recipe.getInputs()[2].getListForJEI());
-                }
-
-                group.init(TileBlastFurnace.OUTPUT1, false, 11, 47);
-                group.set(TileBlastFurnace.OUTPUT1, recipeWrapper.recipe.getOutputs()[0]);
-                if(!recipeWrapper.recipe.getOutputs()[1].isEmpty()){
-                    group.init(TileBlastFurnace.OUTPUT2, false, 31, 47);
-                    group.set(TileBlastFurnace.OUTPUT2, recipeWrapper.recipe.getOutputs()[1]);
-                }
-            }
-        });
+        registry.addRecipeCategories(new SimpleSteelCategories.BlastFurnace(registry));
+        registry.addRecipeCategories(new SimpleSteelCategories.Duster(registry));
+        registry.addRecipeCategories(new SimpleSteelCategories.GeoThermalGenerator(registry));
     }
 
     @Override
     public void register(IModRegistry registry) {
-        registry.handleRecipes(RecipeBlastFurnace.class, BlastFurnaceRecipeWrapper::new, BLAST_FURNACE);
+        registry.handleRecipes(RecipeBlastFurnace.class, SimpleSteelJEIWrapper.BlastFurnace::new, BLAST_FURNACE);
+        registry.handleRecipes(RecipeDuster.class, SimpleSteelJEIWrapper.Duster::new, DUSTER);
+        registry.handleRecipes(IGeoburnable.class, SimpleSteelJEIWrapper.GeothermalGenerator::new, GEOTHERMAL_GENERATOR);
 
         registry.addRecipes(SimpleSteelRecipeHandler.BLAST_FURNACE_RECIPES.values(), BLAST_FURNACE);
+        registry.addRecipes(MachineRecipe.getRegisteredForType(RecipeDuster.class), DUSTER);
+        registry.addRecipes(SimpleSteel.GEOBURNABLE_REGISTRY.getValues(), GEOTHERMAL_GENERATOR);
 
         registry.addRecipeCatalyst(new ItemStack(Registry.blastFurnace), BLAST_FURNACE);
+        registry.addRecipeCatalyst(new ItemStack(Registry.duster), DUSTER);
+        registry.addRecipeCatalyst(new ItemStack(Registry.geothermalGenerator), GEOTHERMAL_GENERATOR);
 
         registry.addRecipeClickArea(GuiBlastFurnace.class, 68, 29, 42, 26, BLAST_FURNACE);
-    }
-
-    private static class BlastFurnaceRecipeWrapper implements IRecipeWrapper{
-        private final RecipeBlastFurnace recipe;
-
-        private BlastFurnaceRecipeWrapper(RecipeBlastFurnace recipe) {
-            this.recipe = recipe;
-        }
-
-        @Override
-        public void getIngredients(@Nonnull IIngredients ingredients) {
-            List<List<ItemStack>> inputList = new ArrayList<>();
-            for(OreDictStack stack : recipe.getInputs()){
-                inputList.add(stack.getListForJEI());
-            }
-            ingredients.setInputLists(ItemStack.class, inputList);
-            ingredients.setOutputs(ItemStack.class, Lists.newArrayList(recipe.getOutputs()));
-        }
-
-        @Override
-        public void drawInfo(Minecraft mc, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-            mc.fontRenderer.drawString("Burn time: " + recipe.getBurnTime(), 45, 30, 0xFFFFFF, false);
-            if(!recipe.getOutputs()[1].isEmpty()){
-                mc.fontRenderer.drawString(recipe.getSecondOutputChance() + "%", 52, 52, 0xFFFFFF, false);
-            }
-        }
+        registry.addRecipeClickArea(GuiDuster.class, 73, 29, 30, 25, DUSTER);
     }
 
 }

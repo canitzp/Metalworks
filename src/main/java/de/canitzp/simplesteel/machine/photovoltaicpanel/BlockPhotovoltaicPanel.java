@@ -2,6 +2,7 @@ package de.canitzp.simplesteel.machine.photovoltaicpanel;
 
 import de.canitzp.simplesteel.Registry;
 import de.canitzp.simplesteel.SimpleSteel;
+import de.canitzp.simplesteel.block.BlockContainerBase;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -17,25 +18,17 @@ import javax.annotation.Nullable;
 /**
  * @author canitzp
  */
-public class BlockPhotovoltaicPanel extends BlockContainer {
+public class BlockPhotovoltaicPanel extends BlockContainerBase<BlockPhotovoltaicPanel> {
 
     public BlockPhotovoltaicPanel() {
-        super(Material.IRON, MapColor.PURPLE);
-        this.setRegistryName(new ResourceLocation(SimpleSteel.MODID, "photovoltaic_panel"));
-        this.setUnlocalizedName(this.getRegistryName().toString());
-        this.setCreativeTab(Registry.TAB);
+        super(Material.IRON, MapColor.PURPLE, "photovoltaic_panel");
         this.setHardness(4.5F);
         this.setHarvestLevel("pickaxe", 2);
     }
 
-    @Nullable
     @Override
-    public TileEntity createNewTileEntity(@Nonnull World world, int meta) {
-        return new TilePhotovoltaicPanel();
+    protected Class<? extends TileEntity> getTileEntityClass() {
+        return TilePhotovoltaicPanel.class;
     }
 
-    @Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.MODEL;
-    }
 }

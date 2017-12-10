@@ -46,23 +46,23 @@ public class RecipeBlastFurnace {
     }
 
     public boolean isRecipe(ItemStack input1, ItemStack input2, ItemStack input3){
-        if(this.inputs[0].isMergeable(input1)){
-            if(this.inputs[1].isMergeable(input2)){
-                return this.inputs[2].isMergeable(input3);
-            } else if(this.inputs[1].isMergeable(input3)){
-                return this.inputs[2].isMergeable(input2);
+        if(this.inputs[0].isSubstractable(input1)){
+            if(this.inputs[1].isSubstractable(input2)){
+                return this.inputs[2].isSubstractable(input3);
+            } else if(this.inputs[1].isSubstractable(input3)){
+                return this.inputs[2].isSubstractable(input2);
             }
-        } else if(this.inputs[0].isMergeable(input2)){
-            if(this.inputs[1].isMergeable(input1)){
-                return this.inputs[2].isMergeable(input3);
-            } else if(this.inputs[1].isMergeable(input3)){
-                return this.inputs[2].isMergeable(input1);
+        } else if(this.inputs[0].isSubstractable(input2)){
+            if(this.inputs[1].isSubstractable(input1)){
+                return this.inputs[2].isSubstractable(input3);
+            } else if(this.inputs[1].isSubstractable(input3)){
+                return this.inputs[2].isSubstractable(input1);
             }
-        } else if(this.inputs[0].isMergeable(input3)){
-            if(this.inputs[1].isMergeable(input1)){
-                return this.inputs[2].isMergeable(input2);
-            } else if(this.inputs[1].isMergeable(input2)){
-                return this.inputs[2].isMergeable(input1);
+        } else if(this.inputs[0].isSubstractable(input3)){
+            if(this.inputs[1].isSubstractable(input1)){
+                return this.inputs[2].isSubstractable(input2);
+            } else if(this.inputs[1].isSubstractable(input2)){
+                return this.inputs[2].isSubstractable(input1);
             }
         }
         return false;
@@ -79,7 +79,7 @@ public class RecipeBlastFurnace {
 
     public void shrink(ItemStack stack){
         for(OreDictStack oreDictStack : this.inputs){
-            if(oreDictStack.isMergeable(stack)){
+            if(oreDictStack.isSubstractable(stack)){
                 stack.shrink(oreDictStack.getStacksize());
                 return;
             }

@@ -23,6 +23,8 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,6 +42,7 @@ public class ItemBattery extends ItemBase {
         this.maxEnergy = maxEnergy;
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void registerClient() {
         for(int i = 0; i < 11; i++){
@@ -110,19 +113,20 @@ public class ItemBattery extends ItemBase {
     @Nonnull
     @Override
     public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        TileEntity tile = world.getTileEntity(pos);
-        if(tile != null && tile.hasCapability(CapabilityEnergy.ENERGY, facing)){
-            if(!world.isRemote){
-                IEnergyStorage energy = tile.getCapability(CapabilityEnergy.ENERGY, facing);
-                if(energy != null && energy.canExtract()){
-                    IEnergyStorage storage = player.getHeldItem(hand).getCapability(CapabilityEnergy.ENERGY, null);
-                    if(storage != null && storage.canReceive()){
-                        storage.receiveEnergy(energy.extractEnergy(storage.receiveEnergy(Integer.MAX_VALUE, true), false), false);
+        if(player.getHeldItem(hand).getCount() == 1){
+            TileEntity tile = world.getTileEntity(pos);
+            if(tile != null && tile.hasCapability(CapabilityEnergy.ENERGY, facing)){
+                if(!world.isRemote){
+                    IEnergyStorage energy = tile.getCapability(CapabilityEnergy.ENERGY, facing);
+                    if(energy != null && energy.canExtract()){
+                        IEnergyStorage storage = player.getHeldItem(hand).getCapability(CapabilityEnergy.ENERGY, null);
+                        if(storage != null && storage.canReceive()){
+                            storage.receiveEnergy(energy.extractEnergy(storage.receiveEnergy(Integer.MAX_VALUE, true), false), false);
+                        }
                     }
-                    System.out.println(storage.getEnergyStored());
                 }
+                return EnumActionResult.SUCCESS;
             }
-            return EnumActionResult.SUCCESS;
         }
         return super.onItemUse(player, world, pos, hand, facing, hitX, hitY, hitZ);
     }

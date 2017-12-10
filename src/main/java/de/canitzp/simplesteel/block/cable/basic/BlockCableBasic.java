@@ -1,10 +1,8 @@
-package de.canitzp.simplesteel.machine.cable.basic;
+package de.canitzp.simplesteel.block.cable.basic;
 
-import de.canitzp.simplesteel.Registry;
-import de.canitzp.simplesteel.SimpleSteel;
-import de.canitzp.simplesteel.machine.cable.Network;
+import de.canitzp.simplesteel.block.BlockContainerBase;
+import de.canitzp.simplesteel.block.cable.Network;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
@@ -12,7 +10,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -20,15 +17,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author canitzp
  */
-public class BlockCableBasic extends BlockContainer {
+public class BlockCableBasic extends BlockContainerBase<BlockCableBasic> {
 
     public static final PropertyBool NORTH = PropertyBool.create("north");
     public static final PropertyBool SOUTH = PropertyBool.create("south");
@@ -41,10 +36,8 @@ public class BlockCableBasic extends BlockContainer {
     public static final PropertyBool STRAIGHT_UD = PropertyBool.create("straight_ud");
 
     public BlockCableBasic() {
-        super(Material.IRON);
-        this.setRegistryName(new ResourceLocation(SimpleSteel.MODID, "cable_basic"));
-        this.setUnlocalizedName(this.getRegistryName().toString());
-        this.setCreativeTab(Registry.TAB);
+        super(Material.IRON, "cable_basic");
+        this.setHardness(0.5F);
         this.setDefaultState(this.blockState.getBaseState().withProperty(NORTH, false)
                 .withProperty(SOUTH, false).withProperty(WEST, false)
                 .withProperty(EAST, false).withProperty(UP, false)
@@ -156,10 +149,9 @@ public class BlockCableBasic extends BlockContainer {
         this.onUpdate(world, pos);
     }
 
-    @Nullable
     @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new TileCableBasic();
+    protected Class<? extends TileEntity> getTileEntityClass() {
+        return TileCableBasic.class;
     }
 
     @Override

@@ -1,7 +1,7 @@
-package de.canitzp.simplesteel.machine.cable;
+package de.canitzp.simplesteel.block.cable;
 
 import com.google.common.collect.Lists;
-import de.canitzp.simplesteel.machine.cable.basic.TileCableBasic;
+import de.canitzp.simplesteel.block.cable.basic.TileCableBasic;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -77,7 +77,7 @@ public class Network {
                 }
             }
             if(energy <= 0){
-                return energy;
+                return oldEnergy;
             }
         }
         return oldEnergy - energy;

@@ -9,6 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -23,6 +24,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Locale;
 
 /**
  * @author canitzp
@@ -86,9 +88,25 @@ public class TileBase extends TileEntity {
         return null;
     }
 
-    public void readNBT(NBTTagCompound nbt, NBTType type){}
+    public void writeNBT(NBTTagCompound nbt, NBTType type){
+        NBTTagCompound caps = new NBTTagCompound();
+        for(EnumFacing side : EnumFacing.values()){
+            NBTTagCompound capsSided = new NBTTagCompound();
+            this.writeCapabilities(capsSided, side);
+            caps.setTag(side.toString().toLowerCase(Locale.ROOT), capsSided);
+        }
+        nbt.setTag("TileBaseCapabilities", caps);
+    }
 
-    public void writeNBT(NBTTagCompound nbt, NBTType type){}
+    public void readNBT(NBTTagCompound nbt, NBTType type){
+        NBTTagCompound caps = nbt.getCompoundTag("TileBaseCapabilities");
+        for(EnumFacing side : EnumFacing.values()){
+            String name = side.toString().toLowerCase(Locale.ROOT);
+            if(caps.hasKey(name, Constants.NBT.TAG_COMPOUND)){
+                this.readCapabilities(caps.getCompoundTag(name), side);
+            }
+        }
+    }
 
     protected void readCapabilities(NBTTagCompound nbt, @Nullable EnumFacing side){
         IItemHandler inventory = this.getInventory(side);
@@ -122,7 +140,7 @@ public class TileBase extends TileEntity {
 
     private boolean isSyncDirty = false;
     public void syncToClients(){
-        if(!this.world.isRemote){
+        if(this.world != null && !this.world.isRemote){
             if(world.getTotalWorldTime() % 10 == 0){
                 NBTTagCompound syncTag = new NBTTagCompound();
                 this.writeNBT(syncTag, NBTType.SYNC);
@@ -135,6 +153,13 @@ public class TileBase extends TileEntity {
             } else {
                 this.isSyncDirty = true;
             }
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void markForRenderUpdate(){
+        if(this.world != null && this.world.isRemote){
+            this.world.markBlockRangeForRenderUpdate(this.pos, this.pos);
         }
     }
 

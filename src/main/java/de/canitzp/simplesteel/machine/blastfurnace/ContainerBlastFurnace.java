@@ -20,12 +20,6 @@ public class ContainerBlastFurnace extends Container {
         this.addSlotToContainer(new Slot(tile.inventory, TileBlastFurnace.INPUT3, 101, 11));
         this.addSlotToContainer(new SlotFurnaceOutput(player, tile.inventory, TileBlastFurnace.OUTPUT1, 71, 57));
         this.addSlotToContainer(new SlotFurnaceOutput(player, tile.inventory, TileBlastFurnace.OUTPUT2, 91, 57));
-        this.addSlotToContainer(new Slot(tile.inventory, TileBlastFurnace.FUEL, 27, 57){
-            @Override
-            public boolean isItemValid(ItemStack stack) {
-                return TileEntityFurnace.isItemFuel(stack);
-            }
-        });
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
                 this.addSlotToContainer(new Slot(player.inventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
@@ -46,15 +40,6 @@ public class ContainerBlastFurnace extends Container {
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int index) {
-        Slot slot = this.inventorySlots.get(index);
-        if(slot != null && slot.getHasStack()){
-            ItemStack stack = slot.getStack().copy();
-            if(TileEntityFurnace.isItemFuel(stack)){
-                if(!mergeItemStack(slot.getStack(), TileBlastFurnace.FUEL, TileBlastFurnace.FUEL, false)){
-                    return ItemStack.EMPTY;
-                }
-            }
-        }
         return ItemStack.EMPTY;
     }
 }

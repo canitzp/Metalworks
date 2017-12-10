@@ -1,5 +1,6 @@
 package de.canitzp.simplesteel.recipe;
 
+import de.canitzp.simplesteel.Util;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -58,7 +59,17 @@ public class OreDictStack {
     public boolean isMergeable(ItemStack other){
         if(this.primaryStack.isEmpty() && other.isEmpty()) return true;
         for(ItemStack stack : this.entries){
-            if(ItemHandlerHelper.canItemStacksStack(stack, other) && other.getCount() >= this.getStacksize()){
+            if(Util.canItemStacksStack(stack, other)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isSubstractable(ItemStack other){
+        if(this.primaryStack.isEmpty() && other.isEmpty()) return true;
+        for(ItemStack stack : this.entries){
+            if(Util.canItemStacksStackIgnoreStacksize(stack, other) && other.getCount() >= this.getStacksize()){
                 return true;
             }
         }

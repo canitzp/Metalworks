@@ -4,8 +4,7 @@
     "textures": {
       "particle": "simplesteel:blocks/cable_basic_extension"
     },
-    "model": "simplesteel:cable_basic",
-    "transform": "forge:default-block"
+    "model": "simplesteel:cable_basic"
   },
   "variants": {
     "normal": [{}],

@@ -1,22 +1,38 @@
 package de.canitzp.simplesteel.inventory;
 
+import de.canitzp.simplesteel.machine.TileBase;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryBasic;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author canitzp
  */
 public abstract class SidedBasicInv extends InventoryBasic implements ISidedInventory {
 
+    private Map<EnumFacing, SidedWrapper> cachedFaces = new HashMap<>();
+    private TileBase tile = null;
+
     public SidedBasicInv(String title, int slotCount) {
         super(title, false, slotCount);
+    }
+
+    public SidedBasicInv setTile(TileBase tile){
+        this.tile = tile;
+        return this;
+    }
+
+    @Override
+    public void markDirty() {
+        super.markDirty();
+        if(this.tile != null){
+            this.tile.markDirty();
+            this.tile.syncToClients();
+        }
     }
 
     @Nonnull
@@ -29,32 +45,16 @@ public abstract class SidedBasicInv extends InventoryBasic implements ISidedInve
         return ints;
     }
 
-    public NBTTagCompound writeTag(NBTTagCompound nbt){
-        if(this.getSizeInventory() > 0){
-            NBTTagList tagList = new NBTTagList();
-            for(int i = 0; i < this.getSizeInventory(); i++){
-                ItemStack slot = this.getStackInSlot(i);
-                NBTTagCompound tagCompound = new NBTTagCompound();
-                if(!slot.isEmpty()){
-                    slot.writeToNBT(tagCompound);
-                }
-                tagList.appendTag(tagCompound);
-            }
-            nbt.setTag("Inventory", tagList);
-        }
-        return nbt;
-    }
-
-    public void readTag(NBTTagCompound nbt){
-        if(nbt.hasKey("Inventory", Constants.NBT.TAG_LIST)){
-            if(this.getSizeInventory() > 0){
-                NBTTagList tagList = nbt.getTagList("Inventory", Constants.NBT.TAG_COMPOUND);
-                for(int i = 0; i < this.getSizeInventory(); i++){
-                    NBTTagCompound tagCompound = tagList.getCompoundTagAt(i);
-                    this.setInventorySlotContents(i, tagCompound.hasKey("id") ? new ItemStack(tagCompound) : ItemStack.EMPTY);
-                }
+    public SidedWrapper getSidedWrapper(EnumFacing side){
+        if(side != null){
+            if(cachedFaces.containsKey(side)){
+                return cachedFaces.get(side);
+            } else {
+                cachedFaces.put(side, new SidedWrapper(this, side));
+                return getSidedWrapper(side);
             }
         }
+        return null;
     }
 
 }

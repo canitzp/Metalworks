@@ -1,5 +1,6 @@
 package de.canitzp.simplesteel.machine.blastfurnace;
 
+import de.canitzp.simplesteel.CustomEnergyStorage;
 import de.canitzp.simplesteel.inventory.SidedBasicInv;
 import de.canitzp.simplesteel.inventory.SidedWrapper;
 import de.canitzp.simplesteel.SimpleSteel;
@@ -22,6 +23,8 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -42,57 +45,25 @@ public class TileBlastFurnace extends TileBase implements ITickable{
     public static final int INPUT3 = 2;
     public static final int OUTPUT1 = 3;
     public static final int OUTPUT2 = 4;
-    public static final int FUEL = 5;
 
-    public EnergyStorage energy = new EnergyStorage(10000, 1500){
-        @Override
-        public int receiveEnergy(int maxReceive, boolean simulate) {
-            int i = super.receiveEnergy(maxReceive, simulate);
-            TileBlastFurnace.this.syncToClients();
-            return i;
-        }
-
-        @Override
-        public int extractEnergy(int maxExtract, boolean simulate) {
-            int i = super.extractEnergy(maxExtract, simulate);
-            TileBlastFurnace.this.syncToClients();
-            return i;
-        }
-    };
+    public CustomEnergyStorage energy = new CustomEnergyStorage(10000, 1500).setTile(this);
     public SidedBasicInv inventory = new SidedBasicInv("blast_furnace", 6) {
         @Override
         public boolean canInsertItem(int index, @Nonnull ItemStack stack, @Nonnull EnumFacing side) {
-            if(side != EnumFacing.DOWN) {
-                ItemStack fuel = this.getStackInSlot(FUEL);
-                return fuel.isEmpty() || !ItemHandlerHelper.canItemStacksStack(fuel, stack) || index == FUEL || fuel.getCount() + stack.getCount() > fuel.getMaxStackSize();
-            }
-            return false;
+            return side != EnumFacing.DOWN && index != OUTPUT1 && index != OUTPUT2;
         }
         @Override
         public boolean canExtractItem(int index, @Nonnull ItemStack stack, @Nonnull EnumFacing side) {
-            return (index == 3 || index == 4) && side != EnumFacing.UP;
+            return (index == OUTPUT1 || index == OUTPUT2) && side != EnumFacing.UP;
         }
-        @Override
-        public void markDirty() {
-            super.markDirty();
-            TileBlastFurnace.this.markDirty();
-            TileBlastFurnace.this.syncToClients();
-        }
-
-        @Override
-        public boolean isItemValidForSlot(int index, ItemStack stack) {
-            return index != FUEL || TileEntityFurnace.isItemFuel(stack);
-        }
-
-    };
-    private SidedWrapper wrapper = new SidedWrapper(this.inventory, EnumFacing.NORTH);
+    }.setTile(this);
     private String recipeID = null;
     public int maxBurn, burnLeft, energyUsage;
 
     @Nullable
     @Override
     protected IItemHandler getInventory(@Nullable EnumFacing side) {
-        return this.wrapper;
+        return this.inventory.getSidedWrapper(side);
     }
 
     @Nullable
@@ -103,10 +74,10 @@ public class TileBlastFurnace extends TileBase implements ITickable{
 
     @Override
     public void readNBT(NBTTagCompound compound, NBTType type) {
+        super.readNBT(compound, type);
         this.maxBurn = compound.getInteger("MaxBurn");
         this.burnLeft = compound.getInteger("BurnLeft");
         this.energyUsage = compound.getInteger("EnergyUsagePerTick");
-        this.readCapabilities(compound, null);
         if(type != NBTType.SYNC && compound.hasKey("RecipeUUID", Constants.NBT.TAG_STRING)){
             this.recipeID = compound.getString("RecipeUUID");
         }
@@ -114,10 +85,10 @@ public class TileBlastFurnace extends TileBase implements ITickable{
 
     @Override
     public void writeNBT(NBTTagCompound compound, NBTType type) {
+        super.writeNBT(compound, type);
         compound.setInteger("MaxBurn", this.maxBurn);
         compound.setInteger("BurnLeft", this.burnLeft);
         compound.setInteger("EnergyUsagePerTick", this.energyUsage);
-        this.writeCapabilities(compound, null);
         if(type != NBTType.SYNC){
             if(this.recipeID != null) {
                 compound.setString("RecipeUUID", this.recipeID);
@@ -192,11 +163,10 @@ public class TileBlastFurnace extends TileBase implements ITickable{
         }
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void onSyncPacket() {
-        if(this.world != null && this.world.isRemote){
-            this.world.markBlockRangeForRenderUpdate(this.pos, this.pos);
-        }
+        this.markForRenderUpdate();
     }
 
 }
