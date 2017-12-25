@@ -1,0 +1,6 @@
+{
+  "parent": "metalworks:item/metalworksbase",
+  "textures": {
+    "layer0": "metalworks:items/control_circuit"
+  }
+}

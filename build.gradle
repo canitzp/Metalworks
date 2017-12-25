@@ -10,8 +10,8 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = "1.3.0"
-group = "de.canitzp.simplesteel"
-archivesBaseName = "Simple Steel"
+group = "de.canitzp.metalworks"
+archivesBaseName = "Metalworks"
 
 sourceCompatibility = targetCompatibility = '1.8'
 compileJava {
@@ -19,11 +19,11 @@ compileJava {
 }
 
 minecraft {
-    version = "1.12-14.21.1.2443"
+    version = "1.12.2-14.23.1.2555"
     runDir = "run"
-    mappings = "snapshot_20170624"
+    mappings = "snapshot_20171225"
     makeObfSourceJar = false
-    replaceIn "SimpleSteel.java"
+    replaceIn "Metalworks.java"
     replace "@VERSION@", project.version.toString()
 }
 

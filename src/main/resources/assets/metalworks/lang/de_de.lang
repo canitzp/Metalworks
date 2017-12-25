@@ -1,0 +1,18 @@
+itemGroup.metalworks=Simple Steel
+
+tile.metalworks:blast_furnace.name=Hochofen
+
+item.metalworks:steel_ingot.name=Stahlbarren
+item.metalworks:steel_nugget.name=Stahlklumpen
+item.metalworks:metal_shielding.name=Metallabschirmung
+item.metalworks:control_circuit.name=Steuerchip
+item.metalworks:steel_pickaxe.name=Stahlspitzhacke
+item.metalworks:steel_axe.name=Stahlaxt
+item.metalworks:steel_sword.name=Stahlschwert
+item.metalworks:steel_shovel.name=Stahlschaufel
+item.metalworks:steel_feet.name=Stahlstiefel
+item.metalworks:steel_chest.name=Stahlbrustpanzer
+item.metalworks:steel_legs.name=Stahlbeinschutz
+item.metalworks:steel_head.name=Stahlhelm
+
+container.jei.metalworks.blast_furnace.name=Hochofen

@@ -1,6 +1,0 @@
-{
-  "parent": "item/handheld",
-  "textures": {
-    "layer0": "simplesteel:items/steel_sword"
-  }
-}

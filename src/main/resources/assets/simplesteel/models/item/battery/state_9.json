@@ -1,6 +1,0 @@
-{
-  "parent": "simplesteel:item/simplesteelbase",
-  "textures": {
-    "layer0": "simplesteel:items/battery/state_9"
-  }
-}

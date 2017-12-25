@@ -1,0 +1,6 @@
+{
+  "parent": "metalworks:item/metalworksbase",
+  "textures": {
+    "layer0": "metalworks:items/quartz_sand_dust"
+  }
+}

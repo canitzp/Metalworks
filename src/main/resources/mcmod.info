@@ -1,7 +1,7 @@
 [
 {
-  "modid": "simplesteel",
-  "name": "Simple Steel",
+  "modid": "metalworks",
+  "name": "Metalworks",
   "description": "",
   "version": "${version}",
   "mcversion": "${mcversion}",
