@@ -5,21 +5,17 @@ import de.canitzp.metalworks.Util;
 import de.canitzp.metalworks.inventory.SidedBasicInv;
 import de.canitzp.metalworks.machine.MachineRecipe;
 import de.canitzp.metalworks.machine.TileBase;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
 
@@ -134,5 +130,10 @@ public class TileDuster extends TileBase implements ITickable{
     @Override
     public void onSyncPacket() {
         this.markForRenderUpdate();
+    }
+
+    @Override
+    public boolean isWorking() {
+        return this.burn > 0 && this.energy.getEnergyStored() >= this.energyUsage;
     }
 }

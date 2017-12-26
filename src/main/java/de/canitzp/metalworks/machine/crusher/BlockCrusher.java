@@ -1,32 +1,28 @@
-package de.canitzp.metalworks.machine.blastfurnace;
+package de.canitzp.metalworks.machine.crusher;
 
-import de.canitzp.metalworks.Metalworks;
+import de.canitzp.metalworks.Registry;
 import de.canitzp.metalworks.block.BlockContainerBase;
 import de.canitzp.metalworks.machine.TileBase;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
+import static de.canitzp.metalworks.Props.ACTIVE;
+import static de.canitzp.metalworks.Props.FACING;
+
 /**
  * @author canitzp
  */
-public class BlockBlastFurnace extends BlockContainerBase<BlockBlastFurnace> {
+public class BlockCrusher extends BlockContainerBase<BlockCrusher> {
 
-    public static final PropertyBool ACTIVE = PropertyBool.create("active");
-    public static final PropertyEnum<EnumFacing> FACING = PropertyEnum.create("facing", EnumFacing.class, EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.EAST, EnumFacing.WEST);
-
-    public BlockBlastFurnace() {
-        super(Material.IRON, "blast_furnace");
+    public BlockCrusher() {
+        super(Material.IRON, Registry.DEFAULT_COLOR, "crusher");
         this.setHarvestLevel("pickaxe", 2);
         this.setHardness(4.5F);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ACTIVE, false));
@@ -56,15 +52,6 @@ public class BlockBlastFurnace extends BlockContainerBase<BlockBlastFurnace> {
 
     @Override
     protected Class<? extends TileBase> getTileEntityClass() {
-        return TileBlastFurnace.class;
+        return TileCrusher.class;
     }
-
-    @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if(!world.isRemote){
-            player.openGui(Metalworks.instance, 0, world, pos.getX(), pos.getY(), pos.getZ());
-        }
-        return true;
-    }
-
 }

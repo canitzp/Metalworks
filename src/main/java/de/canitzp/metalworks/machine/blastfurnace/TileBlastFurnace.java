@@ -152,4 +152,8 @@ public class TileBlastFurnace extends TileBase implements ITickable{
         this.markForRenderUpdate();
     }
 
+    @Override
+    public boolean isWorking() {
+        return this.burnLeft > 0 && this.energy.getEnergyStored() >= this.energyUsage;
+    }
 }

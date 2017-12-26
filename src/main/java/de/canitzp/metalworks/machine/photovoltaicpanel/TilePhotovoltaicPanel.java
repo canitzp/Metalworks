@@ -2,20 +2,17 @@ package de.canitzp.metalworks.machine.photovoltaicpanel;
 
 import de.canitzp.metalworks.CustomEnergyStorage;
 import de.canitzp.metalworks.Util;
-import net.minecraft.tileentity.TileEntity;
+import de.canitzp.metalworks.machine.TileBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.energy.IEnergyStorage;
 
 import javax.annotation.Nullable;
 
 /**
  * @author canitzp
  */
-public class TilePhotovoltaicPanel extends TileEntity implements ITickable{
+public class TilePhotovoltaicPanel extends TileBase implements ITickable{
 
     private boolean cachedCanProduce = false;
 
@@ -45,14 +42,9 @@ public class TilePhotovoltaicPanel extends TileEntity implements ITickable{
         }
     }
 
-    @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        return capability == CapabilityEnergy.ENERGY;
-    }
-
     @Nullable
     @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        return capability == CapabilityEnergy.ENERGY ? CapabilityEnergy.ENERGY.cast(this.energy) : null;
+    protected IEnergyStorage getEnergy(@Nullable EnumFacing side) {
+        return this.energy;
     }
 }

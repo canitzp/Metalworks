@@ -4,10 +4,10 @@ import de.canitzp.metalworks.network.NetworkHandler;
 import de.canitzp.metalworks.network.packet.PacketSyncTile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -24,6 +24,8 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -171,6 +173,26 @@ public class TileBase extends TileEntity {
 
     @SideOnly(Side.CLIENT)
     public void onSyncPacket(){}
+
+    public void breakBlock(){
+        if(!this.world.isRemote){
+            List<IItemHandler> cached = new ArrayList<>();
+            for(EnumFacing side : EnumFacing.values()){
+                IItemHandler inv = this.getInventory(side);
+                if(inv != null && !cached.contains(inv)){
+                    for(int i = 0; i < inv.getSlots(); i++){
+                        InventoryHelper.spawnItemStack(this.world, this.pos.getX(), this.pos.getY(), this.pos.getZ(), inv.getStackInSlot(i));
+                    }
+                    cached.add(inv);
+                }
+            }
+            cached.clear();
+        }
+    }
+
+    public boolean isWorking(){
+        return false;
+    }
 
     public enum NBTType{
         SAVE,

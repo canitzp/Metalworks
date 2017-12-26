@@ -1,8 +1,10 @@
 package de.canitzp.metalworks.inventory;
 
+import de.canitzp.metalworks.Util;
 import de.canitzp.metalworks.machine.TileBase;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryBasic;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 
 import javax.annotation.Nonnull;
@@ -55,6 +57,11 @@ public abstract class SidedBasicInv extends InventoryBasic implements ISidedInve
             }
         }
         return null;
+    }
+
+    public boolean canMergeStacks(int index, ItemStack stack) {
+        ItemStack first = this.getStackInSlot(index);
+        return first.isEmpty() && stack.isEmpty() || Util.canItemStacksStack(first, stack);
     }
 
 }

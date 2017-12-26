@@ -1,10 +1,14 @@
 package de.canitzp.metalworks;
 
 import de.canitzp.metalworks.block.BlockBase;
-import de.canitzp.metalworks.item.*;
+import de.canitzp.metalworks.block.cable.basic.BlockCableBasic;
+import de.canitzp.metalworks.item.ItemArmorCollection;
+import de.canitzp.metalworks.item.ItemBase;
+import de.canitzp.metalworks.item.ItemBattery;
+import de.canitzp.metalworks.item.ItemToolCollection;
 import de.canitzp.metalworks.machine.IMachineRecipe;
 import de.canitzp.metalworks.machine.blastfurnace.BlockBlastFurnace;
-import de.canitzp.metalworks.block.cable.basic.BlockCableBasic;
+import de.canitzp.metalworks.machine.crusher.BlockCrusher;
 import de.canitzp.metalworks.machine.duster.BlockDuster;
 import de.canitzp.metalworks.machine.duster.RecipeDuster;
 import de.canitzp.metalworks.machine.geothermalgenerator.BlockGeothermalGenerator;
@@ -13,13 +17,16 @@ import de.canitzp.metalworks.machine.geothermalgenerator.geoburnable.IGeoburnabl
 import de.canitzp.metalworks.machine.photovoltaicpanel.BlockPhotovoltaicPanel;
 import de.canitzp.metalworks.recipe.OreDictStack;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.*;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.event.RegistryEvent;
@@ -51,6 +58,7 @@ public class Registry {
 
     public static final Item.ToolMaterial MATERIAL_STEEL = EnumHelper.addToolMaterial("steel", 2, 1024, 7.0F, 5.0F, 16);
     public static final ItemArmor.ArmorMaterial ARMOR_STEEL = EnumHelper.addArmorMaterial("steel", "steel", 20, new int[]{2, 5, 7, 3}, 16, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0.5F);
+    public static final MapColor DEFAULT_COLOR = MapColor.BLACK_STAINED_HARDENED_CLAY;
 
     public static final CreativeTabs TAB = new CreativeTabs(Metalworks.MODID) {
         @Override
@@ -92,6 +100,7 @@ public class Registry {
     public static BlockPhotovoltaicPanel photovoltaicPanel = new BlockPhotovoltaicPanel().addRecipes("ppp", "sis", "scs", 'p', photovoltaicCell, 'i', "blockIron", 'c', cableBasic, 's', metalShielding).register();
     public static BlockDuster duster = new BlockDuster().addRecipes("msm", "sis", "mcm", 'm', metalShielding, 's', "stone", 'i', "blockIron", 'c', "circuitBasic").register();
     public static BlockGeothermalGenerator geothermalGenerator = new BlockGeothermalGenerator().addRecipes(" m ", "mim", "mcm", 'm', metalShielding, 'i', "blockIron", 'c', "circuitBasic").register();
+    public static BlockCrusher crusher = new BlockCrusher().register();
 
     public static ItemToolCollection steelTools = new ItemToolCollection(MATERIAL_STEEL);
     public static ItemArmorCollection steelArmor = new ItemArmorCollection(ARMOR_STEEL);

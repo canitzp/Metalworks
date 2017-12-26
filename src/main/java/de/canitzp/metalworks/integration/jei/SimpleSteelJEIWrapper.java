@@ -1,11 +1,8 @@
 package de.canitzp.metalworks.integration.jei;
 
 import com.google.common.collect.Lists;
-import de.canitzp.metalworks.machine.IMachineRecipe;
-import de.canitzp.metalworks.machine.MachineRecipe;
 import de.canitzp.metalworks.machine.blastfurnace.RecipeBlastFurnace;
 import de.canitzp.metalworks.machine.duster.RecipeDuster;
-import de.canitzp.metalworks.machine.geothermalgenerator.geoburnable.BlockGeoburnable;
 import de.canitzp.metalworks.machine.geothermalgenerator.geoburnable.IGeoburnable;
 import de.canitzp.metalworks.recipe.OreDictStack;
 import mezz.jei.api.ingredients.IIngredients;

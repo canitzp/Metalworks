@@ -1,9 +1,9 @@
 package de.canitzp.metalworks.machine.photovoltaicpanel;
 
 import de.canitzp.metalworks.block.BlockContainerBase;
+import de.canitzp.metalworks.machine.TileBase;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.tileentity.TileEntity;
 
 /**
  * @author canitzp
@@ -17,7 +17,7 @@ public class BlockPhotovoltaicPanel extends BlockContainerBase<BlockPhotovoltaic
     }
 
     @Override
-    protected Class<? extends TileEntity> getTileEntityClass() {
+    protected Class<? extends TileBase> getTileEntityClass() {
         return TilePhotovoltaicPanel.class;
     }
 

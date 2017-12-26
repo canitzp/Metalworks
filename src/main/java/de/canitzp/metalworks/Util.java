@@ -17,7 +17,6 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 
 /**
  * @author canitzp

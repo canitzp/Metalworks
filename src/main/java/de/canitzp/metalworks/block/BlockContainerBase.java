@@ -1,5 +1,10 @@
 package de.canitzp.metalworks.block;
 
+import de.canitzp.metalworks.Metalworks;
+import de.canitzp.metalworks.Props;
+import de.canitzp.metalworks.machine.IMachineInterface;
+import de.canitzp.metalworks.machine.TileBase;
+import de.canitzp.metalworks.network.GuiHandler;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -10,17 +15,24 @@ import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.IWorldNameable;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * @author canitzp
  */
 public abstract class BlockContainerBase<T extends BlockContainerBase<T>> extends BlockBase<T> implements ITileEntityProvider{
+
+    private boolean isActivatable = this.getDefaultState().getPropertyKeys().contains(Props.ACTIVE);
+    private boolean hasMachineInterface = GuiHandler.interfaceMap.containsKey(this.getTileEntityClass());
 
     public BlockContainerBase(Material material, MapColor color, String name) {
         super(material, color, name);
@@ -37,7 +49,12 @@ public abstract class BlockContainerBase<T extends BlockContainerBase<T>> extend
         return super.register();
     }
 
-    protected abstract Class<? extends TileEntity> getTileEntityClass();
+    public T addInterface(Class<? extends IMachineInterface<? extends TileBase>> machineInterface){
+        GuiHandler.interfaceMap.put(this.getTileEntityClass(), machineInterface);
+        return (T) this;
+    }
+
+    protected abstract Class<? extends TileBase> getTileEntityClass();
 
     @Nullable
     @Override
@@ -53,9 +70,13 @@ public abstract class BlockContainerBase<T extends BlockContainerBase<T>> extend
     /**
      * Called serverside after this block is replaced with another in Chunk, but before the Tile Entity is updated
      */
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-        super.breakBlock(worldIn, pos, state);
-        worldIn.removeTileEntity(pos);
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+        super.breakBlock(world, pos, state);
+        TileEntity tile = world.getTileEntity(pos);
+        if(tile instanceof TileBase){
+            ((TileBase) tile).breakBlock();
+        }
+        world.removeTileEntity(pos);
     }
 
     /**
@@ -84,10 +105,29 @@ public abstract class BlockContainerBase<T extends BlockContainerBase<T>> extend
      * the Server, this may perform additional changes to the world, like pistons replacing the block with an extended
      * base. On the client, the update may involve replacing tile entities or effects such as sounds or particles
      */
+    @Override
     public boolean eventReceived(IBlockState state, World worldIn, BlockPos pos, int id, int param) {
         super.eventReceived(state, worldIn, pos, id, param);
         TileEntity tileentity = worldIn.getTileEntity(pos);
         return tileentity != null && tileentity.receiveClientEvent(id, param);
     }
 
+    @Override
+    public IBlockState getActualState(@Nonnull IBlockState state, IBlockAccess world, BlockPos pos) {
+        if(this.isActivatable){
+            TileEntity tile = world.getTileEntity(pos);
+            if(tile instanceof TileBase){
+                state = state.withProperty(Props.ACTIVE, ((TileBase) tile).isWorking());
+            }
+        }
+        return state;
+    }
+
+    @Override
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        if(!world.isRemote && this.hasMachineInterface){
+            player.openGui(Metalworks.instance, -1, world, pos.getX(), pos.getY(), pos.getZ());
+        }
+        return super.onBlockActivated(world, pos, state, player, hand, facing, hitX, hitY, hitZ);
+    }
 }

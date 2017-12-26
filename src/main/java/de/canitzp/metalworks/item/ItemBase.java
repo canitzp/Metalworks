@@ -1,7 +1,7 @@
 package de.canitzp.metalworks.item;
 
-import de.canitzp.metalworks.Registry;
 import de.canitzp.metalworks.Metalworks;
+import de.canitzp.metalworks.Registry;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipe;

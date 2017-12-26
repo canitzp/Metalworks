@@ -2,13 +2,13 @@ package de.canitzp.metalworks.block.cable.basic;
 
 import de.canitzp.metalworks.block.BlockContainerBase;
 import de.canitzp.metalworks.block.cable.Network;
+import de.canitzp.metalworks.machine.TileBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -140,7 +140,7 @@ public class BlockCableBasic extends BlockContainerBase<BlockCableBasic> {
     }
 
     @Override
-    protected Class<? extends TileEntity> getTileEntityClass() {
+    protected Class<? extends TileBase> getTileEntityClass() {
         return TileCableBasic.class;
     }
 

@@ -1,8 +1,7 @@
 package de.canitzp.metalworks.machine.geothermalgenerator;
 
 import de.canitzp.metalworks.block.BlockContainerBase;
-import de.canitzp.metalworks.machine.duster.TileDuster;
-import net.minecraft.block.BlockContainer;
+import de.canitzp.metalworks.machine.TileBase;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
@@ -10,14 +9,11 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author canitzp
@@ -57,16 +53,7 @@ public class BlockGeothermalGenerator extends BlockContainerBase<BlockGeothermal
     }
 
     @Override
-    public IBlockState getActualState(@Nonnull IBlockState state, IBlockAccess world, BlockPos pos) {
-        TileEntity tile = world.getTileEntity(pos);
-        if(tile instanceof TileGeothermalGenerator){
-            state = state.withProperty(ACTIVE, ((TileGeothermalGenerator) tile).burn > 0 && ((TileGeothermalGenerator) tile).energy.getEnergyStored() < ((TileGeothermalGenerator) tile).energy.getMaxEnergyStored());
-        }
-        return state;
-    }
-
-    @Override
-    protected Class<? extends TileEntity> getTileEntityClass() {
+    protected Class<? extends TileBase> getTileEntityClass() {
         return TileGeothermalGenerator.class;
     }
 }

@@ -1,18 +1,18 @@
 package de.canitzp.metalworks.block.cable.basic;
 
 import de.canitzp.metalworks.block.cable.Network;
+import de.canitzp.metalworks.machine.TileBase;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.energy.IEnergyStorage;
 
 import javax.annotation.Nullable;
 
 /**
  * @author canitzp
  */
-public class TileCableBasic extends TileEntity{
+public class TileCableBasic extends TileBase{
 
     public Network network;
 
@@ -33,15 +33,10 @@ public class TileCableBasic extends TileEntity{
         }
     };
 
-    @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        return capability == CapabilityEnergy.ENERGY;
-    }
-
     @Nullable
     @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        return capability == CapabilityEnergy.ENERGY ? CapabilityEnergy.ENERGY.cast(this.energy) : null;
+    protected IEnergyStorage getEnergy(@Nullable EnumFacing side) {
+        return this.energy;
     }
 
     @Override

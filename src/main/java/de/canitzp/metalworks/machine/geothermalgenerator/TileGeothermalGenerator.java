@@ -90,4 +90,9 @@ public class TileGeothermalGenerator extends TileBase implements ITickable{
     public void onSyncPacket() {
         this.markForRenderUpdate();
     }
+
+    @Override
+    public boolean isWorking() {
+        return this.burn > 0 && this.energy.getEnergyStored() < this.energy.getMaxEnergyStored();
+    }
 }

@@ -84,8 +84,9 @@ public class Metalworks {
     @SubscribeEvent
     public static void mappingBlocks(RegistryEvent.MissingMappings<Block> map){
         for(RegistryEvent.MissingMappings.Mapping<Block> mapping : map.getAllMappings()){
-            if(Objects.equals(mapping.getTarget().getRegistryName().getResourceDomain(), "simplesteel")){
-                Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(MODID, mapping.getTarget().getRegistryName().getResourcePath()));
+            ResourceLocation targetName = mapping.key;
+            if(targetName != null && Objects.equals(targetName.getResourceDomain(), "simplesteel")){
+                Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(MODID, targetName.getResourcePath()));
                 if(block != null){
                     mapping.remap(block);
                 }
@@ -96,8 +97,9 @@ public class Metalworks {
     @SubscribeEvent
     public static void mappingItems(RegistryEvent.MissingMappings<Item> map){
         for(RegistryEvent.MissingMappings.Mapping<Item> mapping : map.getAllMappings()){
-            if(Objects.equals(mapping.getTarget().getRegistryName().getResourceDomain(), "simplesteel")){
-                Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(MODID, mapping.getTarget().getRegistryName().getResourcePath()));
+            ResourceLocation targetName = mapping.key;
+            if(targetName != null && Objects.equals(targetName.getResourceDomain(), "simplesteel")){
+                Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(MODID, targetName.getResourcePath()));
                 if(item != null){
                     mapping.remap(item);
                 }
