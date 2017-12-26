@@ -194,6 +194,10 @@ public class TileBase extends TileEntity {
         return false;
     }
 
+    public boolean canBeUsedBy(EntityPlayer player) {
+        return player.getDistanceSq(this.getPos().getX()+0.5D, this.pos.getY()+0.5D, this.pos.getZ()+0.5D) <= 64 && !this.isInvalid() && this.world.getTileEntity(this.pos) == this;
+    }
+
     public enum NBTType{
         SAVE,
         DROP,

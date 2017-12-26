@@ -25,7 +25,7 @@ public interface IMachineInterface<T extends TileBase> {
     @SideOnly(Side.CLIENT)
     default void drawScreen(T tile, GuiMachine<T> gui, int guiLeft, int guiTop, int mouseX, int mouseY, float partialTicks){}
 
-    default void initSlots(T tile, ContainerMachine<T> container){}
+    default void initSlots(T tile, ContainerMachine<T> container, EntityPlayer player){}
 
     @Nonnull
     default ItemStack shiftStack(T tile, World world, EntityPlayer player, int index){

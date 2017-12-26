@@ -30,6 +30,7 @@ public class BlockDuster extends BlockContainerBase<BlockDuster> {
         this.setHarvestLevel("pickaxe", 2);
         this.setHardness(4.5F);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ACTIVE, false));
+        this.addInterface(InterfaceDuster.class);
     }
 
     @Nonnull
@@ -57,14 +58,6 @@ public class BlockDuster extends BlockContainerBase<BlockDuster> {
     @Override
     protected Class<? extends TileBase> getTileEntityClass() {
         return TileDuster.class;
-    }
-
-    @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if(!world.isRemote){
-            player.openGui(Metalworks.instance, 1, world, pos.getX(), pos.getY(), pos.getZ());
-        }
-        return true;
     }
 
 }

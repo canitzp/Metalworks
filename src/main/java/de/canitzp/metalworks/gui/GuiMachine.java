@@ -7,6 +7,7 @@ import de.canitzp.metalworks.machine.TileBase;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -21,24 +22,28 @@ public class GuiMachine<T extends TileBase> extends GuiContainer {
 
     private IMachineInterface<T> machineInterface;
     private T tile;
-    private TextureManager texture = this.mc.getTextureManager();
+    private TextureManager texture;
+    private EntityPlayer player;
 
-    public GuiMachine(T tile, IMachineInterface<T> machineInterface, ContainerMachine<T> con) {
+    public GuiMachine(EntityPlayer player, T tile, IMachineInterface<T> machineInterface, ContainerMachine<T> con) {
         super(con);
         this.machineInterface = machineInterface;
         this.tile = tile;
+        this.player = player;
     }
 
     @Override
     public void initGui() {
         this.machineInterface.initGui(this.tile, this);
         super.initGui();
+        this.texture = this.mc.getTextureManager();
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         GlStateManager.pushMatrix();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        this.drawDefaultBackground();
         this.texture.bindTexture(INVENTORY_LOCATION);
         this.machineInterface.drawBackground(this.tile, this, this.texture, this.guiLeft, this.guiTop, mouseX, mouseY, partialTicks);
         GlStateManager.popMatrix();
@@ -63,5 +68,9 @@ public class GuiMachine<T extends TileBase> extends GuiContainer {
 
     public int getYSize(){
         return this.ySize;
+    }
+
+    public EntityPlayer getPlayer() {
+        return player;
     }
 }

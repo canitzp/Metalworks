@@ -1,9 +1,9 @@
 package de.canitzp.metalworks.integration.jei;
 
 import de.canitzp.metalworks.Metalworks;
-import de.canitzp.metalworks.machine.blastfurnace.GuiBlastFurnace;
+import de.canitzp.metalworks.machine.blastfurnace.InterfaceBlastFurnace;
 import de.canitzp.metalworks.machine.blastfurnace.TileBlastFurnace;
-import de.canitzp.metalworks.machine.duster.GuiDuster;
+import de.canitzp.metalworks.machine.duster.InterfaceDuster;
 import de.canitzp.metalworks.recipe.OreDictStack;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
@@ -66,7 +66,7 @@ public abstract class SimpleSteelCategories<T extends IRecipeWrapper> implements
 
         @Override
         protected IDrawable createDrawable(IGuiHelper helper) {
-            return helper.createDrawable(GuiBlastFurnace.LOC, 59, 9, 60, 66);
+            return helper.createDrawable(InterfaceBlastFurnace.LOC, 59, 9, 60, 66);
         }
 
         @Override
@@ -100,7 +100,7 @@ public abstract class SimpleSteelCategories<T extends IRecipeWrapper> implements
 
         @Override
         protected IDrawable createDrawable(IGuiHelper helper) {
-            return helper.createDrawable(GuiDuster.LOC, 59, 9, 60, 66);
+            return helper.createDrawable(InterfaceDuster.LOC, 59, 9, 60, 66);
         }
 
         @Override

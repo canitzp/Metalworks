@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
 public abstract class BlockContainerBase<T extends BlockContainerBase<T>> extends BlockBase<T> implements ITileEntityProvider{
 
     private boolean isActivatable = this.getDefaultState().getPropertyKeys().contains(Props.ACTIVE);
-    private boolean hasMachineInterface = GuiHandler.interfaceMap.containsKey(this.getTileEntityClass());
+    private boolean hasMachineInterface;
 
     public BlockContainerBase(Material material, MapColor color, String name) {
         super(material, color, name);
@@ -51,6 +51,7 @@ public abstract class BlockContainerBase<T extends BlockContainerBase<T>> extend
 
     public T addInterface(Class<? extends IMachineInterface<? extends TileBase>> machineInterface){
         GuiHandler.interfaceMap.put(this.getTileEntityClass(), machineInterface);
+        this.hasMachineInterface = true;
         return (T) this;
     }
 
@@ -126,8 +127,12 @@ public abstract class BlockContainerBase<T extends BlockContainerBase<T>> extend
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if(!world.isRemote && this.hasMachineInterface){
-            player.openGui(Metalworks.instance, -1, world, pos.getX(), pos.getY(), pos.getZ());
+            this.openGui(player, pos);
         }
         return super.onBlockActivated(world, pos, state, player, hand, facing, hitX, hitY, hitZ);
+    }
+
+    public void openGui(EntityPlayer player, BlockPos pos){
+        player.openGui(Metalworks.instance, -1, player.world, pos.getX(), pos.getY(), pos.getZ());
     }
 }

@@ -5,7 +5,6 @@ import de.canitzp.metalworks.Registry;
 import de.canitzp.metalworks.machine.MachineRecipe;
 import de.canitzp.metalworks.machine.blastfurnace.GuiBlastFurnace;
 import de.canitzp.metalworks.machine.blastfurnace.RecipeBlastFurnace;
-import de.canitzp.metalworks.machine.duster.GuiDuster;
 import de.canitzp.metalworks.machine.duster.RecipeDuster;
 import de.canitzp.metalworks.machine.geothermalgenerator.geoburnable.IGeoburnable;
 import de.canitzp.metalworks.recipe.SimpleSteelRecipeHandler;
@@ -46,8 +45,8 @@ public class SimpleSteelJEIPlugin implements IModPlugin{
         registry.addRecipeCatalyst(new ItemStack(Registry.duster), DUSTER);
         registry.addRecipeCatalyst(new ItemStack(Registry.geothermalGenerator), GEOTHERMAL_GENERATOR);
 
-        registry.addRecipeClickArea(GuiBlastFurnace.class, 68, 29, 42, 26, BLAST_FURNACE);
-        registry.addRecipeClickArea(GuiDuster.class, 73, 29, 30, 25, DUSTER);
+        //registry.addRecipeClickArea(GuiBlastFurnace.class, 68, 29, 42, 26, BLAST_FURNACE);
+        //registry.addRecipeClickArea(GuiDuster.class, 73, 29, 30, 25, DUSTER);
     }
 
 }
