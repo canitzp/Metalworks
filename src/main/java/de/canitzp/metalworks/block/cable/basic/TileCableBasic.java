@@ -35,7 +35,7 @@ public class TileCableBasic extends TileBase{
 
     @Nullable
     @Override
-    protected IEnergyStorage getEnergy(@Nullable EnumFacing side) {
+    public IEnergyStorage getEnergy(@Nullable EnumFacing side) {
         return this.energy;
     }
 

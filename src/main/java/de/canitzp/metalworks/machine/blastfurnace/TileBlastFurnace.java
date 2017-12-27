@@ -45,13 +45,13 @@ public class TileBlastFurnace extends TileBase implements ITickable{
 
     @Nullable
     @Override
-    protected IItemHandler getInventory(@Nullable EnumFacing side) {
+    public IItemHandler getInventory(@Nullable EnumFacing side) {
         return this.inventory.getSidedWrapper(side);
     }
 
     @Nullable
     @Override
-    protected IEnergyStorage getEnergy(@Nullable EnumFacing side) {
+    public IEnergyStorage getEnergy(@Nullable EnumFacing side) {
         return this.energy;
     }
 
@@ -155,5 +155,10 @@ public class TileBlastFurnace extends TileBase implements ITickable{
     @Override
     public boolean isWorking() {
         return this.burnLeft > 0 && this.energy.getEnergyStored() >= this.energyUsage;
+    }
+
+    @Override
+    public int getCurrentEnergyUsage() {
+        return this.energyUsage;
     }
 }

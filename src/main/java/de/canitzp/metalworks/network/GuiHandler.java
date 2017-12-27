@@ -1,6 +1,6 @@
 package de.canitzp.metalworks.network;
 
-import de.canitzp.metalworks.gui.GuiMachine;
+import de.canitzp.metalworks.client.gui.GuiMachine;
 import de.canitzp.metalworks.inventory.ContainerMachine;
 import de.canitzp.metalworks.machine.IMachineInterface;
 import de.canitzp.metalworks.machine.TileBase;

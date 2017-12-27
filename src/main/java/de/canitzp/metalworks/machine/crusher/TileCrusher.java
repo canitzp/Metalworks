@@ -34,13 +34,13 @@ public class TileCrusher extends TileBase implements ITickable{
 
     @Nullable
     @Override
-    protected IItemHandler getInventory(@Nullable EnumFacing side) {
+    public IItemHandler getInventory(@Nullable EnumFacing side) {
         return this.inv.getSidedWrapper(side);
     }
 
     @Nullable
     @Override
-    protected IEnergyStorage getEnergy(@Nullable EnumFacing side) {
+    public IEnergyStorage getEnergy(@Nullable EnumFacing side) {
         return this.energy;
     }
 

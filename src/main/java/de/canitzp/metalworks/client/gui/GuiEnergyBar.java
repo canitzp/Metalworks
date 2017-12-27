@@ -16,20 +16,26 @@ public class GuiEnergyBar extends Gui{
 
     public static final ResourceLocation LOCATION = new ResourceLocation(Metalworks.MODID, "textures/gui/energy_bar.png");
     public static final Minecraft mc = Minecraft.getMinecraft();
+    private int x, y;
 
-    public void draw(int x, int y, int energy, int cap, int color){
+    public GuiEnergyBar(int x, int y){
+        this.x = x;
+        this.y = y;
+    }
+
+    public void draw(int energy, int cap, int color){
         if(color < 0){
-            this.draw(x, y, energy, cap, -1, -1, -1, -1);
+            this.draw(energy, cap, -1, -1, -1, -1);
         } else {
             float a = (float)(color >> 24 & 255) / 255.0F;
             float r = (float)(color >> 16 & 255) / 255.0F;
             float g = (float)(color >> 8 & 255) / 255.0F;
             float b = (float)(color & 255) / 255.0F;
-            this.draw(x, y, energy, cap, r, g, b, a);
+            this.draw(energy, cap, r, g, b, a);
         }
     }
 
-    public void draw(int x, int y, int energy, int cap, float r, float g, float b,  float a){
+    public void draw(int energy, int cap, float r, float g, float b,  float a){
         GlStateManager.pushMatrix();
         if(r < 0 || g < 0 || b <  0 || a < 0){
             Util.applyWheelColor(mc.world, 1.0F);
@@ -38,8 +44,8 @@ public class GuiEnergyBar extends Gui{
         }
         mc.getTextureManager().bindTexture(LOCATION);
         int i = (int) ((energy / (cap * 1.0F)) * 62.0F);
-        this.drawTexturedModalRect(x, y + 62 - i, 0, 62 - i, 16, i);
-        this.drawTexturedModalRect(x, y, 16, 0, 16, 62);
+        this.drawTexturedModalRect(this.x, this.y + 62 - i, 0, 62 - i, 16, i);
+        this.drawTexturedModalRect(this.x, this.y, 16, 0, 16, 62);
         GlStateManager.popMatrix();
     }
 

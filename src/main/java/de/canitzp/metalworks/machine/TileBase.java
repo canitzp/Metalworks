@@ -76,17 +76,17 @@ public class TileBase extends TileEntity {
     }
 
     @Nullable
-    protected IItemHandler getInventory(@Nullable EnumFacing side){
+    public IItemHandler getInventory(@Nullable EnumFacing side){
         return null;
     }
 
     @Nullable
-    protected IEnergyStorage getEnergy(@Nullable EnumFacing side){
+    public IEnergyStorage getEnergy(@Nullable EnumFacing side){
         return null;
     }
 
     @Nullable
-    protected IFluidHandler getTank(@Nullable EnumFacing side){
+    public IFluidHandler getTank(@Nullable EnumFacing side){
         return null;
     }
 
@@ -196,6 +196,10 @@ public class TileBase extends TileEntity {
 
     public boolean canBeUsedBy(EntityPlayer player) {
         return player.getDistanceSq(this.getPos().getX()+0.5D, this.pos.getY()+0.5D, this.pos.getZ()+0.5D) <= 64 && !this.isInvalid() && this.world.getTileEntity(this.pos) == this;
+    }
+
+    public int getCurrentEnergyUsage(){
+        return -1;
     }
 
     public enum NBTType{

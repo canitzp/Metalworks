@@ -66,7 +66,7 @@ public class TileGeothermalGenerator extends TileBase implements ITickable{
 
     @Nullable
     @Override
-    protected IEnergyStorage getEnergy(@Nullable EnumFacing side) {
+    public IEnergyStorage getEnergy(@Nullable EnumFacing side) {
         return this.energy;
     }
 
