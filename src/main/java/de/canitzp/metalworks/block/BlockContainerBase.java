@@ -45,7 +45,9 @@ public abstract class BlockContainerBase<T extends BlockContainerBase<T>> extend
 
     @Override
     public T register() {
-        GameRegistry.registerTileEntity(this.getTileEntityClass(), this.getRegistryName().toString());
+        if(shouldRegister()){
+            GameRegistry.registerTileEntity(this.getTileEntityClass(), this.getRegistryName().toString());
+        }
         return super.register();
     }
 
@@ -126,8 +128,11 @@ public abstract class BlockContainerBase<T extends BlockContainerBase<T>> extend
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if(!world.isRemote && this.hasMachineInterface){
-            this.openGui(player, pos);
+        if(this.hasMachineInterface){
+            if(!world.isRemote){
+                this.openGui(player, pos);
+            }
+            return true;
         }
         return super.onBlockActivated(world, pos, state, player, hand, facing, hitX, hitY, hitZ);
     }

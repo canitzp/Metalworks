@@ -28,8 +28,11 @@ minecraft {
 }
 
 repositories{
-    maven {
+    maven { //JEI
         url = "http://dvs1.progwml6.com/files/maven"
+    }
+    maven { //CraftTwaker
+        url "http://maven.blamejared.com"
     }
 }
 

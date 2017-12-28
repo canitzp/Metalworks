@@ -1,5 +1,6 @@
 package de.canitzp.metalworks.machine.blastfurnace;
 
+import de.canitzp.metalworks.config.ConfMachines;
 import de.canitzp.metalworks.recipe.OreDictStack;
 import net.minecraft.item.ItemStack;
 
@@ -8,7 +9,8 @@ import net.minecraft.item.ItemStack;
  */
 public class RecipeBlastFurnace {
 
-    public static final int DEFAULT_ENERGY_USAGE = 100;
+    public static final int DEFAULT_ENERGY_USAGE = ConfMachines.BF_DEFAULT_ENERGY;
+    public static final int DEFAULT_BURN_TIME = ConfMachines.BF_DEFAULT_BURN_TIME;
 
     private final String id;
 
@@ -20,7 +22,7 @@ public class RecipeBlastFurnace {
         this.inputs = new OreDictStack[]{input1, input2, input3};
         this.outputs = new ItemStack[]{output1, output2};
         this.secondOutputChance = out2Chance;
-        this.burnTime = burnTime;
+        this.burnTime = burnTime > 0 ? burnTime : DEFAULT_BURN_TIME;
         this.energyUsage = energyUsagePerTick > 0 ? energyUsagePerTick : DEFAULT_ENERGY_USAGE;
         this.id = String.format("%s#%s#%s#%s#%s#%d#%d", input1.getName(), input2.getName(), input3.getName(), output1.getUnlocalizedName(), output2.getUnlocalizedName(), out2Chance, burnTime);
     }

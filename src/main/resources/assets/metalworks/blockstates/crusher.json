@@ -1,0 +1,48 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "up": "metalworks:blocks/crusher/top",
+      "down": "metalworks:blocks/crusher/bottom",
+      "north": "metalworks:blocks/crusher/front_off",
+      "east": "metalworks:blocks/crusher/right_off",
+      "west": "metalworks:blocks/crusher/left_off",
+      "south": "metalworks:blocks/crusher/back",
+      "particle": "#up"
+    },
+    "model": "cube",
+    "transform": "forge:default-block"
+  },
+  "variants": {
+    "facing": {
+      "north": {
+        "y": 0
+      },
+      "south": {
+        "y": 180
+      },
+      "west": {
+        "y": 270
+      },
+      "east": {
+        "y": 90
+      }
+    },
+    "active": {
+      "true": {
+        "textures": {
+          "north": "metalworks:blocks/crusher/front_on",
+          "east": "metalworks:blocks/crusher/right_on",
+          "west": "metalworks:blocks/crusher/left_on"
+        }
+      },
+      "false": {}
+    },
+    "normal": [
+      {}
+    ],
+    "inventory": [
+      {}
+    ]
+  }
+}

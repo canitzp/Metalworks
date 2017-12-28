@@ -2,6 +2,7 @@ package de.canitzp.metalworks;
 
 import de.canitzp.metalworks.block.BlockBase;
 import de.canitzp.metalworks.block.cable.basic.BlockCableBasic;
+import de.canitzp.metalworks.config.ConfEnable;
 import de.canitzp.metalworks.item.ItemArmorCollection;
 import de.canitzp.metalworks.item.ItemBase;
 import de.canitzp.metalworks.item.ItemBattery;
@@ -9,6 +10,7 @@ import de.canitzp.metalworks.item.ItemToolCollection;
 import de.canitzp.metalworks.machine.IMachineRecipe;
 import de.canitzp.metalworks.machine.blastfurnace.BlockBlastFurnace;
 import de.canitzp.metalworks.machine.crusher.BlockCrusher;
+import de.canitzp.metalworks.machine.crusher.RecipeCrusher;
 import de.canitzp.metalworks.machine.duster.BlockDuster;
 import de.canitzp.metalworks.machine.duster.RecipeDuster;
 import de.canitzp.metalworks.machine.geothermalgenerator.BlockGeothermalGenerator;
@@ -38,6 +40,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.OreIngredient;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
@@ -96,11 +99,11 @@ public class Registry {
             recipes.add(new ShapedOreRecipe(null, new ItemStack(this, 8), " s ", "sws", " s ", 's', "dustQuartzSand", 'w', Blocks.WOOL));
         }
     }.register();
-    public static BlockBlastFurnace blastFurnace = new BlockBlastFurnace().addRecipes("mmm", "fcf", "mmm", 'm', metalShielding, 'f', Blocks.FURNACE, 'c', "circuitBasic").register();
-    public static BlockPhotovoltaicPanel photovoltaicPanel = new BlockPhotovoltaicPanel().addRecipes("ppp", "sis", "scs", 'p', photovoltaicCell, 'i', "blockIron", 'c', cableBasic, 's', metalShielding).register();
-    public static BlockDuster duster = new BlockDuster().addRecipes("msm", "sis", "mcm", 'm', metalShielding, 's', "stone", 'i', "blockIron", 'c', "circuitBasic").register();
-    public static BlockGeothermalGenerator geothermalGenerator = new BlockGeothermalGenerator().addRecipes(" m ", "mim", "mcm", 'm', metalShielding, 'i', "blockIron", 'c', "circuitBasic").register();
-    public static BlockCrusher crusher = new BlockCrusher().register();
+    public static BlockBlastFurnace blastFurnace = new BlockBlastFurnace().setRegistrationParameter(ConfEnable.BLAST_FURNACE).addRecipes("mmm", "fcf", "mmm", 'm', metalShielding, 'f', Blocks.FURNACE, 'c', "circuitBasic").register();
+    public static BlockPhotovoltaicPanel photovoltaicPanel = new BlockPhotovoltaicPanel().setRegistrationParameter(ConfEnable.PHOTOVOLTAIC_PANEL).addRecipes("ppp", "sis", "scs", 'p', photovoltaicCell, 'i', "blockIron", 'c', cableBasic, 's', metalShielding).register();
+    public static BlockDuster duster = new BlockDuster().setRegistrationParameter(ConfEnable.DUSTER).addRecipes("msm", "sis", "mcm", 'm', metalShielding, 's', "stone", 'i', "blockIron", 'c', "circuitBasic").register();
+    public static BlockGeothermalGenerator geothermalGenerator = new BlockGeothermalGenerator().setRegistrationParameter(ConfEnable.GEOTHERMAL_GENERATOR).addRecipes(" m ", "mim", "mcm", 'm', metalShielding, 'i', "blockIron", 'c', "circuitBasic").register();
+    public static BlockCrusher crusher = new BlockCrusher().setRegistrationParameter(ConfEnable.CRUSHER).addRecipes("mim", "ibi", "ici", 'm', metalShielding, 'i', "ingotIron", 'b',"blockIron", 'c', "circuitBasic").register();
 
     public static ItemToolCollection steelTools = new ItemToolCollection(MATERIAL_STEEL);
     public static ItemArmorCollection steelArmor = new ItemArmorCollection(ARMOR_STEEL);
@@ -156,7 +159,12 @@ public class Registry {
     @SubscribeEvent
     public static void registerMachineRecipes(RegistryEvent.Register<IMachineRecipe> event){
         IForgeRegistry<IMachineRecipe> reg = event.getRegistry();
-        reg.register(new RecipeDuster("quartz_sand_dust", new OreDictStack("gemQuartz"), new OreDictStack("sand"), new ItemStack(quartzSandDust, 2), 200, -1));
+
+        //Duster
+        reg.register(new RecipeDuster("quartz_sand_dust", new OreDictStack("gemQuartz"), new OreDictStack("sand"), new ItemStack(quartzSandDust, 2), 0, 0));
+
+        //Crusher
+        reg.register(new RecipeCrusher("wool_string", new OreDictStack(new ItemStack(Blocks.WOOL, 1, OreDictionary.WILDCARD_VALUE)), new ItemStack(Items.STRING, 2), new ItemStack(Items.STRING), 50, 100, 50));
     }
 
     @SubscribeEvent

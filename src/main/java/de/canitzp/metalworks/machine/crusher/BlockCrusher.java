@@ -26,6 +26,7 @@ public class BlockCrusher extends BlockContainerBase<BlockCrusher> {
         this.setHarvestLevel("pickaxe", 2);
         this.setHardness(4.5F);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ACTIVE, false));
+        this.addInterface(InterfaceCrusher.class);
     }
 
     @Nonnull

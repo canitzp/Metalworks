@@ -53,7 +53,7 @@ public class InterfaceDuster implements IMachineInterface<TileDuster> {
     @SideOnly(Side.CLIENT)
     @Override
     public GuiEnergyBar getEnergyBar(TileDuster tile, GuiMachine<TileDuster> gui, EntityPlayer player, int guiLeft, int guiTop) {
-        return new GuiEnergyBar(guiLeft + 11, guiTop + 11);
+        return new GuiEnergyBar(guiLeft + 11, guiTop + 11, false);
     }
 
     @SideOnly(Side.CLIENT)

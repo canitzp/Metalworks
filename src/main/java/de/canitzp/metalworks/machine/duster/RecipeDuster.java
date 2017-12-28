@@ -1,6 +1,7 @@
 package de.canitzp.metalworks.machine.duster;
 
 import de.canitzp.metalworks.Metalworks;
+import de.canitzp.metalworks.config.ConfMachines;
 import de.canitzp.metalworks.machine.MachineRecipe;
 import de.canitzp.metalworks.recipe.OreDictStack;
 import net.minecraft.item.ItemStack;
@@ -14,7 +15,8 @@ import java.util.List;
  */
 public class RecipeDuster extends MachineRecipe{
 
-    public static final int DEFAULT_ENERGY_USAGE = 75;
+    public static final int DEFAULT_ENERGY_USAGE = ConfMachines.DU_DEFAULT_ENERGY;
+    public static final int DEFAULT_TIME = ConfMachines.DU_DEFAULT_BURN_TIME;
 
     private OreDictStack[] inputs;
     private ItemStack output;
@@ -24,7 +26,7 @@ public class RecipeDuster extends MachineRecipe{
         this.setRegistryName(new ResourceLocation(Metalworks.MODID, "duster." + name));
         this.inputs = new OreDictStack[]{input1, input2};
         this.output = output;
-        this.time = time;
+        this.time = time > 0 ? time : DEFAULT_TIME;
         this.energy = energy > 0 ? energy : DEFAULT_ENERGY_USAGE;
     }
 

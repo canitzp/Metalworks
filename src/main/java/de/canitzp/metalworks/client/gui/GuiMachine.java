@@ -13,15 +13,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * @author canitzp
@@ -65,7 +61,7 @@ public class GuiMachine<T extends TileBase> extends GuiContainer {
         Pair<Integer, Integer> invCoords = this.machineInterface.getInventoryLocation(this.tile, this.player);
         if(invCoords != null){
             this.texture.bindTexture(INVENTORY_LOCATION);
-            this.drawTexturedModalRect(invCoords.getLeft() + this.guiLeft, invCoords.getRight() + this.guiTop, 0, 0, 175, 84);
+            this.drawTexturedModalRect(invCoords.getLeft() + this.guiLeft, invCoords.getRight() + this.guiTop, 0, 0, 176, 85);
         }
         this.machineInterface.drawBackground(this.tile, this, this.texture, this.guiLeft, this.guiTop, mouseX, mouseY, partialTicks);
         if(this.energyBar != null){
@@ -82,10 +78,14 @@ public class GuiMachine<T extends TileBase> extends GuiContainer {
         super.drawScreen(mouseX, mouseY, partialTicks);
         super.renderHoveredToolTip(mouseX, mouseY);
         this.machineInterface.drawScreen(this.tile, this, this.guiLeft, this.guiTop, mouseX, mouseY, partialTicks);
-        if(this.energyBar != null && this.tile.getCurrentEnergyUsage() > -1){
+        if(this.energyBar != null){
             IEnergyStorage energy = this.tile.getEnergy(EnumFacing.NORTH);
             if(energy != null && energy.getMaxEnergyStored() > 0){
-                this.energyBar.mouseDraw(this, guiLeft, guiTop, mouseX, mouseY, energy.getEnergyStored(), this.tile.getCurrentEnergyUsage());
+                if(this.tile.getCurrentEnergyUsage() > 0){
+                    this.energyBar.mouseDrawUsage(this, mouseX, mouseY, energy.getEnergyStored(), this.tile.getCurrentEnergyUsage());
+                } else {
+                    this.energyBar.mouseDrawTank(this, mouseX, mouseY, energy.getEnergyStored(), energy.getMaxEnergyStored());
+                }
             }
         }
         if(this.jeiStuff != null){
@@ -109,7 +109,7 @@ public class GuiMachine<T extends TileBase> extends GuiContainer {
 
     public GuiMachine<T> setSize(int xSize, int ySize){
         this.xSize = xSize;
-        this.ySize = ySize;
+        this.ySize = ySize + (this.machineInterface.getInventoryLocation(this.tile, this.player) != null ? 85 : 0);
         return this;
     }
 
@@ -118,7 +118,7 @@ public class GuiMachine<T extends TileBase> extends GuiContainer {
     }
 
     public int getYSize(){
-        return this.ySize;
+        return this.ySize - (this.machineInterface.getInventoryLocation(this.tile, this.player) != null ? 85 : 0);
     }
 
     public EntityPlayer getPlayer() {

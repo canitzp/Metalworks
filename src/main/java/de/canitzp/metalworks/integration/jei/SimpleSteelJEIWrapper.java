@@ -1,7 +1,10 @@
 package de.canitzp.metalworks.integration.jei;
 
 import com.google.common.collect.Lists;
+import de.canitzp.metalworks.Util;
+import de.canitzp.metalworks.client.gui.GuiEnergyBar;
 import de.canitzp.metalworks.machine.blastfurnace.RecipeBlastFurnace;
+import de.canitzp.metalworks.machine.crusher.RecipeCrusher;
 import de.canitzp.metalworks.machine.duster.RecipeDuster;
 import de.canitzp.metalworks.machine.geothermalgenerator.geoburnable.IGeoburnable;
 import de.canitzp.metalworks.recipe.OreDictStack;
@@ -12,6 +15,8 @@ import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -91,6 +96,43 @@ public abstract class SimpleSteelJEIWrapper<T> implements IRecipeWrapper{
             this.recipe.drawJEIText(mc.fontRenderer);
         }
 
+    }
+
+    public static class Crusher extends SimpleSteelJEIWrapper<RecipeCrusher>{
+
+        private static GuiEnergyBar energyBar = new GuiEnergyBar(1, 1, false);
+
+        public Crusher(RecipeCrusher recipe) {
+            super(recipe);
+        }
+
+        @Override
+        public void getIngredients(IIngredients ingredients) {
+            ingredients.setInputs(ItemStack.class, this.recipe.getInput().getListForJEI());
+            ingredients.setOutputs(ItemStack.class, Arrays.asList(this.recipe.getOutputs()));
+        }
+
+        @Override
+        public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+            energyBar.draw(1, 1, -1);
+        }
+
+        @Nonnull
+        @Override
+        public List<String> getTooltipStrings(int mouseX, int mouseY) {
+            if(mouseX >= 0 && mouseX <= 20 && mouseY >= 0 && mouseY <= 64){
+                return Lists.newArrayList(Util.formatEnergy(this.recipe.getEnergy() * this.recipe.getTime()), Util.formatEnergy(this.recipe.getEnergy()) + "/tick");
+            }
+            if(mouseX >= 24 && mouseX <= 24 + 30 && mouseY >= 20 && mouseY <= 20 + 25){
+                List<String> list = new ArrayList<>();
+                list.add("Time:     " + this.recipe.getTime());
+                if(this.recipe.getSencondChance() > 0){
+                    list.add("Chance: " + this.recipe.getSencondChance() + "%");
+                }
+                return list;
+            }
+            return Collections.emptyList();
+        }
     }
 
 }

@@ -17,10 +17,12 @@ public class GuiEnergyBar extends Gui{
     public static final ResourceLocation LOCATION = new ResourceLocation(Metalworks.MODID, "textures/gui/energy_bar.png");
     public static final Minecraft mc = Minecraft.getMinecraft();
     private int x, y;
+    private boolean standalone;
 
-    public GuiEnergyBar(int x, int y){
+    public GuiEnergyBar(int x, int y, boolean standalone){
         this.x = x;
         this.y = y;
+        this.standalone = standalone;
     }
 
     public void draw(int energy, int cap, int color){
@@ -37,20 +39,37 @@ public class GuiEnergyBar extends Gui{
 
     public void draw(int energy, int cap, float r, float g, float b,  float a){
         GlStateManager.pushMatrix();
+        mc.getTextureManager().bindTexture(LOCATION);
+        int i = (int) ((energy / (cap * 1.0F)) * 62.0F);
+        if(!standalone){
+            applyColor(r, g, b, a);
+            this.drawTexturedModalRect(this.x, this.y + 62 - i, 0, 62 - i, 16, i);
+            this.drawTexturedModalRect(this.x, this.y, 16, 0, 16, 62);
+        } else {
+            this.drawTexturedModalRect(this.x, this.y, 32, 0, 28, 74);
+            applyColor(r, g, b, a);
+            this.drawTexturedModalRect(this.x + 6, this.y + 62 + 6 - i, 0, 62 - i, 16, i);
+            this.drawTexturedModalRect(this.x + 6, this.y + 6, 16, 0, 16, 62);
+        }
+        GlStateManager.popMatrix();
+    }
+
+    private void applyColor(float r, float g, float b,  float a){
         if(r < 0 || g < 0 || b <  0 || a < 0){
             Util.applyWheelColor(mc.world, 1.0F);
         } else {
             GlStateManager.color(r, g, b, a);
         }
-        mc.getTextureManager().bindTexture(LOCATION);
-        int i = (int) ((energy / (cap * 1.0F)) * 62.0F);
-        this.drawTexturedModalRect(this.x, this.y + 62 - i, 0, 62 - i, 16, i);
-        this.drawTexturedModalRect(this.x, this.y, 16, 0, 16, 62);
-        GlStateManager.popMatrix();
     }
 
-    public void mouseDraw(GuiScreen gui, int guiLeft, int guiTop, int mouseX, int mouseY, int energy, int usage){
-        if(mouseX >= guiLeft + 11 && mouseX <= guiLeft + 11 + 16 && mouseY >= guiTop + 11 && mouseY <= guiTop + 11 + 62){
+    public void mouseDrawTank(GuiScreen gui, int mouseX, int mouseY, int energy, int max){
+        if(mouseX >= this.x && mouseX <= this.x + 16 && mouseY >= this.y && mouseY <= this.y + 62){
+            gui.drawHoveringText(Util.formatEnergy(energy) + " / " + Util.formatEnergy(max), mouseX, mouseY);
+        }
+    }
+
+    public void mouseDrawUsage(GuiScreen gui, int mouseX, int mouseY, int energy, int usage){
+        if(mouseX >= this.x && mouseX <= this.x + 16 && mouseY >= this.y && mouseY <= this.y + 62){
             gui.drawHoveringText(Lists.newArrayList(Util.formatEnergy(energy), "Usage: " + Util.formatEnergy(usage)), mouseX, mouseY);
         }
     }

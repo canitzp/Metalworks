@@ -33,6 +33,7 @@ public class BlockBase<T extends BlockBase<T>> extends Block {
     private List<Object[]> recipes = new ArrayList<>();
     private List<String> oreNames = new ArrayList<String>();
     private int infoState = 0; // 0=unchecked 1=checked, but no localisation 2=checked and localisation found
+    private boolean registerParameter = true;
 
     public BlockBase(Material material, MapColor color, String name) {
         super(material, color);
@@ -46,9 +47,20 @@ public class BlockBase<T extends BlockBase<T>> extends Block {
     }
 
     public T register(){
-        BLOCKS.add(this);
-        this.item = new ItemBlock(this);
-        this.item.setRegistryName(this.getRegistryName());
+        if(shouldRegister()){
+            BLOCKS.add(this);
+            this.item = new ItemBlock(this);
+            this.item.setRegistryName(this.getRegistryName());
+        }
+        return (T) this;
+    }
+
+    protected boolean shouldRegister(){
+        return this.registerParameter;
+    }
+
+    public T setRegistrationParameter(boolean bool){
+        this.registerParameter = bool;
         return (T) this;
     }
 

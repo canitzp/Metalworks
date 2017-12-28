@@ -4,6 +4,7 @@ import de.canitzp.metalworks.block.BlockBase;
 import de.canitzp.metalworks.item.ItemBase;
 import de.canitzp.metalworks.machine.IMachineRecipe;
 import de.canitzp.metalworks.machine.blastfurnace.RecipeBlastFurnace;
+import de.canitzp.metalworks.machine.crusher.RecipeCrusher;
 import de.canitzp.metalworks.machine.geothermalgenerator.geoburnable.IGeoburnable;
 import de.canitzp.metalworks.network.GuiHandler;
 import de.canitzp.metalworks.network.NetworkHandler;
@@ -79,6 +80,27 @@ public class Metalworks {
     public void postInit(FMLPostInitializationEvent event){
         SimpleSteelRecipeHandler.addBlastFurnaceRecipe(new RecipeBlastFurnace(new OreDictStack("ingotIron").setStacksize(2), new OreDictStack(Items.COAL).setStacksize(3), OreDictStack.EMPTY, new ItemStack(Registry.steelIngot), ItemStack.EMPTY, 0, 400, -1));
         SimpleSteelRecipeHandler.addBlastFurnaceRecipe(new RecipeBlastFurnace(new OreDictStack("ingotIron").setStacksize(3), new OreDictStack("gemDiamond"), OreDictStack.EMPTY, new ItemStack(Registry.metalShielding, 4), new ItemStack(Items.IRON_NUGGET), 25, 250, -1));
+
+        // Generic Crusher
+        for(String name : OreDictionary.getOreNames()){
+            if(name.startsWith("ore")){
+                String dustName = name.replaceFirst("ore", "dust");
+                if(OreDictionary.doesOreNameExist(dustName)){
+                    ItemStack dust = OreDictionary.getOres(dustName).get(0).copy();
+                    dust.setCount(2);
+                    MACHINE_RECIPE_REGISTRY.register(new RecipeCrusher(name + "_" + dustName,
+                            new OreDictStack(name), dust, ItemStack.EMPTY, 0, 200, 0));
+                }
+            } else if(name.startsWith("ingot")){
+                String dustName = name.replaceFirst("ingot", "dust");
+                if(OreDictionary.doesOreNameExist(dustName)) {
+                    ItemStack dust = OreDictionary.getOres(dustName).get(0).copy();
+                    dust.setCount(1);
+                    MACHINE_RECIPE_REGISTRY.register(new RecipeCrusher(name + "_" + dustName,
+                            new OreDictStack(name), dust, ItemStack.EMPTY, 0, 150, 0));
+                }
+            }
+        }
     }
 
     @SubscribeEvent

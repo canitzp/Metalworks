@@ -3,6 +3,7 @@ package de.canitzp.metalworks.integration.jei;
 import de.canitzp.metalworks.Metalworks;
 import de.canitzp.metalworks.machine.blastfurnace.InterfaceBlastFurnace;
 import de.canitzp.metalworks.machine.blastfurnace.TileBlastFurnace;
+import de.canitzp.metalworks.machine.crusher.InterfaceCrusher;
 import de.canitzp.metalworks.machine.duster.InterfaceDuster;
 import de.canitzp.metalworks.recipe.OreDictStack;
 import mezz.jei.api.IGuiHelper;
@@ -136,6 +137,32 @@ public abstract class SimpleSteelCategories<T extends IRecipeWrapper> implements
         public void setRecipe(IRecipeLayout recipeLayout, SimpleSteelJEIWrapper.GeothermalGenerator recipeWrapper, IIngredients ingredients) {
             recipeLayout.getItemStacks().init(0, true, 0, 0);
             recipeLayout.getItemStacks().set(0, ingredients.getInputs(ItemStack.class).get(0));
+        }
+    }
+
+    public static class Crusher extends SimpleSteelCategories<SimpleSteelJEIWrapper.Crusher>{
+
+        public Crusher(IRecipeCategoryRegistration reg) {
+            super(reg, SimpleSteelJEIPlugin.CRUSHER);
+        }
+
+        @Override
+        protected IDrawable createDrawable(IGuiHelper helper) {
+            return helper.createDrawable(InterfaceCrusher.LOC, 59, 5, 58, 64);
+        }
+
+        @Override
+        public void setRecipe(IRecipeLayout recipeLayout, SimpleSteelJEIWrapper.Crusher recipeWrapper, IIngredients ingredients) {
+            IGuiItemStackGroup group = recipeLayout.getItemStacks();
+            group.init(0, true, 30, 0);
+            group.set(0, recipeWrapper.recipe.getInput().getListForJEI());
+            group.init(1, false, 20, 46);
+            ItemStack[] outs = recipeWrapper.recipe.getOutputs();
+            group.set(1, outs[0]);
+            if(!outs[1].isEmpty()){
+                group.init(2, false, 40, 46);
+                group.set(2, outs[1]);
+            }
         }
     }
 

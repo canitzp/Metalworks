@@ -61,7 +61,7 @@ public abstract class SidedBasicInv extends InventoryBasic implements ISidedInve
 
     public boolean canMergeStacks(int index, ItemStack stack) {
         ItemStack first = this.getStackInSlot(index);
-        return first.isEmpty() && stack.isEmpty() || Util.canItemStacksStack(first, stack);
+        return first.isEmpty() || stack.isEmpty() || Util.canItemStacksStack(first, stack);
     }
 
 }
