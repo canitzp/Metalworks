@@ -74,12 +74,11 @@ public abstract class BlockContainerBase<T extends BlockContainerBase<T>> extend
      * Called serverside after this block is replaced with another in Chunk, but before the Tile Entity is updated
      */
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
-        super.breakBlock(world, pos, state);
         TileEntity tile = world.getTileEntity(pos);
         if(tile instanceof TileBase){
             ((TileBase) tile).breakBlock();
         }
-        world.removeTileEntity(pos);
+        super.breakBlock(world, pos, state);
     }
 
     /**

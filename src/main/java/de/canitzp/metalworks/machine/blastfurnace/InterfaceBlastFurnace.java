@@ -3,6 +3,7 @@ package de.canitzp.metalworks.machine.blastfurnace;
 import de.canitzp.metalworks.Metalworks;
 import de.canitzp.metalworks.client.gui.GuiEnergyBar;
 import de.canitzp.metalworks.client.gui.GuiMachine;
+import de.canitzp.metalworks.integration.jei.SimpleSteelJEIPlugin;
 import de.canitzp.metalworks.inventory.ContainerMachine;
 import de.canitzp.metalworks.machine.IMachineInterface;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -14,6 +15,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nullable;
+
 /**
  * @author canitzp
  */
@@ -24,7 +27,7 @@ public class InterfaceBlastFurnace implements IMachineInterface<TileBlastFurnace
     @SideOnly(Side.CLIENT)
     @Override
     public void initGui(TileBlastFurnace tile, GuiMachine<TileBlastFurnace> gui) {
-        gui.setSize(176, 166);
+        gui.setSize(176, 81);
     }
 
     @SideOnly(Side.CLIENT)
@@ -42,6 +45,13 @@ public class InterfaceBlastFurnace implements IMachineInterface<TileBlastFurnace
     @Override
     public GuiEnergyBar getEnergyBar(TileBlastFurnace tile, GuiMachine<TileBlastFurnace> gui, EntityPlayer player, int guiLeft, int guiTop) {
         return new GuiEnergyBar(guiLeft + 11, guiTop + 11, false);
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Nullable
+    @Override
+    public JEIData getJEIClickArea(TileBlastFurnace tile, GuiMachine<TileBlastFurnace> gui, EntityPlayer player, int guiLeft, int guiTop) {
+        return new JEIData(68, 29, 42, 26, SimpleSteelJEIPlugin.BLAST_FURNACE);
     }
 
     @Override

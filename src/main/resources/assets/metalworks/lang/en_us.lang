@@ -1,4 +1,4 @@
-itemGroup.metalworks=Simple Steel
+itemGroup.metalworks=Metalworks
 
 tile.metalworks:blast_furnace.name=Blast furnace
 tile.metalworks:photovoltaic_panel.name=Photovoltaic Panel

@@ -27,7 +27,7 @@ import java.util.Random;
  */
 public class TileCrusher extends TileBase implements ITickable{
 
-    public CustomEnergyStorage energy = new CustomEnergyStorage(10000, 1500);
+    public CustomEnergyStorage energy = new CustomEnergyStorage(10000, 1500).setTile(this);
     public SidedBasicInv inv = new SidedBasicInv("crusher", 3) {
         @Override
         public boolean canInsertItem(int index, ItemStack stack, EnumFacing direction) {

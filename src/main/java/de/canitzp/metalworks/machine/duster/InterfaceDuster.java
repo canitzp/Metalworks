@@ -28,7 +28,7 @@ public class InterfaceDuster implements IMachineInterface<TileDuster> {
     @SideOnly(Side.CLIENT)
     @Override
     public void initGui(TileDuster tile, GuiMachine<TileDuster> gui) {
-        gui.setSize(176, 166);
+        gui.setSize(176, 81);
     }
 
     @SideOnly(Side.CLIENT)
