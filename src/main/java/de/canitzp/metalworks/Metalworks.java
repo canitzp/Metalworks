@@ -11,6 +11,7 @@ import de.canitzp.metalworks.network.NetworkHandler;
 import de.canitzp.metalworks.recipe.OreDictStack;
 import de.canitzp.metalworks.recipe.SimpleSteelRecipeHandler;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -72,6 +73,11 @@ public class Metalworks {
                 for(String name : ((List<String>) block.getOreNames())){
                     OreDictionary.registerOre(name, block);
                 }
+            }
+        }
+        if(event.getSide().isClient()){
+            for(ItemBase item : ItemBase.ITEMS){
+                item.registerColorHandler(Minecraft.getMinecraft().getItemColors());
             }
         }
     }

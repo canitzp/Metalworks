@@ -3,10 +3,7 @@ package de.canitzp.metalworks;
 import de.canitzp.metalworks.block.BlockBase;
 import de.canitzp.metalworks.block.cable.basic.BlockCableBasic;
 import de.canitzp.metalworks.config.ConfEnable;
-import de.canitzp.metalworks.item.ItemArmorCollection;
-import de.canitzp.metalworks.item.ItemBase;
-import de.canitzp.metalworks.item.ItemBattery;
-import de.canitzp.metalworks.item.ItemToolCollection;
+import de.canitzp.metalworks.item.*;
 import de.canitzp.metalworks.machine.IMachineRecipe;
 import de.canitzp.metalworks.machine.blastfurnace.BlockBlastFurnace;
 import de.canitzp.metalworks.machine.crusher.BlockCrusher;
@@ -82,6 +79,7 @@ public class Registry {
             recipes.add(new ShapelessOreRecipe(null, new ItemStack(steelNugget, 9), new OreIngredient("ingotSteel")));
         }
     }.addRecipes("###", "###", "###", '#', "nuggetSteel").addOreName("nuggetSteel").register();
+    public static Item steelDust = new ItemDust("steel", 0x535559).register();
     public static Item metalShielding = new ItemBase("metal_shielding"){
         @Override
         public void registerRecipes(List<IRecipe> recipes) {

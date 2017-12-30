@@ -3,6 +3,7 @@ package de.canitzp.metalworks.item;
 import de.canitzp.metalworks.Metalworks;
 import de.canitzp.metalworks.Registry;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
@@ -48,6 +49,11 @@ public class ItemBase extends Item {
     @SideOnly(Side.CLIENT)
     public void registerClient(){
         ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(this.getRegistryName(), "inventory"));
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void registerColorHandler(ItemColors itemColors){
+
     }
 
     public void registerRecipes(final List<IRecipe> recipes){
