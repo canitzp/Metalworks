@@ -30,25 +30,46 @@ public class CustomEnergyStorage extends EnergyStorage {
     }
 
     public int forceReceive(int maxReceive, boolean simulate){
-        int energyReceived = Math.min(capacity - energy, Math.min(this.maxReceive, maxReceive));
-        if (!simulate)
-            energy += energyReceived;
+        int energyReceived = Math.min(capacity - this.getEnergyStored(), Math.min(this.maxReceive, maxReceive));
+        if (!simulate){
+            this.setEnergy(this.getEnergyStored() + energyReceived);
+        }
         this.notifyTile();
         return energyReceived;
     }
 
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
-        int energy = super.receiveEnergy(maxReceive, simulate);
-        this.notifyTile();
-        return energy;
+        if(canReceive()){
+            int energyReceived = Math.min(capacity - this.getEnergyStored(), Math.min(this.maxReceive, maxReceive));
+            if (!simulate){
+                this.setEnergy(this.getEnergyStored() + energyReceived);
+            }
+            this.notifyTile();
+            return energyReceived;
+        }
+        return 0;
     }
 
     @Override
     public int extractEnergy(int maxExtract, boolean simulate) {
-        int energy = super.extractEnergy(maxExtract, simulate);
-        this.notifyTile();
-        return energy;
+        if(canExtract()){
+            int energyExtracted = Math.min(energy, Math.min(this.maxExtract, maxExtract));
+            if (!simulate){
+                this.setEnergy(this.getEnergyStored() - energyExtracted);
+            }
+            notifyTile();
+            return energyExtracted;
+        }
+        return 0;
+    }
+
+    public void setEnergy(int energy){
+        this.energy = energy;
+    }
+
+    public int getExtractTransfer(){
+        return this.maxExtract;
     }
 
     public CustomEnergyStorage setTile(@Nullable TileBase tile){

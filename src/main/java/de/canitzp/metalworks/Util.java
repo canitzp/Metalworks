@@ -2,13 +2,21 @@ package de.canitzp.metalworks;
 
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.relauncher.Side;
@@ -116,6 +124,31 @@ public class Util {
                 i = 100 - i;
             }
             gui.drawHoveringText(i + "%", mouseX, mouseY);
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void renderItemInWorld(ItemStack stack){
+        if(!stack.isEmpty()){
+            Minecraft mc = Minecraft.getMinecraft();
+            RenderItem renderer = mc.getRenderItem();
+            TextureManager manager = mc.getTextureManager();
+
+            IBakedModel model = renderer.getItemModelWithOverrides(stack, null, null);
+
+            manager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+            manager.getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
+            GlStateManager.enableRescaleNormal();
+            GlStateManager.enableBlend();
+            GlStateManager.pushMatrix();
+            model = ForgeHooksClient.handleCameraTransforms(model, ItemCameraTransforms.TransformType.FIXED, false);
+            renderer.renderItem(stack, model);
+            GlStateManager.cullFace(GlStateManager.CullFace.BACK);
+            GlStateManager.popMatrix();
+            GlStateManager.disableRescaleNormal();
+            GlStateManager.disableBlend();
+            manager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+            manager.getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
         }
     }
 

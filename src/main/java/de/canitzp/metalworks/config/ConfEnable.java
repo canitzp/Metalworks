@@ -30,4 +30,8 @@ public class ConfEnable {
     @Config.Name("Is Photovoltaic Panel enabled")
     public static boolean PHOTOVOLTAIC_PANEL = true;
 
+    @Config.RequiresMcRestart
+    @Config.Name("Is Super Charger enabled")
+    public static boolean SUPER_CHARGER = true;
+
 }

@@ -1,0 +1,103 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "up": "metalworks:blocks/super_charger/top",
+      "down": "metalworks:blocks/super_charger/bottom",
+      "north": "metalworks:blocks/super_charger/back_front_off",
+      "east": "metalworks:blocks/super_charger/side/0",
+      "west": "#east",
+      "south": "#north",
+      "particle": "#up"
+    },
+    "model": "cube",
+    "transform": "forge:default-block"
+  },
+  "variants": {
+    "facing": {
+      "north": {
+        "y": 0
+      },
+      "south": {
+        "y": 180
+      },
+      "west": {
+        "y": 270
+      },
+      "east": {
+        "y": 90
+      }
+    },
+    "active": {
+      "true": {
+        "textures": {
+          "north": "metalworks:blocks/super_charger/back_front_on"
+        }
+      },
+      "false": {}
+    },
+    "charging_state": {
+      "0": {
+        "textures": {
+          "east": "metalworks:blocks/super_charger/side/0"
+        }
+      },
+      "1": {
+        "textures": {
+          "east": "metalworks:blocks/super_charger/side/1"
+        }
+      },
+      "2": {
+        "textures": {
+          "east": "metalworks:blocks/super_charger/side/2"
+        }
+      },
+      "3": {
+        "textures": {
+          "east": "metalworks:blocks/super_charger/side/3"
+        }
+      },
+      "4": {
+        "textures": {
+          "east": "metalworks:blocks/super_charger/side/4"
+        }
+      },
+      "5": {
+        "textures": {
+          "east": "metalworks:blocks/super_charger/side/5"
+        }
+      },
+      "6": {
+        "textures": {
+          "east": "metalworks:blocks/super_charger/side/6"
+        }
+      },
+      "7": {
+        "textures": {
+          "east": "metalworks:blocks/super_charger/side/7"
+        }
+      },
+      "8": {
+        "textures": {
+          "east": "metalworks:blocks/super_charger/side/8"
+        }
+      },
+      "9": {
+        "textures": {
+          "east": "metalworks:blocks/super_charger/side/9"
+        }
+      },
+      "10": {
+        "textures": {
+          "east": "metalworks:blocks/super_charger/side/10"
+        }
+      }
+    },
+    "normal": [
+      {}
+    ],
+    "inventory": [
+      {}
+    ]
+  }
+}

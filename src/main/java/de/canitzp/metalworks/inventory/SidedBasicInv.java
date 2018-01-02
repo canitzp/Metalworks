@@ -56,7 +56,7 @@ public abstract class SidedBasicInv extends InventoryBasic implements ISidedInve
                 return getSidedWrapper(side);
             }
         }
-        return null;
+        return getSidedWrapper(EnumFacing.NORTH);
     }
 
     public boolean canMergeStacks(int index, ItemStack stack) {

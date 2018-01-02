@@ -28,7 +28,11 @@ public class TileDuster extends TileBase implements ITickable{
     public static final int INPUT2 = 1;
     public static final int OUTPUT = 2;
 
-    public CustomEnergyStorage energy = new CustomEnergyStorage(10000, 1500).setTile(this);
+    public static int ENERGY_CAPACITY = 10000;
+    public static int ENERGY_RECEIVE = 1500;
+    public static int ENERGY_EXTRACT = ENERGY_RECEIVE;
+
+    public CustomEnergyStorage energy = new CustomEnergyStorage(ENERGY_CAPACITY, ENERGY_RECEIVE, ENERGY_EXTRACT).setTile(this);
     public SidedBasicInv inventory = new SidedBasicInv("duster", 3) {
         @Override
         public boolean canInsertItem(int index, ItemStack stack, EnumFacing direction) {

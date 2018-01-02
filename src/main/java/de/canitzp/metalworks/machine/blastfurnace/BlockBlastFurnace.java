@@ -31,6 +31,7 @@ public class BlockBlastFurnace extends BlockContainerBase<BlockBlastFurnace> {
         this.setHardness(4.5F);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ACTIVE, false));
         this.addInterface(InterfaceBlastFurnace.class);
+        this.setEnergeticItem(TileBlastFurnace.ENERGY_CAPACITY, TileBlastFurnace.ENERGY_RECEIVE, TileBlastFurnace.ENEGRY_EXTRACT);
     }
 
     @Nonnull

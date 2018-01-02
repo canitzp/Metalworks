@@ -19,7 +19,9 @@ import javax.annotation.Nullable;
  */
 public class TileGeothermalGenerator extends TileBase implements ITickable{
 
-    public CustomEnergyStorage energy = new CustomEnergyStorage(5000){
+    public static int ENERGY_CAPACITY = 5000;
+
+    public CustomEnergyStorage energy = new CustomEnergyStorage(ENERGY_CAPACITY){
         @Override
         public boolean canReceive() {
             return false;

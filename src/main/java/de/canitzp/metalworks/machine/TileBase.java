@@ -5,6 +5,7 @@ import de.canitzp.metalworks.network.packet.PacketSyncTile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -91,28 +92,39 @@ public class TileBase extends TileEntity {
     }
 
     public void writeNBT(NBTTagCompound nbt, NBTType type){
-        NBTTagCompound caps = new NBTTagCompound();
-        for(EnumFacing side : EnumFacing.values()){
-            NBTTagCompound capsSided = new NBTTagCompound();
-            this.writeCapabilities(capsSided, side);
-            caps.setTag(side.toString().toLowerCase(Locale.ROOT), capsSided);
+        if(type != NBTType.DROP){
+            NBTTagCompound caps = new NBTTagCompound();
+            for(EnumFacing side : EnumFacing.values()){
+                NBTTagCompound capsSided = new NBTTagCompound();
+                this.writeCapabilities(capsSided, side);
+                caps.setTag(side.toString().toLowerCase(Locale.ROOT), capsSided);
+            }
+            nbt.setTag("TileBaseCapabilities", caps);
+        } else if(this.getEnergy(null) != null){
+            nbt.setInteger("Energy", this.getEnergy(null).getEnergyStored());
         }
-        nbt.setTag("TileBaseCapabilities", caps);
     }
 
-    public void readNBT(NBTTagCompound nbt, NBTType type){
-        NBTTagCompound caps = nbt.getCompoundTag("TileBaseCapabilities");
-        for(EnumFacing side : EnumFacing.values()){
-            String name = side.toString().toLowerCase(Locale.ROOT);
-            if(caps.hasKey(name, Constants.NBT.TAG_COMPOUND)){
-                this.readCapabilities(caps.getCompoundTag(name), side);
+    public void readNBT(NBTTagCompound nbt, NBTType type) {
+        if (type != NBTType.DROP) {
+            NBTTagCompound caps = nbt.getCompoundTag("TileBaseCapabilities");
+            for (EnumFacing side : EnumFacing.values()) {
+                String name = side.toString().toLowerCase(Locale.ROOT);
+                if (caps.hasKey(name, Constants.NBT.TAG_COMPOUND)) {
+                    this.readCapabilities(caps.getCompoundTag(name), side);
+                }
             }
+        } else if (this.getEnergy(null) != null) {
+            this.getEnergy(null).receiveEnergy(nbt.getInteger("Energy"), false);
         }
     }
 
     protected void readCapabilities(NBTTagCompound nbt, @Nullable EnumFacing side){
         IItemHandler inventory = this.getInventory(side);
         if(inventory != null && inventory instanceof IItemHandlerModifiable && nbt.hasKey("Inventory")){
+            for(int i = 0; i < inventory.getSlots(); i++){ // clear the inventory, otherwise empty stacks doesn't get overriden while syncing. Forge Bug?
+                ((IItemHandlerModifiable) inventory).setStackInSlot(i, ItemStack.EMPTY);
+            }
             CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.readNBT(inventory, side, nbt.getTag("Inventory"));
         }
         IFluidHandler tank = getTank(side);

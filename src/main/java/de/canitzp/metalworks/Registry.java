@@ -14,6 +14,7 @@ import de.canitzp.metalworks.machine.geothermalgenerator.BlockGeothermalGenerato
 import de.canitzp.metalworks.machine.geothermalgenerator.geoburnable.BlockGeoburnable;
 import de.canitzp.metalworks.machine.geothermalgenerator.geoburnable.IGeoburnable;
 import de.canitzp.metalworks.machine.photovoltaicpanel.BlockPhotovoltaicPanel;
+import de.canitzp.metalworks.machine.supercharger.BlockSuperCharger;
 import de.canitzp.metalworks.recipe.OreDictStack;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
@@ -102,6 +103,7 @@ public class Registry {
     public static BlockDuster duster = new BlockDuster().setRegistrationParameter(ConfEnable.DUSTER).addRecipes("msm", "sis", "mcm", 'm', metalShielding, 's', "stone", 'i', "blockIron", 'c', "circuitBasic").register();
     public static BlockGeothermalGenerator geothermalGenerator = new BlockGeothermalGenerator().setRegistrationParameter(ConfEnable.GEOTHERMAL_GENERATOR).addRecipes(" m ", "mim", "mcm", 'm', metalShielding, 'i', "blockIron", 'c', "circuitBasic").register();
     public static BlockCrusher crusher = new BlockCrusher().setRegistrationParameter(ConfEnable.CRUSHER).addRecipes("mim", "ibi", "ici", 'm', metalShielding, 'i', "ingotIron", 'b',"blockIron", 'c', "circuitBasic").register();
+    public static BlockSuperCharger superCharger = new BlockSuperCharger().setRegistrationParameter(ConfEnable.SUPER_CHARGER).addRecipes("mmm", "cbi", "mmm", 'm', metalShielding, 'c', cableBasic, 'i', "blockIron", 'b', "circuitBasic").register();
 
     public static ItemToolCollection steelTools = new ItemToolCollection(MATERIAL_STEEL);
     public static ItemArmorCollection steelArmor = new ItemArmorCollection(ARMOR_STEEL);

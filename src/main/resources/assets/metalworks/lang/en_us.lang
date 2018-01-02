@@ -6,6 +6,7 @@ tile.metalworks:cable_basic.name=Cable
 tile.metalworks:duster.name=Duster
 tile.metalworks:geothermal_generator.name=Geothermal Generator
 tile.metalworks:crusher.name=Crusher
+tile.metalworks:super_charger.name=Super Charger
 
 item.metalworks:steel_ingot.name=Steel Ingot
 item.metalworks:steel_nugget.name=Steel Nugget
@@ -22,6 +23,7 @@ item.metalworks:steel_head.name=Steel Helmet
 item.metalworks:battery_low_density.name=Battery
 item.metalworks:photovoltaic_cell.name=Photovoltaic Cell
 item.metalworks:quartz_sand_dust.name=Quartz Sand
+item.metalworks:steel_dust.name=Steel Dust
 
 desc.metalworks:geothermal_generator.name=Produces cheap energy out of blocks around it. NL Produces a very little amount of energy.
 desc.metalworks:crusher.name=Crushes you loved material NL to it's substantial parts.
@@ -29,6 +31,7 @@ desc.metalworks:photovoltaic_panel.name=Produces cheap energy out of the sun. NL
 desc.metalworks:duster.name=Grinds two materials down to a dust
 desc.metalworks:blast_furnace.name=Heats items up to their melt point NL and combines them to cool them down
 desc.metalworks:cable_basic.name=Transfer: §c1000 CF/t
+desc.metalworks:super_charger.name=A really fast way to charge up your energetic items. NL Transfer: §c15000 CF/t§7
 
 container.jei.metalworks.blast_furnace.name=Blast Furnace
 container.jei.metalworks.duster.name=Duster

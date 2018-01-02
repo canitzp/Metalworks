@@ -29,7 +29,11 @@ public class TileBlastFurnace extends TileBase implements ITickable{
     public static final int OUTPUT1 = 3;
     public static final int OUTPUT2 = 4;
 
-    public CustomEnergyStorage energy = new CustomEnergyStorage(10000, 1500).setTile(this);
+    public static int ENERGY_CAPACITY = 10000;
+    public static int ENERGY_RECEIVE = 1500;
+    public static int ENEGRY_EXTRACT = ENERGY_RECEIVE;
+
+    public CustomEnergyStorage energy = new CustomEnergyStorage(ENERGY_CAPACITY, ENERGY_RECEIVE, ENEGRY_EXTRACT).setTile(this);
     public SidedBasicInv inventory = new SidedBasicInv("blast_furnace", 6) {
         @Override
         public boolean canInsertItem(int index, @Nonnull ItemStack stack, @Nonnull EnumFacing side) {

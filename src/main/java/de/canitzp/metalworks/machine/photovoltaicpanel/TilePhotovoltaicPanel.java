@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
  */
 public class TilePhotovoltaicPanel extends TileBase implements ITickable{
 
-    public static final int ENERGY_PRODUCTION = ConfMachines.PP_ENERGY_PRODUCTION;
+    public static int ENERGY_PRODUCTION = ConfMachines.PP_ENERGY_PRODUCTION;
 
     private boolean cachedCanProduce = false;
 

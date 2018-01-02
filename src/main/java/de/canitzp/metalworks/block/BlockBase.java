@@ -49,8 +49,7 @@ public class BlockBase<T extends BlockBase<T>> extends Block {
     public T register(){
         if(shouldRegister()){
             BLOCKS.add(this);
-            this.item = new ItemBlock(this);
-            this.item.setRegistryName(this.getRegistryName());
+            this.item = this.getItem();
         }
         return (T) this;
     }
@@ -72,6 +71,12 @@ public class BlockBase<T extends BlockBase<T>> extends Block {
     public T addOreName(String... names){
         this.oreNames.addAll(Arrays.asList(names));
         return (T) this;
+    }
+
+    protected ItemBlock getItem(){
+        ItemBlock item = new ItemBlock(this);
+        item.setRegistryName(this.getRegistryName());
+        return item;
     }
 
     @SideOnly(Side.CLIENT)

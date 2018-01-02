@@ -27,6 +27,7 @@ public class BlockCrusher extends BlockContainerBase<BlockCrusher> {
         this.setHardness(4.5F);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ACTIVE, false));
         this.addInterface(InterfaceCrusher.class);
+        this.setEnergeticItem(TileCrusher.ENERGY_CAPACITY, TileCrusher.ENERGY_RECEIVE, TileCrusher.ENERGY_EXTRACT);
     }
 
     @Nonnull

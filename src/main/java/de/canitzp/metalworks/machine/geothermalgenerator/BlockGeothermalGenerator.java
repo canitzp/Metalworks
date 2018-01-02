@@ -28,6 +28,7 @@ public class BlockGeothermalGenerator extends BlockContainerBase<BlockGeothermal
         this.setHarvestLevel("pickaxe", 2);
         this.setHardness(4.5F);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ACTIVE, false));
+        this.setEnergeticItem(TileGeothermalGenerator.ENERGY_CAPACITY, TileGeothermalGenerator.ENERGY_CAPACITY, TileGeothermalGenerator.ENERGY_CAPACITY);
     }
 
     @Nonnull
