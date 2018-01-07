@@ -1,5 +1,6 @@
 package de.canitzp.metalworks.machine.photovoltaicpanel;
 
+import com.google.common.collect.Lists;
 import de.canitzp.metalworks.CustomEnergyStorage;
 import de.canitzp.metalworks.Util;
 import de.canitzp.metalworks.config.ConfMachines;
@@ -40,7 +41,7 @@ public class TilePhotovoltaicPanel extends TileBase implements ITickable{
                 energy.forceReceive(ENERGY_PRODUCTION, false);
             }
             if(this.energy.getEnergyStored() > 0){
-                Util.pushEnergy(this.world, this.pos, this.energy, EnumFacing.UP);
+                Util.pushEnergy(this.world, this.pos, this.energy, EnumFacing.DOWN, EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.WEST, EnumFacing.EAST);
             }
         }
     }

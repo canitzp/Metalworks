@@ -31,8 +31,8 @@ public class TileGeothermalGenerator extends TileBase implements ITickable{
 
     @Override
     public void update() {
+        this.updateBase();
         if(!this.world.isRemote){
-            this.updateForSyncing();
             if(this.burn <= 0){
                 if(this.cooldown <= 0){
                     this.energyPerTick = 0;

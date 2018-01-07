@@ -67,8 +67,8 @@ public class TileSuperCharger extends TileBase implements ITickable{
 
     @Override
     public void update() {
+        super.updateBase();
         if(!world.isRemote){
-            super.updateForSyncing();
             if(this.energy.getEnergyStored() > 0){
                 IEnergyStorage itemEnergy = this.getItemEnergy();
                 if(itemEnergy != null && itemEnergy.getEnergyStored() < itemEnergy.getMaxEnergyStored()){

@@ -108,55 +108,14 @@ public abstract class BlockContainerBase<T extends BlockContainerBase<T>> extend
         super.breakBlock(world, pos, state);
     }
 
-    /**
-     * Spawns the block's drops in the world. By the time this is called the Block has possibly been set to air via
-     * Block.removedByPlayer
-     */
-    public void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, ItemStack stack) {
-        if (te instanceof IWorldNameable && ((IWorldNameable)te).hasCustomName()) {
-            player.addStat(StatList.getBlockStats(this));
-            player.addExhaustion(0.005F);
-            if(!world.isRemote){
-                ItemStack itemStack = new ItemStack(this.getItemDropped(state, world.rand, EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, stack)), this.quantityDropped(world.rand));
-                if(!itemStack.isEmpty()){
-                    itemStack.setStackDisplayName(((IWorldNameable)te).getName());
-                    spawnAsEntity(world, pos, itemStack);
-                }
-            }
-        }
-        else {
-            player.addStat(StatList.getBlockStats(this));
-            player.addExhaustion(0.005F);
-            if (this.canSilkHarvest(world, pos, state, player) && EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0) {
-                java.util.List<ItemStack> items = new java.util.ArrayList<ItemStack>();
-                ItemStack itemstack = this.getSilkTouchDrop(state);
-
-                if (!itemstack.isEmpty()) {
-                    items.add(itemstack);
-                }
-
-                net.minecraftforge.event.ForgeEventFactory.fireBlockHarvesting(items, world, pos, state, 0, 1.0f, true, player);
-                for (ItemStack item : items) {
-                    spawnAsEntity(world, pos, item);
-                }
-            }
-            else {
-                harvesters.set(player);
-                int i = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, stack);
-                NonNullList<ItemStack> drops = NonNullList.create();
-                this.getDrops(drops, world, pos, state, te, stack, i);
-                drops.forEach(drop -> spawnAsEntity(world, pos, drop));
-                harvesters.set(null);
-            }
-        }
-    }
-
-    public void getDrops(NonNullList<ItemStack> drops, World world, BlockPos pos, IBlockState state, TileEntity tile, ItemStack harvestStack, int fortune){
-        Random rand = world.rand;
+    @Override
+    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune){
+        Random rand = new Random();
         int count = quantityDropped(state, fortune, rand);
         for (int i = 0; i < count; i++) {
             Item item = this.getItemDropped(state, rand, fortune);
             if (item != Items.AIR) {
+                TileEntity tile = world.getTileEntity(pos);
                 NBTTagCompound nbt = new NBTTagCompound();
                 if (tile instanceof TileBase) {
                     NBTTagCompound tileData = new NBTTagCompound();
@@ -169,6 +128,17 @@ public abstract class BlockContainerBase<T extends BlockContainerBase<T>> extend
                 drops.add(stack);
             }
         }
+    }
+
+    @Override
+    public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
+        return willHarvest || super.removedByPlayer(state, world, pos, player, false);
+    }
+
+    @Override
+    public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, ItemStack stack) {
+        super.harvestBlock(worldIn, player, pos, state, te, stack);
+        worldIn.setBlockToAir(pos);
     }
 
     /**

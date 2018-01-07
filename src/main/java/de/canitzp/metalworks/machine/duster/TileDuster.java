@@ -85,8 +85,8 @@ public class TileDuster extends TileBase implements ITickable{
 
     @Override
     public void update() {
+        this.updateBase();
         if(!world.isRemote){
-            this.updateForSyncing();
             if(this.recipeId != null){
                 if(burn <= 0){
                     RecipeDuster recipe = MachineRecipe.getRecipe(this.recipeId);

@@ -85,8 +85,8 @@ public class TileBlastFurnace extends TileBase implements ITickable{
 
     @Override
     public void update() {
+        this.updateBase();
         if(!world.isRemote){
-            this.updateForSyncing();
             if(this.recipeID != null){
                 if(this.burnLeft <= 0){
                     this.burnLeft = this.maxBurn = this.energyUsage = 0;

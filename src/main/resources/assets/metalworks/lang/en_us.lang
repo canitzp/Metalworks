@@ -7,6 +7,7 @@ tile.metalworks:duster.name=Duster
 tile.metalworks:geothermal_generator.name=Geothermal Generator
 tile.metalworks:crusher.name=Crusher
 tile.metalworks:super_charger.name=Super Charger
+tile.metalworks:battery_low.name=Battery Pack (Low)
 
 item.metalworks:steel_ingot.name=Steel Ingot
 item.metalworks:steel_nugget.name=Steel Nugget
@@ -32,6 +33,7 @@ desc.metalworks:duster.name=Grinds two materials down to a dust
 desc.metalworks:blast_furnace.name=Heats items up to their melt point NL and combines them to cool them down
 desc.metalworks:cable_basic.name=Transfer: §c1000 CF/t
 desc.metalworks:super_charger.name=A really fast way to charge up your energetic items. NL Transfer: §c15000 CF/t§7
+desc.metalworks:battery_low.name=The tiniest way to store some energy. NL Orange is input and Black is output. NL Storage: §c100000 CF§7 NL I/O: §c5000 CF§7
 
 container.jei.metalworks.blast_furnace.name=Blast Furnace
 container.jei.metalworks.duster.name=Duster

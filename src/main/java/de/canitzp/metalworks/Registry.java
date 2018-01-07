@@ -5,6 +5,7 @@ import de.canitzp.metalworks.block.cable.basic.BlockCableBasic;
 import de.canitzp.metalworks.config.ConfEnable;
 import de.canitzp.metalworks.item.*;
 import de.canitzp.metalworks.machine.IMachineRecipe;
+import de.canitzp.metalworks.machine.battery.BlockBattery;
 import de.canitzp.metalworks.machine.blastfurnace.BlockBlastFurnace;
 import de.canitzp.metalworks.machine.crusher.BlockCrusher;
 import de.canitzp.metalworks.machine.crusher.RecipeCrusher;
@@ -104,6 +105,7 @@ public class Registry {
     public static BlockGeothermalGenerator geothermalGenerator = new BlockGeothermalGenerator().setRegistrationParameter(ConfEnable.GEOTHERMAL_GENERATOR).addRecipes(" m ", "mim", "mcm", 'm', metalShielding, 'i', "blockIron", 'c', "circuitBasic").register();
     public static BlockCrusher crusher = new BlockCrusher().setRegistrationParameter(ConfEnable.CRUSHER).addRecipes("mim", "ibi", "ici", 'm', metalShielding, 'i', "ingotIron", 'b',"blockIron", 'c', "circuitBasic").register();
     public static BlockSuperCharger superCharger = new BlockSuperCharger().setRegistrationParameter(ConfEnable.SUPER_CHARGER).addRecipes("mmm", "cbi", "mmm", 'm', metalShielding, 'c', cableBasic, 'i', "blockIron", 'b', "circuitBasic").register();
+    public static BlockBattery lowDensity = new BlockBattery(new BlockBattery.Type("low", 100000, 5000)).addRecipes("ibi", "bbb", "iii", 'i', "ingotIron", 'b', batteryLowDensity).register();
 
     public static ItemToolCollection steelTools = new ItemToolCollection(MATERIAL_STEEL);
     public static ItemArmorCollection steelArmor = new ItemArmorCollection(ARMOR_STEEL);

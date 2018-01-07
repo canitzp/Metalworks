@@ -99,6 +99,9 @@ public class TileBase extends TileEntity {
                 this.writeCapabilities(capsSided, side);
                 caps.setTag(side.toString().toLowerCase(Locale.ROOT), capsSided);
             }
+            NBTTagCompound capsSided = new NBTTagCompound();
+            this.writeCapabilities(capsSided, null);
+            caps.setTag("default", capsSided);
             nbt.setTag("TileBaseCapabilities", caps);
         } else if(this.getEnergy(null) != null){
             nbt.setInteger("Energy", this.getEnergy(null).getEnergyStored());
@@ -114,6 +117,7 @@ public class TileBase extends TileEntity {
                     this.readCapabilities(caps.getCompoundTag(name), side);
                 }
             }
+            this.readCapabilities(caps.getCompoundTag("default"), null);
         } else if (this.getEnergy(null) != null) {
             this.getEnergy(null).receiveEnergy(nbt.getInteger("Energy"), false);
         }
@@ -170,16 +174,25 @@ public class TileBase extends TileEntity {
         }
     }
 
+    private boolean isRenderDirty = false;
     @SideOnly(Side.CLIENT)
     public void markForRenderUpdate(){
         if(this.world != null && this.world.isRemote){
-            this.world.markBlockRangeForRenderUpdate(this.pos, this.pos);
+            if(this.isRenderDirty && this.world.getTotalWorldTime() % 10 == 0){
+                this.world.markBlockRangeForRenderUpdate(this.pos, this.pos);
+                this.isRenderDirty = true;
+            } else {
+                this.isRenderDirty = true;
+            }
         }
     }
 
-    protected void updateForSyncing(){
-        if(this.isSyncDirty){
+    protected void updateBase(){
+        if(!this.world.isRemote && this.isSyncDirty){
             this.syncToClients();
+        }
+        if(this.world.isRemote && this.isRenderDirty){
+            this.markForRenderUpdate();
         }
     }
 

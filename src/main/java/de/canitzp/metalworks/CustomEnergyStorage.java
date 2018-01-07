@@ -72,15 +72,27 @@ public class CustomEnergyStorage extends EnergyStorage {
         return this.maxExtract;
     }
 
+    public int getReceiveTransfer(){
+        return this.maxReceive;
+    }
+
     public CustomEnergyStorage setTile(@Nullable TileBase tile){
         this.tileToUpdate = tile;
         return this;
     }
 
-    private void notifyTile(){
+    protected void notifyTile(){
         if(this.tileToUpdate != null){
             this.tileToUpdate.syncToClients();
         }
     }
 
+    public CustomEnergyStorage copy(){
+        return new CustomEnergyStorage(this.capacity, this.maxReceive, this.maxExtract, this.energy).setTile(this.tileToUpdate);
+    }
+
+    @Nullable
+    public TileBase getTileToUpdate() {
+        return tileToUpdate;
+    }
 }

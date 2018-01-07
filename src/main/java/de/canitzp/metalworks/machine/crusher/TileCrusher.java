@@ -4,9 +4,6 @@ import de.canitzp.metalworks.CustomEnergyStorage;
 import de.canitzp.metalworks.inventory.SidedBasicInv;
 import de.canitzp.metalworks.machine.MachineRecipe;
 import de.canitzp.metalworks.machine.TileBase;
-import de.canitzp.metalworks.machine.blastfurnace.RecipeBlastFurnace;
-import de.canitzp.metalworks.machine.duster.RecipeDuster;
-import de.canitzp.metalworks.recipe.SimpleSteelRecipeHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -17,7 +14,6 @@ import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -84,8 +80,8 @@ public class TileCrusher extends TileBase implements ITickable{
 
     @Override
     public void update() {
+        this.updateBase();
         if(!this.world.isRemote){
-            this.updateForSyncing();
             if(this.recipeId != null){
                 if(this.burn <= 0){
                     this.burn = this.maxBurn = this.energyUsage = 0;

@@ -1,5 +1,6 @@
 package de.canitzp.metalworks;
 
+import com.google.common.collect.Lists;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -25,6 +26,9 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author canitzp
@@ -64,12 +68,13 @@ public class Util {
         return String.format("%.1f %s%s", energy / Math.pow(1000, exp), unitType, ENERY_UNIT);
     }
 
-    public static int pushEnergy(World world, BlockPos pos, IEnergyStorage energy, EnumFacing... ignore){
+    public static int pushEnergy(World world, BlockPos pos, IEnergyStorage energy){
+        return pushEnergy(world, pos, energy, EnumFacing.values());
+    }
+
+    public static int pushEnergy(World world, BlockPos pos, IEnergyStorage energy, EnumFacing... sides){
         if(!world.isRemote && energy.canExtract()){
-            for(EnumFacing side : EnumFacing.values()){
-                if(ignore.length > 0 && ArrayUtils.contains(ignore, side)){
-                   continue;
-                }
+            for(EnumFacing side : sides){
                 TileEntity tile = world.getTileEntity(pos.offset(side));
                 if(tile != null && tile.hasCapability(CapabilityEnergy.ENERGY, side.getOpposite())){
                     IEnergyStorage storage = tile.getCapability(CapabilityEnergy.ENERGY, side.getOpposite());
