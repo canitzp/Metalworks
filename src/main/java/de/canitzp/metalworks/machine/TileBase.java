@@ -97,7 +97,9 @@ public class TileBase extends TileEntity {
             for(EnumFacing side : EnumFacing.values()){
                 NBTTagCompound capsSided = new NBTTagCompound();
                 this.writeCapabilities(capsSided, side);
-                caps.setTag(side.toString().toLowerCase(Locale.ROOT), capsSided);
+                if(!capsSided.hasNoTags()){
+                    caps.setTag(side.toString().toLowerCase(Locale.ROOT), capsSided);
+                }
             }
             NBTTagCompound capsSided = new NBTTagCompound();
             this.writeCapabilities(capsSided, null);
@@ -117,7 +119,9 @@ public class TileBase extends TileEntity {
                     this.readCapabilities(caps.getCompoundTag(name), side);
                 }
             }
-            this.readCapabilities(caps.getCompoundTag("default"), null);
+            if (caps.hasKey("default", Constants.NBT.TAG_COMPOUND)) {
+                this.readCapabilities(caps.getCompoundTag("default"), null);
+            }
         } else if (this.getEnergy(null) != null) {
             this.getEnergy(null).receiveEnergy(nbt.getInteger("Energy"), false);
         }
@@ -137,6 +141,9 @@ public class TileBase extends TileEntity {
         }
         IEnergyStorage energy = getEnergy(side);
         if(energy != null && energy instanceof EnergyStorage && nbt.hasKey("Energy")){
+            if(side == null){
+                System.out.println(this.getClass().getName() + " " + nbt);
+            }
             CapabilityEnergy.ENERGY.readNBT(energy, side, nbt.getTag("Energy"));
         }
     }

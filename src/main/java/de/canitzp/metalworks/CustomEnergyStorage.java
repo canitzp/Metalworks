@@ -84,6 +84,7 @@ public class CustomEnergyStorage extends EnergyStorage {
     protected void notifyTile(){
         if(this.tileToUpdate != null){
             this.tileToUpdate.syncToClients();
+            this.tileToUpdate.markDirty();
         }
     }
 
