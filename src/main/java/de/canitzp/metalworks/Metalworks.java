@@ -15,6 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -91,16 +92,18 @@ public class Metalworks {
         for(String name : OreDictionary.getOreNames()){
             if(name.startsWith("ore")){
                 String dustName = name.replaceFirst("ore", "dust");
-                if(OreDictionary.doesOreNameExist(dustName)){
-                    ItemStack dust = OreDictionary.getOres(dustName).get(0).copy();
+                NonNullList<ItemStack> oreEntries = OreDictionary.getOres(dustName);
+                if(!oreEntries.isEmpty()){
+                    ItemStack dust = oreEntries.get(0).copy();
                     dust.setCount(2);
                     MACHINE_RECIPE_REGISTRY.register(new RecipeCrusher(name + "_" + dustName,
                             new OreDictStack(name), dust, ItemStack.EMPTY, 0, 200, 0));
                 }
             } else if(name.startsWith("ingot")){
                 String dustName = name.replaceFirst("ingot", "dust");
-                if(OreDictionary.doesOreNameExist(dustName)) {
-                    ItemStack dust = OreDictionary.getOres(dustName).get(0).copy();
+                NonNullList<ItemStack> oreEntries = OreDictionary.getOres(dustName);
+                if(!oreEntries.isEmpty()) {
+                    ItemStack dust = oreEntries.get(0).copy();
                     dust.setCount(1);
                     MACHINE_RECIPE_REGISTRY.register(new RecipeCrusher(name + "_" + dustName,
                             new OreDictStack(name), dust, ItemStack.EMPTY, 0, 150, 0));

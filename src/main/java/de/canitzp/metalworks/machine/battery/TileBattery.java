@@ -6,8 +6,11 @@ import de.canitzp.metalworks.Util;
 import de.canitzp.metalworks.machine.TileBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.energy.IEnergyStorage;
 
 import javax.annotation.Nullable;
@@ -17,7 +20,7 @@ import javax.annotation.Nullable;
  */
 public class TileBattery extends TileBase implements ITickable{
 
-    private CustomEnergyStorage normal, input, output;
+    private CustomEnergyStorage normal = new CustomEnergyStorage(Integer.MAX_VALUE), input, output;
 
     @Nullable
     @Override
@@ -36,8 +39,9 @@ public class TileBattery extends TileBase implements ITickable{
     public void onLoad() {
         Block block = world.getBlockState(this.getPos()).getBlock();
         if(block instanceof BlockBattery){
+            int oldEnergy = this.normal.getEnergyStored();
             BlockBattery.Type batType = ((BlockBattery) block).getBatteryType();
-            this.normal = new CustomEnergyStorage(batType.maxEnergy, batType.maxTransfer).setTile(this);
+            this.normal = new CustomEnergyStorage(batType.maxEnergy, batType.maxTransfer, batType.maxTransfer, oldEnergy).setTile(this);
             this.input = new SlaveEnergyStorage(this.normal).set(true, false);
             this.output = new SlaveEnergyStorage(this.normal).set(false, true);
         }

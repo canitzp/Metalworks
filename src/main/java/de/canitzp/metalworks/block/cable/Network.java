@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author canitzp
@@ -21,7 +22,7 @@ public class Network {
 
     private World world;
     private List<BlockPos> cables = new ArrayList<>();
-    private Map<BlockPos, EnumFacing> receiver = new HashMap<>();
+    private Map<BlockPos, EnumFacing> receiver = new ConcurrentHashMap<>();
 
     public Network(World world){
         this.world = world;

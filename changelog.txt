@@ -1,3 +1,8 @@
+1.4.1:
+    -Fixed: -Batteries aren't saving energy when closing the world
+            -ConcurrentModificationException when connecting cable to some non-metalworks machines (tested) Closes #1
+            -NullPointerException on game starts when OreDictionary is fucked up (tested) Closes #2
+
 1.4.0 - Name change:
     -Changed Mod name to 'Metalworks'
     -Added Crusher, Battery Pack, Super Charger

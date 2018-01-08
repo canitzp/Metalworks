@@ -1,5 +1,6 @@
 package de.canitzp.metalworks.machine;
 
+import de.canitzp.metalworks.machine.battery.TileBattery;
 import de.canitzp.metalworks.network.NetworkHandler;
 import de.canitzp.metalworks.network.packet.PacketSyncTile;
 import net.minecraft.entity.player.EntityPlayer;
@@ -141,9 +142,6 @@ public class TileBase extends TileEntity {
         }
         IEnergyStorage energy = getEnergy(side);
         if(energy != null && energy instanceof EnergyStorage && nbt.hasKey("Energy")){
-            if(side == null){
-                System.out.println(this.getClass().getName() + " " + nbt);
-            }
             CapabilityEnergy.ENERGY.readNBT(energy, side, nbt.getTag("Energy"));
         }
     }
