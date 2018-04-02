@@ -18,9 +18,10 @@ public class RecipeDuster extends MachineRecipe{
     public static final int DEFAULT_ENERGY_USAGE = ConfMachines.DU_DEFAULT_ENERGY;
     public static final int DEFAULT_TIME = ConfMachines.DU_DEFAULT_BURN_TIME;
 
-    private OreDictStack[] inputs;
-    private ItemStack output;
-    private int time, energy;
+    private final OreDictStack[] inputs;
+    private final ItemStack output;
+    private final int time;
+    private final int energy;
 
     public RecipeDuster(String name, OreDictStack input1, OreDictStack input2, ItemStack output, int time, int energy){
         this.setRegistryName(new ResourceLocation(Metalworks.MODID, "duster." + name));
@@ -69,9 +70,7 @@ public class RecipeDuster extends MachineRecipe{
             ItemStack input1 = inputs[0];
             ItemStack input2 = inputs[1];
             List<Integer> exceptions = new ArrayList<>();
-            if(canMergeWithAnyInput(input1, exceptions) && canMergeWithAnyInput(input2, exceptions)){
-                return true;
-            }
+            return canMergeWithAnyInput(input1, exceptions) && canMergeWithAnyInput(input2, exceptions);
         }
         return false;
     }

@@ -1,6 +1,7 @@
 package de.canitzp.metalworks.integration.jei;
 
 import de.canitzp.metalworks.Metalworks;
+import de.canitzp.metalworks.machine.biogenerator.InterfaceBioGenerator;
 import de.canitzp.metalworks.machine.blastfurnace.InterfaceBlastFurnace;
 import de.canitzp.metalworks.machine.blastfurnace.TileBlastFurnace;
 import de.canitzp.metalworks.machine.crusher.InterfaceCrusher;
@@ -71,7 +72,7 @@ public abstract class SimpleSteelCategories<T extends IRecipeWrapper> implements
         }
 
         @Override
-        public void setRecipe(IRecipeLayout recipeLayout, SimpleSteelJEIWrapper.BlastFurnace recipeWrapper, IIngredients ingredients) {
+        public void setRecipe(@Nonnull IRecipeLayout recipeLayout, @Nonnull SimpleSteelJEIWrapper.BlastFurnace recipeWrapper, @Nonnull IIngredients ingredients) {
             IGuiItemStackGroup group = recipeLayout.getItemStacks();
             group.init(TileBlastFurnace.INPUT1, true, 1, 1);
             group.set(TileBlastFurnace.INPUT1, recipeWrapper.recipe.getInputs()[0].getListForJEI());
@@ -105,7 +106,7 @@ public abstract class SimpleSteelCategories<T extends IRecipeWrapper> implements
         }
 
         @Override
-        public void setRecipe(IRecipeLayout recipeLayout, SimpleSteelJEIWrapper.Duster recipeWrapper, IIngredients ingredients) {
+        public void setRecipe(@Nonnull IRecipeLayout recipeLayout, @Nonnull SimpleSteelJEIWrapper.Duster recipeWrapper, @Nonnull IIngredients ingredients) {
             IGuiItemStackGroup group = recipeLayout.getItemStacks();
             OreDictStack[] inputs = recipeWrapper.recipe.getInputs();
             if(inputs[0] != OreDictStack.EMPTY){
@@ -134,7 +135,7 @@ public abstract class SimpleSteelCategories<T extends IRecipeWrapper> implements
         }
 
         @Override
-        public void setRecipe(IRecipeLayout recipeLayout, SimpleSteelJEIWrapper.GeothermalGenerator recipeWrapper, IIngredients ingredients) {
+        public void setRecipe(@Nonnull IRecipeLayout recipeLayout, @Nonnull SimpleSteelJEIWrapper.GeothermalGenerator recipeWrapper, @Nonnull IIngredients ingredients) {
             recipeLayout.getItemStacks().init(0, true, 0, 0);
             recipeLayout.getItemStacks().set(0, ingredients.getInputs(ItemStack.class).get(0));
         }
@@ -152,7 +153,7 @@ public abstract class SimpleSteelCategories<T extends IRecipeWrapper> implements
         }
 
         @Override
-        public void setRecipe(IRecipeLayout recipeLayout, SimpleSteelJEIWrapper.Crusher recipeWrapper, IIngredients ingredients) {
+        public void setRecipe(@Nonnull IRecipeLayout recipeLayout, @Nonnull SimpleSteelJEIWrapper.Crusher recipeWrapper, @Nonnull IIngredients ingredients) {
             IGuiItemStackGroup group = recipeLayout.getItemStacks();
             group.init(0, true, 30, 0);
             group.set(0, recipeWrapper.recipe.getInput().getListForJEI());
@@ -162,6 +163,30 @@ public abstract class SimpleSteelCategories<T extends IRecipeWrapper> implements
             if(!outs[1].isEmpty()){
                 group.init(2, false, 40, 46);
                 group.set(2, outs[1]);
+            }
+        }
+    }
+
+    public static class BioGenerator extends SimpleSteelCategories<SimpleSteelJEIWrapper.BioGenerator>{
+
+        public BioGenerator(IRecipeCategoryRegistration reg) {
+            super(reg, SimpleSteelJEIPlugin.BIO_GENERATOR);
+        }
+
+        @Override
+        protected IDrawable createDrawable(IGuiHelper helper) {
+            return helper.createDrawable(InterfaceBioGenerator.LOC, 59, 5, 58, 64);
+        }
+
+        @Override
+        public void setRecipe(@Nonnull IRecipeLayout recipeLayout, @Nonnull SimpleSteelJEIWrapper.BioGenerator recipeWrapper, @Nonnull IIngredients ingredients) {
+            IGuiItemStackGroup group = recipeLayout.getItemStacks();
+            group.init(0, true, 20, 0);
+            group.set(0, recipeWrapper.recipe.getStack().copy());
+            ItemStack waste = recipeWrapper.recipe.getWaste().copy();
+            if(!waste.isEmpty()){
+                group.init(1, false, 20, 46);
+                group.set(1, waste);
             }
         }
     }

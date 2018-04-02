@@ -19,8 +19,9 @@ import java.util.Map;
  */
 public class GuiHandler implements IGuiHandler {
 
-    public static Map<Class<? extends TileBase>, Class<? extends IMachineInterface<? extends TileBase>>> interfaceMap = new HashMap<>();
+    public static final Map<Class<? extends TileBase>, Class<? extends IMachineInterface<? extends TileBase>>> interfaceMap = new HashMap<>();
 
+    @SuppressWarnings("unchecked")
     @Nullable
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
@@ -32,6 +33,7 @@ public class GuiHandler implements IGuiHandler {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     @Nullable
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
@@ -43,6 +45,7 @@ public class GuiHandler implements IGuiHandler {
         return null;
     }
 
+    @SuppressWarnings("SuspiciousMethodCalls")
     private IMachineInterface<? extends TileBase> getMachineInterface(TileEntity tile){
         if(tile instanceof TileBase && interfaceMap.containsKey(tile.getClass())){
             try {

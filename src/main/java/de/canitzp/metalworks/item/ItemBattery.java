@@ -34,7 +34,7 @@ import java.util.List;
  */
 public class ItemBattery extends ItemBase {
 
-    private int maxEnergy;
+    private final int maxEnergy;
 
     public ItemBattery(String name, int maxEnergy) {
         super(name);

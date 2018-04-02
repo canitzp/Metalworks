@@ -15,6 +15,7 @@ import java.util.List;
 @Mod.EventBusSubscriber
 public class MachineRecipe extends IForgeRegistryEntry.Impl<IMachineRecipe> implements IMachineRecipe {
 
+    @SuppressWarnings("unchecked")
     public static <E extends IMachineRecipe> E getRecipe(ResourceLocation res){
         return (E) Metalworks.MACHINE_RECIPE_REGISTRY.getValue(res);
     }
@@ -30,6 +31,7 @@ public class MachineRecipe extends IForgeRegistryEntry.Impl<IMachineRecipe> impl
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     public static <E extends IMachineRecipe> List<E> getRegisteredForType(Class<E> clazz){
         List<E> list = new ArrayList<>();
         for(IMachineRecipe recipe : Metalworks.MACHINE_RECIPE_REGISTRY){

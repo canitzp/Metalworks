@@ -6,12 +6,12 @@ import de.canitzp.metalworks.Util;
 import de.canitzp.metalworks.machine.TileBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nullable;
 
@@ -21,6 +21,12 @@ import javax.annotation.Nullable;
 public class TileBattery extends TileBase implements ITickable{
 
     private CustomEnergyStorage normal = new CustomEnergyStorage(Integer.MAX_VALUE), input, output;
+    private int lastChargingState;
+
+    @Override
+    protected Triple<Boolean, Boolean, Boolean> hasEnergyFluidInv() {
+        return Triple.of(true, false, false);
+    }
 
     @Nullable
     @Override
@@ -51,17 +57,20 @@ public class TileBattery extends TileBase implements ITickable{
     public void update() {
         this.updateBase();
         if(!world.isRemote){
-            if(this.output != null)
+            if(this.output != null && this.normal.getEnergyStored() != 0){
                 Util.pushEnergy(this.world, this.pos, this.output, this.getOutputSide());
-            if(this.world.getTotalWorldTime() % 100 == 0){
-                this.syncToClients();
             }
         }
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void onSyncPacket() {
-        this.markForRenderUpdate();
+        int chargingState = getChargingState();
+        if(this.lastChargingState != chargingState){
+            this.lastChargingState = chargingState;
+            this.markForRenderUpdate();
+        }
     }
 
     public int getChargingState(){

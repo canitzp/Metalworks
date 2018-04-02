@@ -15,7 +15,7 @@ import net.minecraft.world.World;
  */
 public class BlockGeoburnable extends DefaultGeoBurnable {
 
-    public IBlockState state;
+    public final IBlockState state;
     public boolean ignoreStates = false;
     public int energy = DEFAULT_ENERGY, burn = DEFAULT_BURN_TIME;
     private int cooldown = 0;

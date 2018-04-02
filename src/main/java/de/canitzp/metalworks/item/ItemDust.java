@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class ItemDust extends ItemBase {
 
-    private int color;
+    private final int color;
 
     public ItemDust(String name, int color) {
         super(name + "_dust");

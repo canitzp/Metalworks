@@ -2,50 +2,51 @@ package de.canitzp.metalworks.block;
 
 import de.canitzp.metalworks.Metalworks;
 import de.canitzp.metalworks.Props;
-import de.canitzp.metalworks.item.ItemBlockEnergetic;
+import de.canitzp.metalworks.Util;
+import de.canitzp.metalworks.item.ItemMachineBlock;
 import de.canitzp.metalworks.machine.IMachineInterface;
 import de.canitzp.metalworks.machine.TileBase;
-import de.canitzp.metalworks.machine.blastfurnace.TileBlastFurnace;
 import de.canitzp.metalworks.network.GuiHandler;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.IWorldNameable;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 /**
  * @author canitzp
  */
+@SuppressWarnings({"deprecation", "unchecked", "SameParameterValue", "UnusedReturnValue"})
 public abstract class BlockContainerBase<T extends BlockContainerBase<T>> extends BlockBase<T> implements ITileEntityProvider{
 
-    private boolean isActivatable = this.getDefaultState().getPropertyKeys().contains(Props.ACTIVE);
+    private final boolean isActivatable = this.getDefaultState().getPropertyKeys().contains(Props.ACTIVE);
     private boolean hasMachineInterface;
     private boolean energeticItemBlock;
+    private boolean rightClickChecks = true;
+    private boolean hasMachineItemBlock;
     private int capacity, maxReceive, maxExtract;
 
     public BlockContainerBase(Material material, MapColor color, String name) {
@@ -60,7 +61,7 @@ public abstract class BlockContainerBase<T extends BlockContainerBase<T>> extend
     @Override
     public T register() {
         if(shouldRegister()){
-            GameRegistry.registerTileEntity(this.getTileEntityClass(), this.getRegistryName().toString());
+            GameRegistry.registerTileEntity(this.getTileEntityClass(), Objects.requireNonNull(this.getRegistryName()).toString());
         }
         return super.register();
     }
@@ -73,22 +74,28 @@ public abstract class BlockContainerBase<T extends BlockContainerBase<T>> extend
 
     @Override
     protected ItemBlock getItem() {
-        return this.energeticItemBlock ? new ItemBlockEnergetic(this, this.capacity, this.maxReceive, this.maxExtract) : super.getItem();
+        return this.hasMachineItemBlock ? new ItemMachineBlock(this) : super.getItem();
     }
 
-    protected T setEnergeticItem(int capacity, int maxReceive, int maxExtract){
-        this.energeticItemBlock = true;
-        this.capacity = capacity;
-        this.maxReceive = maxReceive;
-        this.maxExtract = maxExtract;
+    protected T setMachineItemBlock(boolean b){
+        this.hasMachineItemBlock = b;
         return (T) this;
+    }
+
+    protected T setRightClickChecks(boolean b){
+        this.rightClickChecks = b;
+        return (T) this;
+    }
+
+    public List<EnumFacing> getSidesToShowInTooltip(){
+        return Collections.emptyList();
     }
 
     protected abstract Class<? extends TileBase> getTileEntityClass();
 
     @Nullable
     @Override
-    public final TileEntity createNewTileEntity(World worldIn, int meta) {
+    public final TileEntity createNewTileEntity(@Nonnull World worldIn, int meta) {
         try {
             return this.getTileEntityClass().newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
@@ -98,18 +105,20 @@ public abstract class BlockContainerBase<T extends BlockContainerBase<T>> extend
     }
 
     /**
-     * Called serverside after this block is replaced with another in Chunk, but before the Tile Entity is updated
+     * Called server side after this block is replaced with another in Chunk, but before the Tile Entity is updated
      */
-    public void breakBlock(World world, BlockPos pos, IBlockState state) {
-        TileEntity tile = world.getTileEntity(pos);
-        if(tile instanceof TileBase){
-            ((TileBase) tile).breakBlock();
+    public void breakBlock(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull IBlockState state) {
+        if(!this.hasMachineItemBlock){
+            TileEntity tile = world.getTileEntity(pos);
+            if(tile instanceof TileBase){
+                ((TileBase) tile).breakBlock();
+            }
         }
         super.breakBlock(world, pos, state);
     }
 
     @Override
-    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune){
+    public void getDrops(@Nonnull NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, @Nonnull IBlockState state, int fortune){
         Random rand = new Random();
         int count = quantityDropped(state, fortune, rand);
         for (int i = 0; i < count; i++) {
@@ -131,12 +140,12 @@ public abstract class BlockContainerBase<T extends BlockContainerBase<T>> extend
     }
 
     @Override
-    public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
+    public boolean removedByPlayer(@Nonnull IBlockState state, World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer player, boolean willHarvest) {
         return willHarvest || super.removedByPlayer(state, world, pos, player, false);
     }
 
     @Override
-    public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, ItemStack stack) {
+    public void harvestBlock(@Nonnull World worldIn, EntityPlayer player, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nullable TileEntity te, ItemStack stack) {
         super.harvestBlock(worldIn, player, pos, state, te, stack);
         worldIn.setBlockToAir(pos);
     }
@@ -153,6 +162,7 @@ public abstract class BlockContainerBase<T extends BlockContainerBase<T>> extend
         return tileentity != null && tileentity.receiveClientEvent(id, param);
     }
 
+    @Nonnull
     @Override
     public IBlockState getActualState(@Nonnull IBlockState state, IBlockAccess world, BlockPos pos) {
         if(this.isActivatable){
@@ -166,18 +176,22 @@ public abstract class BlockContainerBase<T extends BlockContainerBase<T>> extend
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if(this.hasMachineInterface){
-            if(!world.isRemote){
-                this.openGui(player, pos);
+        if(rightClickChecks){
+            if (!world.isRemote) {
+                if (!Util.tryToBucketOrUnbucketAFluid(world, pos, state, player, hand, facing, hitX, hitY, hitZ)) {
+                    if (this.hasMachineInterface) {
+                        this.openGui(player, pos);
+                    }
+                }
             }
             return true;
         }
-        return super.onBlockActivated(world, pos, state, player, hand, facing, hitX, hitY, hitZ);
+        return false;
     }
 
     @Override
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        if(stack.getTagCompound() != null && stack.getTagCompound().hasKey("TileData", Constants.NBT.TAG_COMPOUND) && this.energeticItemBlock){
+        if(stack.getTagCompound() != null && stack.getTagCompound().hasKey("TileData", Constants.NBT.TAG_COMPOUND) && this.hasMachineItemBlock){
             TileEntity tile = world.getTileEntity(pos);
             if(tile instanceof TileBase){
                 ((TileBase) tile).readNBT(stack.getTagCompound().getCompoundTag("TileData"), TileBase.NBTType.DROP);
@@ -185,7 +199,23 @@ public abstract class BlockContainerBase<T extends BlockContainerBase<T>> extend
         }
     }
 
+    @Nonnull
+    @Override
+    public ItemStack getPickBlock(@Nonnull IBlockState state, RayTraceResult target, @Nonnull World world, @Nonnull BlockPos pos, EntityPlayer player) {
+        ItemStack def = super.getPickBlock(state, target, world, pos, player);
+        TileEntity tile = world.getTileEntity(pos);
+        NBTTagCompound nbt = new NBTTagCompound();
+        if (tile instanceof TileBase && this.hasMachineItemBlock) {
+            NBTTagCompound tileData = new NBTTagCompound();
+            ((TileBase) tile).writeNBT(tileData, TileBase.NBTType.DROP);
+            nbt.setTag("TileData", tileData);
+            def.setTagCompound(nbt);
+        }
+        return def;
+    }
+
     public void openGui(EntityPlayer player, BlockPos pos){
         player.openGui(Metalworks.instance, -1, player.world, pos.getX(), pos.getY(), pos.getZ());
     }
+
 }

@@ -11,6 +11,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.energy.IEnergyStorage;
+import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nullable;
 
@@ -19,15 +20,20 @@ import javax.annotation.Nullable;
  */
 public class TileGeothermalGenerator extends TileBase implements ITickable{
 
-    public static int ENERGY_CAPACITY = 5000;
+    public static final int ENERGY_CAPACITY = 5000;
 
-    public CustomEnergyStorage energy = new CustomEnergyStorage(ENERGY_CAPACITY){
+    public final CustomEnergyStorage energy = new CustomEnergyStorage(ENERGY_CAPACITY){
         @Override
         public boolean canReceive() {
             return false;
         }
     }.setTile(this);
     public int burn = 0, energyPerTick = 0, cooldown = 0;
+
+    @Override
+    protected Triple<Boolean, Boolean, Boolean> hasEnergyFluidInv() {
+        return Triple.of(true, false, false);
+    }
 
     @Override
     public void update() {

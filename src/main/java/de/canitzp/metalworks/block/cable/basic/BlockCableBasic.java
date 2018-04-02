@@ -17,12 +17,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author canitzp
  */
+@SuppressWarnings("deprecation")
 public class BlockCableBasic extends BlockContainerBase<BlockCableBasic> {
 
     public static final PropertyBool NORTH = PropertyBool.create("north");
@@ -37,6 +39,7 @@ public class BlockCableBasic extends BlockContainerBase<BlockCableBasic> {
 
     public BlockCableBasic() {
         super(Material.IRON, "cable_basic");
+        this.setRightClickChecks(false);
         this.setHardness(0.5F);
         this.setDefaultState(this.blockState.getBaseState().withProperty(NORTH, false)
                 .withProperty(SOUTH, false).withProperty(WEST, false)
@@ -45,6 +48,7 @@ public class BlockCableBasic extends BlockContainerBase<BlockCableBasic> {
                 .withProperty(STRAIGHT_WE, false).withProperty(STRAIGHT_UD, false));
     }
 
+    @Nonnull
     @Override
     public IBlockState getStateFromMeta(int meta) {
         return this.getDefaultState();
@@ -65,13 +69,15 @@ public class BlockCableBasic extends BlockContainerBase<BlockCableBasic> {
         return false;
     }
 
+    @Nonnull
     @Override
     protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, NORTH, SOUTH, WEST, EAST, UP, DOWN, STRAIGHT_NS, STRAIGHT_WE, STRAIGHT_UD);
     }
 
+    @Nonnull
     @Override
-    public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+    public IBlockState getActualState(@Nonnull IBlockState state, IBlockAccess world, BlockPos pos) {
         List<EnumFacing> validSides = isSideValid(world, pos);
         boolean north = validSides.contains(EnumFacing.NORTH);
         boolean south = validSides.contains(EnumFacing.SOUTH);
@@ -104,6 +110,7 @@ public class BlockCableBasic extends BlockContainerBase<BlockCableBasic> {
         return sides;
     }
 
+    @Nonnull
     @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
         state = getActualState(state, source, pos);
@@ -136,7 +143,7 @@ public class BlockCableBasic extends BlockContainerBase<BlockCableBasic> {
 
     @Override
     public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
-        this.onUpdate(world, pos);
+        //this.onUpdate(world, pos);
     }
 
     @Override
@@ -145,12 +152,12 @@ public class BlockCableBasic extends BlockContainerBase<BlockCableBasic> {
     }
 
     @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+    public void breakBlock(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull IBlockState state) {
         super.breakBlock(world, pos, state);
         if(!world.isRemote){
             for(EnumFacing side : EnumFacing.values()){
                 TileEntity tile = world.getTileEntity(pos.offset(side));
-                if(tile != null && tile instanceof TileCableBasic){
+                if(tile instanceof TileCableBasic){
                     ((TileCableBasic) tile).network = new Network(world);
                     ((TileCableBasic) tile).network.searchFor(pos.offset(side));
                 }
@@ -161,7 +168,7 @@ public class BlockCableBasic extends BlockContainerBase<BlockCableBasic> {
     public void onUpdate(IBlockAccess world, BlockPos pos){
         if(world instanceof World && !((World) world).isRemote){
             TileEntity tile = world.getTileEntity(pos);
-            if(tile != null && tile instanceof TileCableBasic){
+            if(tile instanceof TileCableBasic){
                 ((TileCableBasic) tile).network.searchFor(pos);
             }
         }

@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public abstract class SidedBasicInv extends InventoryBasic implements ISidedInventory {
 
-    private Map<EnumFacing, SidedWrapper> cachedFaces = new HashMap<>();
+    private final Map<EnumFacing, SidedWrapper> cachedFaces = new HashMap<>();
     private TileBase tile = null;
 
     public SidedBasicInv(String title, int slotCount) {

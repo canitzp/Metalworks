@@ -6,7 +6,6 @@ import de.canitzp.metalworks.client.gui.GuiMachine;
 import de.canitzp.metalworks.integration.jei.SimpleSteelJEIPlugin;
 import de.canitzp.metalworks.inventory.ContainerMachine;
 import de.canitzp.metalworks.machine.IMachineInterface;
-import de.canitzp.metalworks.machine.duster.TileDuster;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;

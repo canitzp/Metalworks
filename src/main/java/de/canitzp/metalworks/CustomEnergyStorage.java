@@ -33,8 +33,8 @@ public class CustomEnergyStorage extends EnergyStorage {
         int energyReceived = Math.min(capacity - this.getEnergyStored(), Math.min(this.maxReceive, maxReceive));
         if (!simulate){
             this.setEnergy(this.getEnergyStored() + energyReceived);
+            this.notifyTile();
         }
-        this.notifyTile();
         return energyReceived;
     }
 
@@ -44,8 +44,8 @@ public class CustomEnergyStorage extends EnergyStorage {
             int energyReceived = Math.min(capacity - this.getEnergyStored(), Math.min(this.maxReceive, maxReceive));
             if (!simulate){
                 this.setEnergy(this.getEnergyStored() + energyReceived);
+                this.notifyTile();
             }
-            this.notifyTile();
             return energyReceived;
         }
         return 0;
@@ -57,8 +57,8 @@ public class CustomEnergyStorage extends EnergyStorage {
             int energyExtracted = Math.min(energy, Math.min(this.maxExtract, maxExtract));
             if (!simulate){
                 this.setEnergy(this.getEnergyStored() - energyExtracted);
+                notifyTile();
             }
-            notifyTile();
             return energyExtracted;
         }
         return 0;
@@ -92,8 +92,12 @@ public class CustomEnergyStorage extends EnergyStorage {
         return new CustomEnergyStorage(this.capacity, this.maxReceive, this.maxExtract, this.energy).setTile(this.tileToUpdate);
     }
 
-    @Nullable
-    public TileBase getTileToUpdate() {
-        return tileToUpdate;
+    @SuppressWarnings("UnusedReturnValue")
+    public CustomEnergyStorage setValues(int stored, int max, int receive, int extract) {
+        this.energy = stored;
+        this.capacity = max;
+        this.maxReceive = receive;
+        this.maxExtract = extract;
+        return this;
     }
 }

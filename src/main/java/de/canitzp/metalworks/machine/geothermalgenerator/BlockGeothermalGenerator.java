@@ -18,6 +18,7 @@ import javax.annotation.Nonnull;
 /**
  * @author canitzp
  */
+@SuppressWarnings("deprecation")
 public class BlockGeothermalGenerator extends BlockContainerBase<BlockGeothermalGenerator> {
 
     public static final PropertyBool ACTIVE = PropertyBool.create("active");
@@ -28,7 +29,7 @@ public class BlockGeothermalGenerator extends BlockContainerBase<BlockGeothermal
         this.setHarvestLevel("pickaxe", 2);
         this.setHardness(4.5F);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ACTIVE, false));
-        this.setEnergeticItem(TileGeothermalGenerator.ENERGY_CAPACITY, TileGeothermalGenerator.ENERGY_CAPACITY, TileGeothermalGenerator.ENERGY_CAPACITY);
+        this.setMachineItemBlock(true);
     }
 
     @Nonnull
@@ -48,6 +49,7 @@ public class BlockGeothermalGenerator extends BlockContainerBase<BlockGeothermal
         return new BlockStateContainer(this, ACTIVE, FACING);
     }
 
+    @Nonnull
     @Override
     public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
         return super.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer).withProperty(FACING, placer.getHorizontalFacing().getOpposite());

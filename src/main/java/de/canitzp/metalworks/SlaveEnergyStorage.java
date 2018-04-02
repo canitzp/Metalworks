@@ -5,7 +5,7 @@ package de.canitzp.metalworks;
  */
 public class SlaveEnergyStorage extends CustomEnergyStorage {
 
-    private CustomEnergyStorage master;
+    private final CustomEnergyStorage master;
     private boolean canExtract = true, canReceive = true;
 
     public SlaveEnergyStorage(CustomEnergyStorage energyStorage) {

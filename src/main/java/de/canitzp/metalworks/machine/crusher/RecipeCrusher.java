@@ -15,15 +15,17 @@ public class RecipeCrusher extends MachineRecipe {
     public static final int DEFAULT_ENERGY = ConfMachines.CR_DEFAULT_ENERGY;
     public static final int DEFAULT_TIME = ConfMachines.CR_DEFAULT_BURN_TIME;
 
-    private OreDictStack input = OreDictStack.EMPTY;
-    private ItemStack[] outputs;
-    private int sencondChance, time, energy;
+    private final OreDictStack input;
+    private final ItemStack[] outputs;
+    private final int secondChance;
+    private final int time;
+    private final int energy;
 
     public RecipeCrusher(String name, OreDictStack input, ItemStack output, ItemStack secondOutput, int secondChance, int time, int energy){
         this.setRegistryName(new ResourceLocation(Metalworks.MODID, "crusher." + name));
         this.input = input;
         this.outputs = new ItemStack[]{output, secondOutput};
-        this.sencondChance = secondChance;
+        this.secondChance = secondChance;
         this.energy = energy > 0 ? energy : DEFAULT_ENERGY;
         this.time = time > 0 ? time : DEFAULT_TIME;
     }
@@ -36,8 +38,8 @@ public class RecipeCrusher extends MachineRecipe {
         return outputs;
     }
 
-    public int getSencondChance() {
-        return sencondChance;
+    public int getSecondChance() {
+        return secondChance;
     }
 
     public int getEnergy() {

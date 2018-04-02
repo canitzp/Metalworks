@@ -15,6 +15,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author canitzp
@@ -22,12 +23,12 @@ import java.util.List;
 public class ItemBase extends Item {
 
     public static final List<ItemBase> ITEMS = new ArrayList<>();
-    private List<Object[]> recipes = new ArrayList<>();
-    private List<String> oreNames = new ArrayList<>();
+    private final List<Object[]> recipes = new ArrayList<>();
+    private final List<String> oreNames = new ArrayList<>();
 
     public ItemBase(String name){
         this.setRegistryName(new ResourceLocation(Metalworks.MODID, name));
-        this.setUnlocalizedName(this.getRegistryName().toString());
+        this.setUnlocalizedName(Objects.requireNonNull(this.getRegistryName()).toString());
         this.setCreativeTab(Registry.TAB);
     }
 
@@ -48,7 +49,7 @@ public class ItemBase extends Item {
 
     @SideOnly(Side.CLIENT)
     public void registerClient(){
-        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(this.getRegistryName(), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(Objects.requireNonNull(this.getRegistryName()), "inventory"));
     }
 
     @SideOnly(Side.CLIENT)

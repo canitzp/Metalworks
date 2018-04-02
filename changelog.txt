@@ -1,3 +1,10 @@
+1.5.0:
+    -Added: -Bio Generator
+            -Fluid Tank
+    -Fixed: -Cable can transfer energy unlimited fast (more or less)
+            -Cable networks are now way faster and won't kill the tps anymore
+            -Batteries aren't as fps eating as before
+
 1.4.1:
     -Fixed: -Batteries aren't saving energy when closing the world
             -ConcurrentModificationException when connecting cable to some non-metalworks machines (tested) Closes #1

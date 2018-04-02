@@ -2,6 +2,7 @@ package de.canitzp.metalworks;
 
 import de.canitzp.metalworks.block.BlockBase;
 import de.canitzp.metalworks.item.ItemBase;
+import de.canitzp.metalworks.machine.IGeneratorFuel;
 import de.canitzp.metalworks.machine.IMachineRecipe;
 import de.canitzp.metalworks.machine.blastfurnace.RecipeBlastFurnace;
 import de.canitzp.metalworks.machine.crusher.RecipeCrusher;
@@ -21,7 +22,6 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -29,7 +29,6 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -44,19 +43,19 @@ public class Metalworks {
     public static final String MODVERSION = "@VERSION@";
 
     public static final IForgeRegistry<IMachineRecipe> MACHINE_RECIPE_REGISTRY = new RegistryBuilder<IMachineRecipe>()
-            .setName(new ResourceLocation(Metalworks.MODID, "machineRecipes")).setType(IMachineRecipe.class)
+            .setName(new ResourceLocation(Metalworks.MODID, "machine_Recipes")).setType(IMachineRecipe.class)
             .setMaxID(10000).disableSaving().allowModification().create();
 
     public static final IForgeRegistry<IGeoburnable> GEOBURNABLE_REGISTRY = new RegistryBuilder<IGeoburnable>()
             .setName(new ResourceLocation(Metalworks.MODID, "geoburnables")).setType(IGeoburnable.class)
             .setMaxID(10000).disableSaving().allowModification().create();
 
+    public static final IForgeRegistry<IGeneratorFuel> GENERATOR_FUEL_REGISTRY = new RegistryBuilder<IGeneratorFuel>()
+            .setName(new ResourceLocation(Metalworks.MODID, "generator_fuel")).setType(IGeneratorFuel.class)
+            .setMaxID(10000).disableSaving().allowModification().create();
+
     @Mod.Instance(MODID)
     public static Metalworks instance;
-
-    @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event){
-    }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event){
@@ -69,9 +68,9 @@ public class Metalworks {
                 }
             }
         }
-        for(BlockBase block : BlockBase.BLOCKS){
+        for(BlockBase<?> block : BlockBase.BLOCKS){
             if(block.hasOreNames()){
-                for(String name : ((List<String>) block.getOreNames())){
+                for(String name : block.getOreNames()){
                     OreDictionary.registerOre(name, block);
                 }
             }
@@ -90,7 +89,7 @@ public class Metalworks {
 
         // Generic Crusher
         for(String name : OreDictionary.getOreNames()){
-            if(name.startsWith("ore")){
+            if(name.startsWith("ore") && !"oreRedstone".equals(name)){
                 String dustName = name.replaceFirst("ore", "dust");
                 NonNullList<ItemStack> oreEntries = OreDictionary.getOres(dustName);
                 if(!oreEntries.isEmpty()){

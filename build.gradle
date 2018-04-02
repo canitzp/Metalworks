@@ -9,19 +9,16 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.4.1"
+version = "1.5.0pre"
 group = "de.canitzp.metalworks"
 archivesBaseName = "Metalworks"
 
 sourceCompatibility = targetCompatibility = '1.8'
-compileJava {
-    sourceCompatibility = targetCompatibility = '1.8'
-}
 
 minecraft {
-    version = "1.12.2-14.23.1.2555"
+    version = "1.12.2-14.23.2.2641"
     runDir = "run"
-    mappings = "snapshot_20171225"
+    mappings = "snapshot_20180327"
     makeObfSourceJar = false
     replaceIn "Metalworks.java"
     replace "@VERSION@", project.version.toString()
@@ -29,16 +26,30 @@ minecraft {
 
 repositories{
     maven { //JEI
-        url = "http://dvs1.progwml6.com/files/maven"
+        url "http://dvs1.progwml6.com/files/maven"
     }
     maven { //CraftTwaker
         url "http://maven.blamejared.com"
+    }
+    maven { // Actually Additions
+        url "http://maven.chaosfield.at"
+    }
+    maven { // CommonCapabilities
+        url "https://dl.bintray.com/cyclopsmc/dev/"
+    }
+    maven { // OpenComputers
+        url "http://maven.cil.li/"
     }
 }
 
 dependencies {
     deobfProvided "mezz.jei:jei_${project.jei_version}:api"
     runtime "mezz.jei:jei_${project.jei_version}"
+    deobfCompile "de.ellpeck.actuallyadditions:ActuallyAdditions:" + project.actadd_version
+    deobfCompile "de.canitzp.tumat:TUMAT:" + project.tumat_version
+    deobfCompile "org.cyclops.commoncapabilities:CommonCapabilities:" + project.commoncaps_version
+    deobfProvided "li.cil.oc:OpenComputers:MC" + project.oc_version + ":api"
+    runtime "li.cil.oc:OpenComputers:MC" + project.oc_version
 }
 
 processResources {

@@ -10,7 +10,6 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,9 +19,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Network {
 
-    private World world;
-    private List<BlockPos> cables = new ArrayList<>();
-    private Map<BlockPos, EnumFacing> receiver = new ConcurrentHashMap<>();
+    private final World world;
+    private final List<BlockPos> cables = new ArrayList<>();
+    private final Map<BlockPos, EnumFacing> receiver = new ConcurrentHashMap<>();
 
     public Network(World world){
         this.world = world;
@@ -79,6 +78,8 @@ public class Network {
                 if(storage != null && storage.canReceive()){
                     energy -= storage.receiveEnergy(energy, simulate);
                 }
+            } else {
+                this.receiver.remove(entry.getKey());
             }
             if(energy <= 0){
                 return oldEnergy;

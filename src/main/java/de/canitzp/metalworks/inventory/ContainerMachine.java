@@ -15,14 +15,12 @@ import javax.annotation.Nonnull;
  */
 public class ContainerMachine<T extends TileBase> extends Container {
 
-    private IMachineInterface<T> machineInterface;
-    private T tile;
-    private EntityPlayer player;
+    private final IMachineInterface<T> machineInterface;
+    private final T tile;
 
     public ContainerMachine(EntityPlayer player, T tile, IMachineInterface<T> machineInterface){
         this.machineInterface = machineInterface;
         this.tile = tile;
-        this.player = player;
         machineInterface.initSlots(tile, this, player);
         Pair<Integer, Integer> invCoords = machineInterface.getInventoryLocation(tile, player);
         if(invCoords != null){
@@ -41,7 +39,7 @@ public class ContainerMachine<T extends TileBase> extends Container {
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer player) {
+    public boolean canInteractWith(@Nonnull EntityPlayer player) {
         return this.tile.canBeUsedBy(player);
     }
 
@@ -51,6 +49,7 @@ public class ContainerMachine<T extends TileBase> extends Container {
         return this.machineInterface.shiftStack(this.tile, player.world, player, index);
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public Slot addSlot(Slot slot){
         return this.addSlotToContainer(slot);
     }

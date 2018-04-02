@@ -3,7 +3,7 @@
 	"textures": {
 		"0": "metalworks:items/battery/state_0",
 		"1": "metalworks:blocks/battery",
-		"particle": "#0"
+		"particle": "metalworks:items/battery/state_0"
 	},
 	"elements": [
 		{

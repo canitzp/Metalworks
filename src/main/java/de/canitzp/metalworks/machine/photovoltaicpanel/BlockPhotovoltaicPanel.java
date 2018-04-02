@@ -14,7 +14,8 @@ public class BlockPhotovoltaicPanel extends BlockContainerBase<BlockPhotovoltaic
         super(Material.IRON, MapColor.PURPLE, "photovoltaic_panel");
         this.setHardness(4.5F);
         this.setHarvestLevel("pickaxe", 2);
-        this.setEnergeticItem(TilePhotovoltaicPanel.ENERGY_PRODUCTION, TilePhotovoltaicPanel.ENERGY_PRODUCTION, TilePhotovoltaicPanel.ENERGY_PRODUCTION);
+        this.setMachineItemBlock(true);
+        this.setRightClickChecks(false);
     }
 
     @Override

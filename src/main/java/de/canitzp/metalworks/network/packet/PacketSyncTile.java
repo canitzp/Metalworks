@@ -52,7 +52,7 @@ public class PacketSyncTile implements IMessage, IMessageHandler<PacketSyncTile,
         if(message.syncTag != null){
             Minecraft.getMinecraft().addScheduledTask(() -> {
                 TileEntity tile = Minecraft.getMinecraft().world.getTileEntity(message.pos);
-                if(tile != null && tile instanceof TileBase){
+                if(tile instanceof TileBase){
                     ((TileBase) tile).readNBT(message.syncTag, TileBase.NBTType.SYNC);
                     ((TileBase) tile).onSyncPacket();
                 }

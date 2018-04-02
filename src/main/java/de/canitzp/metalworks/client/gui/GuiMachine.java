@@ -1,5 +1,6 @@
 package de.canitzp.metalworks.client.gui;
 
+import de.canitzp.metalworks.CustomFluidTank;
 import de.canitzp.metalworks.Metalworks;
 import de.canitzp.metalworks.integration.jei.SimpleSteelJEIPlugin;
 import de.canitzp.metalworks.inventory.ContainerMachine;
@@ -13,11 +14,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author canitzp
@@ -28,11 +33,12 @@ public class GuiMachine<T extends TileBase> extends GuiContainer {
     public static final ResourceLocation INVENTORY_LOCATION = new ResourceLocation(Metalworks.MODID, "textures/gui/inventory.png");
     public static  boolean isJeiLoaded;
 
-    private IMachineInterface<T> machineInterface;
-    private T tile;
+    private final IMachineInterface<T> machineInterface;
+    private final T tile;
     private TextureManager texture;
-    private EntityPlayer player;
+    private final EntityPlayer player;
     private GuiEnergyBar energyBar;
+    private final Map<EnumFacing, GuiFluidBar> fluidBars = new ConcurrentHashMap<>();
     private IMachineInterface.JEIData jeiStuff;
 
     public GuiMachine(EntityPlayer player, T tile, IMachineInterface<T> machineInterface, ContainerMachine<T> con) {
@@ -48,6 +54,10 @@ public class GuiMachine<T extends TileBase> extends GuiContainer {
         super.initGui();
         this.texture = this.mc.getTextureManager();
         this.energyBar = this.machineInterface.getEnergyBar(this.tile, this, this.player, this.guiLeft, this.guiTop);
+        Map<EnumFacing, GuiFluidBar> interfaceBars = this.machineInterface.getFluidBar(this.tile, this, this.player, this.guiLeft, this.guiTop);
+        if(interfaceBars != null){
+            this.fluidBars.putAll(interfaceBars);
+        }
         if(isJeiLoaded){
             this.jeiStuff = this.machineInterface.getJEIClickArea(this.tile, this, this.player, this.guiLeft, this.guiTop);
         }
@@ -70,6 +80,14 @@ public class GuiMachine<T extends TileBase> extends GuiContainer {
                 this.energyBar.draw(energy.getEnergyStored(), energy.getMaxEnergyStored(), -1);
             }
         }
+        if(!this.fluidBars.isEmpty()) {
+            this.fluidBars.forEach((side, fluidBar) -> {
+                IFluidHandler fluid = this.tile.getTank(side);
+                if (fluid instanceof CustomFluidTank && ((FluidTank) fluid).getCapacity() > 0) {
+                    fluidBar.draw((CustomFluidTank) fluid);
+                }
+            });
+        }
         GlStateManager.popMatrix();
     }
 
@@ -81,12 +99,16 @@ public class GuiMachine<T extends TileBase> extends GuiContainer {
         if(this.energyBar != null){
             IEnergyStorage energy = this.tile.getEnergy(EnumFacing.NORTH);
             if(energy != null && energy.getMaxEnergyStored() > 0){
-                if(this.tile.getCurrentEnergyUsage() > 0){
-                    this.energyBar.mouseDrawUsage(this, mouseX, mouseY, energy.getEnergyStored(), this.tile.getCurrentEnergyUsage());
-                } else {
-                    this.energyBar.mouseDrawTank(this, mouseX, mouseY, energy.getEnergyStored(), energy.getMaxEnergyStored());
-                }
+                this.energyBar.mouseDrawTank(this, mouseX, mouseY, energy.getEnergyStored(), energy.getMaxEnergyStored(), tile.getCurrentEnergyUsage());
             }
+        }
+        if(!this.fluidBars.isEmpty()) {
+            this.fluidBars.forEach((side, fluidBar) -> {
+                IFluidHandler fluid = this.tile.getTank(side);
+                if (fluid instanceof CustomFluidTank && ((FluidTank) fluid).getCapacity() > 0) {
+                    fluidBar.drawMouseOver(this, mouseX, mouseY, (CustomFluidTank) fluid);
+                }
+            });
         }
         if(this.jeiStuff != null){
             IMachineInterface.JEIData data = this.jeiStuff;
@@ -107,6 +129,7 @@ public class GuiMachine<T extends TileBase> extends GuiContainer {
         }
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public GuiMachine<T> setSize(int xSize, int ySize){
         this.xSize = xSize;
         this.ySize = ySize + (this.machineInterface.getInventoryLocation(this.tile, this.player) != null ? 85 : 0);

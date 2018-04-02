@@ -13,6 +13,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
+import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,12 +30,12 @@ public class TileBlastFurnace extends TileBase implements ITickable{
     public static final int OUTPUT1 = 3;
     public static final int OUTPUT2 = 4;
 
-    public static int ENERGY_CAPACITY = 10000;
-    public static int ENERGY_RECEIVE = 1500;
-    public static int ENEGRY_EXTRACT = ENERGY_RECEIVE;
+    public static final int ENERGY_CAPACITY = 10000;
+    public static final int ENERGY_RECEIVE = 1500;
+    public static final int ENERGY_EXTRACT = ENERGY_RECEIVE;
 
-    public CustomEnergyStorage energy = new CustomEnergyStorage(ENERGY_CAPACITY, ENERGY_RECEIVE, ENEGRY_EXTRACT).setTile(this);
-    public SidedBasicInv inventory = new SidedBasicInv("blast_furnace", 6) {
+    public final CustomEnergyStorage energy = new CustomEnergyStorage(ENERGY_CAPACITY, ENERGY_RECEIVE, ENERGY_EXTRACT).setTile(this);
+    public final SidedBasicInv inventory = new SidedBasicInv("blast_furnace", 6) {
         @Override
         public boolean canInsertItem(int index, @Nonnull ItemStack stack, @Nonnull EnumFacing side) {
             return side != EnumFacing.DOWN && index != OUTPUT1 && index != OUTPUT2;
@@ -46,6 +47,11 @@ public class TileBlastFurnace extends TileBase implements ITickable{
     }.setTile(this);
     private String recipeID = null;
     public int maxBurn, burnLeft, energyUsage;
+
+    @Override
+    protected Triple<Boolean, Boolean, Boolean> hasEnergyFluidInv() {
+        return Triple.of(true, false, true);
+    }
 
     @Nullable
     @Override

@@ -18,7 +18,7 @@ public class OreDictStack {
 
     private String oreDictEntry;
     private ItemStack primaryStack = ItemStack.EMPTY;
-    private NonNullList<ItemStack> entries;
+    private final NonNullList<ItemStack> entries;
     private int stacksize = 1;
 
     public OreDictStack(String oreDictEntry){

@@ -8,6 +8,8 @@ tile.metalworks:geothermal_generator.name=Geothermal Generator
 tile.metalworks:crusher.name=Crusher
 tile.metalworks:super_charger.name=Super Charger
 tile.metalworks:battery_low.name=Battery Pack (Low)
+tile.metalworks:bio_generator.name=Bio Generator
+tile.metalworks:tank.name=Fluid Tank
 
 item.metalworks:steel_ingot.name=Steel Ingot
 item.metalworks:steel_nugget.name=Steel Nugget
@@ -25,6 +27,7 @@ item.metalworks:battery_low_density.name=Battery
 item.metalworks:photovoltaic_cell.name=Photovoltaic Cell
 item.metalworks:quartz_sand_dust.name=Quartz Sand
 item.metalworks:steel_dust.name=Steel Dust
+item.metalworks:bio_waste.name=Bio Waste
 
 desc.metalworks:geothermal_generator.name=Produces cheap energy out of blocks around it. NL Produces a very little amount of energy.
 desc.metalworks:crusher.name=Crushes you loved material NL to it's substantial parts.
@@ -34,11 +37,13 @@ desc.metalworks:blast_furnace.name=Heats items up to their melt point NL and com
 desc.metalworks:cable_basic.name=Transfer: §c1000 CF/t
 desc.metalworks:super_charger.name=A really fast way to charge up your energetic items. NL Transfer: §c15000 CF/t§7
 desc.metalworks:battery_low.name=The tiniest way to store some energy. NL Orange is input and Black is output. NL Storage: §c100000 CF§7 NL I/O: §c5000 CF§7
+desc.metalworks:tank.name=This tank can hold up to 20 buckets of your lovely fluids. NL This can don't push fluids in any direction, you have to pull it out!
 
 container.jei.metalworks.blast_furnace.name=Blast Furnace
 container.jei.metalworks.duster.name=Duster
 container.jei.metalworks.geothermal_generator.name=Geothermal Generator
 container.jei.metalworks.crusher.name=Crusher
+container.jei.metalworks.bio_generator.name=Bio Generator
 
 config.metalworks:machines.name=Machine configurations
 config.metalworks:enable.name=Enable configurations

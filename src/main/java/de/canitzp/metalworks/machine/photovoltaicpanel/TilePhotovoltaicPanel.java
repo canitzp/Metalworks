@@ -1,6 +1,5 @@
 package de.canitzp.metalworks.machine.photovoltaicpanel;
 
-import com.google.common.collect.Lists;
 import de.canitzp.metalworks.CustomEnergyStorage;
 import de.canitzp.metalworks.Util;
 import de.canitzp.metalworks.config.ConfMachines;
@@ -8,6 +7,7 @@ import de.canitzp.metalworks.machine.TileBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.energy.IEnergyStorage;
+import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nullable;
 
@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
  */
 public class TilePhotovoltaicPanel extends TileBase implements ITickable{
 
-    public static int ENERGY_PRODUCTION = ConfMachines.PP_ENERGY_PRODUCTION;
+    public static final int ENERGY_PRODUCTION = ConfMachines.PP_ENERGY_PRODUCTION;
 
     private boolean cachedCanProduce = false;
 
@@ -24,12 +24,17 @@ public class TilePhotovoltaicPanel extends TileBase implements ITickable{
     // but since a day in minecraft is only 12 minutes long, I recalculate this with the minecraft values:
     // 393.2W/day (day=12; in reality a day has 1440 minutes) -> 32.76W/minute -> 546.1mW/second -> 27.3mW/tick
     // I now talked to some people and we decided to ste the conversion rate to 1W equals 300RF(293.04), after my calculations
-    private CustomEnergyStorage energy = new CustomEnergyStorage(ENERGY_PRODUCTION){
+    private final CustomEnergyStorage energy = new CustomEnergyStorage(ENERGY_PRODUCTION){
         @Override
         public boolean canReceive() {
             return false;
         }
     };
+
+    @Override
+    protected Triple<Boolean, Boolean, Boolean> hasEnergyFluidInv() {
+        return Triple.of(true, false, false);
+    }
 
     @Override
     public void update() {

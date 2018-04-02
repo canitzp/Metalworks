@@ -16,7 +16,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import org.apache.commons.lang3.tuple.Triple;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -28,24 +30,29 @@ public class TileDuster extends TileBase implements ITickable{
     public static final int INPUT2 = 1;
     public static final int OUTPUT = 2;
 
-    public static int ENERGY_CAPACITY = 10000;
-    public static int ENERGY_RECEIVE = 1500;
-    public static int ENERGY_EXTRACT = ENERGY_RECEIVE;
+    public static final int ENERGY_CAPACITY = 10000;
+    public static final int ENERGY_RECEIVE = 1500;
+    public static final int ENERGY_EXTRACT = ENERGY_RECEIVE;
 
-    public CustomEnergyStorage energy = new CustomEnergyStorage(ENERGY_CAPACITY, ENERGY_RECEIVE, ENERGY_EXTRACT).setTile(this);
-    public SidedBasicInv inventory = new SidedBasicInv("duster", 3) {
+    public final CustomEnergyStorage energy = new CustomEnergyStorage(ENERGY_CAPACITY, ENERGY_RECEIVE, ENERGY_EXTRACT).setTile(this);
+    public final SidedBasicInv inventory = new SidedBasicInv("duster", 3) {
         @Override
-        public boolean canInsertItem(int index, ItemStack stack, EnumFacing direction) {
+        public boolean canInsertItem(int index, @Nonnull ItemStack stack, @Nonnull EnumFacing direction) {
             return index != OUTPUT && direction != EnumFacing.DOWN;
         }
 
         @Override
-        public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
+        public boolean canExtractItem(int index, @Nonnull ItemStack stack, @Nonnull EnumFacing direction) {
             return index == OUTPUT && direction != EnumFacing.UP;
         }
     }.setTile(this);
     public int energyUsage, maxBurn, burn;
     private ResourceLocation recipeId;
+
+    @Override
+    protected Triple<Boolean, Boolean, Boolean> hasEnergyFluidInv() {
+        return Triple.of(true, false, true);
+    }
 
     @Nullable
     @Override
@@ -59,6 +66,7 @@ public class TileDuster extends TileBase implements ITickable{
         return this.energy;
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public void readNBT(NBTTagCompound nbt, NBTType type) {
         super.readNBT(nbt, type);
@@ -70,6 +78,7 @@ public class TileDuster extends TileBase implements ITickable{
         }
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public void writeNBT(NBTTagCompound nbt, NBTType type) {
         super.writeNBT(nbt, type);
@@ -83,6 +92,7 @@ public class TileDuster extends TileBase implements ITickable{
         }
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public void update() {
         this.updateBase();

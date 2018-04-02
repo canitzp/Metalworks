@@ -13,6 +13,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author canitzp
@@ -20,33 +21,33 @@ import java.util.Map;
 //TODO maybe update shears too? or fishing rod?
 public class ItemToolCollection {
 
-    private Item.ToolMaterial material;
+    private final Item.ToolMaterial material;
 
-    private ItemPickaxe pickaxe;
-    private ItemSword sword;
-    private ItemSpade shovel;
-    private ItemAxe axe;
+    private final ItemPickaxe pickaxe;
+    private final ItemSword sword;
+    private final ItemSpade shovel;
+    private final ItemAxe axe;
 
     public ItemToolCollection(Item.ToolMaterial material){
         this.material = material;
         this.pickaxe = new Pickaxe(material){{
             this.setRegistryName(new ResourceLocation(Metalworks.MODID, material.name() + "_pickaxe"));
-            this.setUnlocalizedName(this.getRegistryName().toString());
+            this.setUnlocalizedName(Objects.requireNonNull(this.getRegistryName()).toString());
             this.setCreativeTab(Registry.TAB);
         }};
         this.sword = new ItemSword(material){{
            this.setRegistryName(new ResourceLocation(Metalworks.MODID, material.name() + "_sword"));
-           this.setUnlocalizedName(this.getRegistryName().toString());
+           this.setUnlocalizedName(Objects.requireNonNull(this.getRegistryName()).toString());
            this.setCreativeTab(Registry.TAB);
         }};
         this.shovel = new ItemSpade(material){{
             this.setRegistryName(new ResourceLocation(Metalworks.MODID, material.name() + "_shovel"));
-            this.setUnlocalizedName(this.getRegistryName().toString());
+            this.setUnlocalizedName(Objects.requireNonNull(this.getRegistryName()).toString());
             this.setCreativeTab(Registry.TAB);
         }};
         this.axe = new Axe(material){{
             this.setRegistryName(new ResourceLocation(Metalworks.MODID, material.name() + "_axe"));
-            this.setUnlocalizedName(this.getRegistryName().toString());
+            this.setUnlocalizedName(Objects.requireNonNull(this.getRegistryName()).toString());
             this.setCreativeTab(Registry.TAB);
         }};
     }
@@ -57,10 +58,10 @@ public class ItemToolCollection {
 
     @SideOnly(Side.CLIENT)
     public void bakeModels(){
-        ModelLoader.setCustomModelResourceLocation(pickaxe, 0, new ModelResourceLocation(pickaxe.getRegistryName(), "invenory"));
-        ModelLoader.setCustomModelResourceLocation(shovel, 0, new ModelResourceLocation(shovel.getRegistryName(), "invenory"));
-        ModelLoader.setCustomModelResourceLocation(sword, 0, new ModelResourceLocation(sword.getRegistryName(), "invenory"));
-        ModelLoader.setCustomModelResourceLocation(axe, 0, new ModelResourceLocation(axe.getRegistryName(), "invenory"));
+        ModelLoader.setCustomModelResourceLocation(pickaxe, 0, new ModelResourceLocation(Objects.requireNonNull(pickaxe.getRegistryName()), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(shovel, 0, new ModelResourceLocation(Objects.requireNonNull(shovel.getRegistryName()), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(sword, 0, new ModelResourceLocation(Objects.requireNonNull(sword.getRegistryName()), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(axe, 0, new ModelResourceLocation(Objects.requireNonNull(axe.getRegistryName()), "inventory"));
     }
 
     public void registerRecipes(final Map<ResourceLocation, IRecipe> recipes, Object ingotStackOrString){

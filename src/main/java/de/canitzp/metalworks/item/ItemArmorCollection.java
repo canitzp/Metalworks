@@ -18,17 +18,18 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 import javax.annotation.Nullable;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author canitzp
  */
 public class ItemArmorCollection {
 
-    private ItemArmor.ArmorMaterial material;
-    private ItemArmor head;
-    private ItemArmor chestplate;
-    private ItemArmor legs;
-    private ItemArmor shoes;
+    private final ItemArmor.ArmorMaterial material;
+    private final ItemArmor head;
+    private final ItemArmor chestplate;
+    private final ItemArmor legs;
+    private final ItemArmor shoes;
 
     public ItemArmorCollection(ItemArmor.ArmorMaterial material){
         this.material = material;
@@ -44,10 +45,10 @@ public class ItemArmorCollection {
 
     @SideOnly(Side.CLIENT)
     public void bakeModels(){
-        ModelLoader.setCustomModelResourceLocation(head, 0, new ModelResourceLocation(head.getRegistryName(), "invenory"));
-        ModelLoader.setCustomModelResourceLocation(chestplate, 0, new ModelResourceLocation(chestplate.getRegistryName(), "invenory"));
-        ModelLoader.setCustomModelResourceLocation(legs, 0, new ModelResourceLocation(legs.getRegistryName(), "invenory"));
-        ModelLoader.setCustomModelResourceLocation(shoes, 0, new ModelResourceLocation(shoes.getRegistryName(), "invenory"));
+        ModelLoader.setCustomModelResourceLocation(head, 0, new ModelResourceLocation(Objects.requireNonNull(head.getRegistryName()), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(chestplate, 0, new ModelResourceLocation(Objects.requireNonNull(chestplate.getRegistryName()), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(legs, 0, new ModelResourceLocation(Objects.requireNonNull(legs.getRegistryName()), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(shoes, 0, new ModelResourceLocation(Objects.requireNonNull(shoes.getRegistryName()), "inventory"));
     }
 
     public void registerRecipes(final Map<ResourceLocation, IRecipe> recipes, Object ingotStackOrString){
@@ -65,7 +66,7 @@ public class ItemArmorCollection {
         public Armor(ArmorMaterial material, EntityEquipmentSlot equipmentSlot) {
             super(material, 0, equipmentSlot);
             this.setRegistryName(new ResourceLocation(Metalworks.MODID, material.name() + "_" + equipmentSlot.getName()));
-            this.setUnlocalizedName(this.getRegistryName().toString());
+            this.setUnlocalizedName(Objects.requireNonNull(this.getRegistryName()).toString());
             this.setCreativeTab(Registry.TAB);
         }
 

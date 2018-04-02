@@ -22,23 +22,25 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author canitzp
  */
+@SuppressWarnings("unchecked")
 public class BlockBase<T extends BlockBase<T>> extends Block {
 
     public static final List<BlockBase> BLOCKS = new ArrayList<>();
     public ItemBlock item;
-    private List<Object[]> recipes = new ArrayList<>();
-    private List<String> oreNames = new ArrayList<String>();
+    private final List<Object[]> recipes = new ArrayList<>();
+    private final List<String> oreNames = new ArrayList<>();
     private int infoState = 0; // 0=unchecked 1=checked, but no localisation 2=checked and localisation found
     private boolean registerParameter = true;
 
     public BlockBase(Material material, MapColor color, String name) {
         super(material, color);
         this.setRegistryName(new ResourceLocation(Metalworks.MODID, name));
-        this.setUnlocalizedName(this.getRegistryName().toString());
+        this.setUnlocalizedName(Objects.requireNonNull(this.getRegistryName()).toString());
         this.setCreativeTab(Registry.TAB);
     }
 
@@ -75,14 +77,14 @@ public class BlockBase<T extends BlockBase<T>> extends Block {
 
     protected ItemBlock getItem(){
         ItemBlock item = new ItemBlock(this);
-        item.setRegistryName(this.getRegistryName());
+        item.setRegistryName(Objects.requireNonNull(this.getRegistryName()));
         return item;
     }
 
     @SideOnly(Side.CLIENT)
     public void registerClient(){
         if(this.item != null){
-            ModelLoader.setCustomModelResourceLocation(this.item, 0, new ModelResourceLocation(this.getRegistryName(), "inventory"));
+            ModelLoader.setCustomModelResourceLocation(this.item, 0, new ModelResourceLocation(Objects.requireNonNull(this.getRegistryName()), "inventory"));
         }
     }
 
@@ -106,7 +108,7 @@ public class BlockBase<T extends BlockBase<T>> extends Block {
     public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, ITooltipFlag advanced) {
         super.addInformation(stack, player, tooltip, advanced);
         if(this.infoState == 0){
-            if(I18n.hasKey("desc." + this.getRegistryName().toString() + ".name")){
+            if(I18n.hasKey("desc." + Objects.requireNonNull(this.getRegistryName()).toString() + ".name")){
                 this.infoState = 2;
             } else {
                 this.infoState = 1;

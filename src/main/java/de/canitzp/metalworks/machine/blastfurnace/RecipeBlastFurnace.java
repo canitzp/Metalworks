@@ -14,9 +14,11 @@ public class RecipeBlastFurnace {
 
     private final String id;
 
-    private OreDictStack[] inputs;
-    private ItemStack[] outputs;
-    private int secondOutputChance, burnTime, energyUsage;
+    private final OreDictStack[] inputs;
+    private final ItemStack[] outputs;
+    private final int secondOutputChance;
+    private final int burnTime;
+    private final int energyUsage;
 
     public RecipeBlastFurnace(OreDictStack input1, OreDictStack input2, OreDictStack input3, ItemStack output1, ItemStack output2, int out2Chance, int burnTime, int energyUsagePerTick){
         this.inputs = new OreDictStack[]{input1, input2, input3};

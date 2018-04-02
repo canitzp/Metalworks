@@ -1,6 +1,5 @@
 package de.canitzp.metalworks.client.gui;
 
-import com.google.common.collect.Lists;
 import de.canitzp.metalworks.Metalworks;
 import de.canitzp.metalworks.Util;
 import net.minecraft.client.Minecraft;
@@ -9,15 +8,19 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author canitzp
  */
 public class GuiEnergyBar extends Gui{
 
-    public static final ResourceLocation LOCATION = new ResourceLocation(Metalworks.MODID, "textures/gui/energy_bar.png");
+    public static final ResourceLocation LOCATION = new ResourceLocation(Metalworks.MODID, "textures/gui/util.png");
     public static final Minecraft mc = Minecraft.getMinecraft();
-    private int x, y;
-    private boolean standalone;
+    private final int x;
+    private final int y;
+    private final boolean standalone;
 
     public GuiEnergyBar(int x, int y, boolean standalone){
         this.x = x;
@@ -44,7 +47,7 @@ public class GuiEnergyBar extends Gui{
         if(!standalone){
             applyColor(r, g, b, a);
             this.drawTexturedModalRect(this.x, this.y + 62 - i, 0, 62 - i, 16, i);
-            this.drawTexturedModalRect(this.x, this.y, 16, 0, 16, 62);
+            //this.drawTexturedModalRect(this.x, this.y, 16, 0, 16, 62);
         } else {
             this.drawTexturedModalRect(this.x, this.y, 32, 0, 28, 74);
             applyColor(r, g, b, a);
@@ -62,15 +65,14 @@ public class GuiEnergyBar extends Gui{
         }
     }
 
-    public void mouseDrawTank(GuiScreen gui, int mouseX, int mouseY, int energy, int max){
+    public void mouseDrawTank(GuiScreen gui, int mouseX, int mouseY, int energy, int max, int usage){
         if(mouseX >= this.x && mouseX <= this.x + 16 && mouseY >= this.y && mouseY <= this.y + 62){
-            gui.drawHoveringText(Util.formatEnergy(energy) + " / " + Util.formatEnergy(max), mouseX, mouseY);
-        }
-    }
-
-    public void mouseDrawUsage(GuiScreen gui, int mouseX, int mouseY, int energy, int usage){
-        if(mouseX >= this.x && mouseX <= this.x + 16 && mouseY >= this.y && mouseY <= this.y + 62){
-            gui.drawHoveringText(Lists.newArrayList(Util.formatEnergy(energy), "Usage: " + Util.formatEnergy(usage)), mouseX, mouseY);
+            List<String> lines = new ArrayList<>();
+            lines.add(String.format("%s / %s", Util.formatEnergy(energy), Util.formatEnergy(max)));
+            if(usage != 0){
+                lines.add(String.format("%s: %s", usage > 0 ? "Usage" : "Generation", Util.formatEnergy(Math.abs(usage))));
+            }
+            gui.drawHoveringText(lines, mouseX, mouseY);
         }
     }
 

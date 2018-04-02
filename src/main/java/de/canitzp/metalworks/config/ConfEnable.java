@@ -6,6 +6,7 @@ import net.minecraftforge.common.config.Config;
 /**
  * @author canitzp
  */
+@SuppressWarnings("CanBeFinal")
 @Config.LangKey("config." + Metalworks.MODID + ":enable.name")
 @Config(modid = Metalworks.MODID, category = "enable")
 public class ConfEnable {
@@ -33,5 +34,9 @@ public class ConfEnable {
     @Config.RequiresMcRestart
     @Config.Name("Is Super Charger enabled")
     public static boolean SUPER_CHARGER = true;
+
+    @Config.RequiresMcRestart
+    @Config.Name("Is Bio Generator enabled")
+    public static boolean BIO_GENERATOR = true;
 
 }

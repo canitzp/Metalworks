@@ -14,7 +14,9 @@ import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
+import org.apache.commons.lang3.tuple.Triple;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
 
@@ -23,24 +25,29 @@ import java.util.Random;
  */
 public class TileCrusher extends TileBase implements ITickable{
 
-    public static int ENERGY_CAPACITY = 10000;
-    public static int ENERGY_RECEIVE = 1500;
-    public static int ENERGY_EXTRACT = ENERGY_RECEIVE;
+    public static final int ENERGY_CAPACITY = 10000;
+    public static final int ENERGY_RECEIVE = 1500;
+    public static final int ENERGY_EXTRACT = ENERGY_RECEIVE;
 
-    public CustomEnergyStorage energy = new CustomEnergyStorage(ENERGY_CAPACITY, ENERGY_RECEIVE, ENERGY_EXTRACT).setTile(this);
-    public SidedBasicInv inv = new SidedBasicInv("crusher", 3) {
+    public final CustomEnergyStorage energy = new CustomEnergyStorage(ENERGY_CAPACITY, ENERGY_RECEIVE, ENERGY_EXTRACT).setTile(this);
+    public final SidedBasicInv inv = new SidedBasicInv("crusher", 3) {
         @Override
-        public boolean canInsertItem(int index, ItemStack stack, EnumFacing direction) {
+        public boolean canInsertItem(int index, @Nonnull ItemStack stack, @Nonnull EnumFacing direction) {
             return direction != EnumFacing.DOWN && index == 0;
         }
 
         @Override
-        public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
+        public boolean canExtractItem(int index, @Nonnull ItemStack stack, @Nonnull EnumFacing direction) {
             return direction != EnumFacing.UP && index != 0;
         }
     }.setTile(this);
     private ResourceLocation recipeId;
     public int burn, maxBurn, energyUsage;
+
+    @Override
+    protected Triple<Boolean, Boolean, Boolean> hasEnergyFluidInv() {
+        return Triple.of(true, false, true);
+    }
 
     @Nullable
     @Override
@@ -54,6 +61,7 @@ public class TileCrusher extends TileBase implements ITickable{
         return this.energy;
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public void readNBT(NBTTagCompound nbt, NBTType type) {
         super.readNBT(nbt, type);
@@ -65,6 +73,7 @@ public class TileCrusher extends TileBase implements ITickable{
         }
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public void writeNBT(NBTTagCompound nbt, NBTType type) {
         super.writeNBT(nbt, type);
@@ -78,6 +87,7 @@ public class TileCrusher extends TileBase implements ITickable{
         }
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public void update() {
         this.updateBase();
@@ -97,7 +107,7 @@ public class TileCrusher extends TileBase implements ITickable{
                                     out1.grow(recipe.getOutputs()[0].getCount());
                                 }
                             }
-                            if(recipe.getSencondChance() > 0 && new Random().nextInt(100/recipe.getSencondChance()) - 1 == 0 && !recipe.getOutputs()[1].isEmpty()){
+                            if(recipe.getSecondChance() > 0 && new Random().nextInt(100/recipe.getSecondChance()) - 1 == 0 && !recipe.getOutputs()[1].isEmpty()){
                                 if(out2.isEmpty()){
                                     this.inv.setInventorySlotContents(2, recipe.getOutputs()[1].copy());
                                 } else {

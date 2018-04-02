@@ -1,41 +1,45 @@
 package de.canitzp.metalworks;
 
-import com.google.common.collect.Lists;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
-import org.apache.commons.lang3.ArrayUtils;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Objects;
 
 /**
  * @author canitzp
  */
 public class Util {
 
-    public static final String ENERY_UNIT = "CF";
+    public static final String ENERGY_UNIT = "CF";
 
     public static boolean isDayTime(World world){
         return world.isDaytime();
@@ -61,13 +65,14 @@ public class Util {
 
     public static String formatEnergy(int energy) {
         if (energy < 1000) {
-            return energy + " " + ENERY_UNIT;
+            return energy + " " + ENERGY_UNIT;
         }
         final int exp = (int) (Math.log(energy) / Math.log(1000));
         final char unitType = "kmg".charAt(exp - 1);
-        return String.format("%.1f %s%s", energy / Math.pow(1000, exp), unitType, ENERY_UNIT);
+        return String.format("%.1f %s%s", energy / Math.pow(1000, exp), unitType, ENERGY_UNIT);
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public static int pushEnergy(World world, BlockPos pos, IEnergyStorage energy){
         return pushEnergy(world, pos, energy, EnumFacing.values());
     }
@@ -85,6 +90,21 @@ public class Util {
             }
         }
         return 0;
+    }
+
+    public static FluidStack pushFluid(World world, BlockPos pos, IFluidHandler fluid, EnumFacing... sides){
+        if(!world.isRemote){
+            for(EnumFacing side : sides){
+                TileEntity tile = world.getTileEntity(pos.offset(side));
+                if(tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite())){
+                    IFluidHandler other = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite());
+                    if(other != null){
+                        return fluid.drain(other.fill(fluid.drain(Integer.MAX_VALUE, false), true), true);
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     /**
@@ -110,12 +130,20 @@ public class Util {
         GlStateManager.color(col[0] / 255.0F, col[1] / 255.0F, col[2] / 255.0F, alpha);
     }
 
+    public static boolean canStacksBeMerged(ItemStack a, ItemStack b){
+        return ItemStack.areItemStacksEqual(a, b);
+    }
+
     public static boolean canItemStacksStack(@Nonnull ItemStack a, @Nonnull ItemStack b) {
         return canItemStacksStackIgnoreStacksize(a, b) && a.getCount() + b.getCount() <= a.getMaxStackSize();
     }
 
     public static boolean canItemStacksStackIgnoreStacksize(@Nonnull ItemStack a, @Nonnull ItemStack b){
-        return !a.isEmpty() && isItemEqualIgnoreDamageIfWildcard(a, b) && a.hasTagCompound() == b.hasTagCompound() && (!a.hasTagCompound() || a.getTagCompound().equals(b.getTagCompound())) && a.areCapsCompatible(b);
+        return !a.isEmpty() && isItemEqualIgnoreDamageIfWildcard(a, b) && a.hasTagCompound() == b.hasTagCompound() && (!a.hasTagCompound() || Objects.requireNonNull(a.getTagCompound()).equals(b.getTagCompound())) && a.areCapsCompatible(b);
+    }
+
+    public static boolean canItemStacksStackWithoutStacksizeMax(@Nonnull ItemStack lessOrEqual, @Nonnull ItemStack more){
+        return canItemStacksStackIgnoreStacksize(lessOrEqual, more) && lessOrEqual.getCount() <= more.getCount();
     }
 
     public static boolean isItemEqualIgnoreDamageIfWildcard(ItemStack first, ItemStack second){
@@ -155,6 +183,36 @@ public class Util {
             manager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
             manager.getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
         }
+    }
+
+    public static boolean tryToBucketOrUnbucketAFluid(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
+        if(!player.isSneaking()){
+            TileEntity tile = world.getTileEntity(pos);
+            if(tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing)){
+                IFluidHandler tank = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing);
+                if(tank != null){
+                    return FluidUtil.interactWithFluidHandler(player, hand, tank);
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Draws a textured rectangle at z = 0. Args: x, y, u, v, width, height, textureWidth, textureHeight
+     */
+    public static void drawModalRectWithCustomSizedTexture(int x, int y, float u, float v, double width, double height, float textureWidth, float textureHeight)
+    {
+        float f = 1.0F / textureWidth;
+        float f1 = 1.0F / textureHeight;
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+        bufferbuilder.pos((double)x, y + height, 0.0D).tex((double)(u * f), (double)((v + (float)height) * f1)).endVertex();
+        bufferbuilder.pos(x + width, y + height, 0.0D).tex((double)((u + (float)width) * f), (double)((v + (float)height) * f1)).endVertex();
+        bufferbuilder.pos(x + width, (double)y, 0.0D).tex((double)((u + (float)width) * f), (double)(v * f1)).endVertex();
+        bufferbuilder.pos((double)x, (double)y, 0.0D).tex((double)(u * f), (double)(v * f1)).endVertex();
+        tessellator.draw();
     }
 
 }

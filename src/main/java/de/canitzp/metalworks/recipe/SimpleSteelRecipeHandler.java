@@ -15,6 +15,7 @@ public class SimpleSteelRecipeHandler {
 
     public static final Map<String, RecipeBlastFurnace> BLAST_FURNACE_RECIPES = new HashMap<>();
 
+    @SuppressWarnings("UnusedReturnValue")
     @Nonnull
     public static String addBlastFurnaceRecipe(@Nonnull RecipeBlastFurnace recipe){
         String id = recipe.getID();

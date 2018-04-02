@@ -8,6 +8,8 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 
+import java.util.Objects;
+
 /**
  * @author canitzp
  */
@@ -15,7 +17,7 @@ public class RenderSuperCharger extends TileEntitySpecialRenderer<TileSuperCharg
 
     @Override
     public void render(TileSuperCharger te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-        ItemStack stack = te.getInventory(EnumFacing.NORTH).getStackInSlot(0);
+        ItemStack stack = Objects.requireNonNull(te.getInventory(EnumFacing.NORTH)).getStackInSlot(0);
         if(!stack.isEmpty() && !te.getWorld().getBlockState(te.getPos().up()).isFullBlock()){
             this.setLightmapDisabled(true);
             GlStateManager.pushMatrix();

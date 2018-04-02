@@ -19,6 +19,7 @@ import static de.canitzp.metalworks.Props.FACING;
 /**
  * @author canitzp
  */
+@SuppressWarnings("deprecation")
 public class BlockCrusher extends BlockContainerBase<BlockCrusher> {
 
     public BlockCrusher() {
@@ -27,7 +28,7 @@ public class BlockCrusher extends BlockContainerBase<BlockCrusher> {
         this.setHardness(4.5F);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ACTIVE, false));
         this.addInterface(InterfaceCrusher.class);
-        this.setEnergeticItem(TileCrusher.ENERGY_CAPACITY, TileCrusher.ENERGY_RECEIVE, TileCrusher.ENERGY_EXTRACT);
+        this.setMachineItemBlock(true);
     }
 
     @Nonnull
@@ -47,6 +48,7 @@ public class BlockCrusher extends BlockContainerBase<BlockCrusher> {
         return new BlockStateContainer(this, ACTIVE, FACING);
     }
 
+    @Nonnull
     @Override
     public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
         return super.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer).withProperty(FACING, placer.getHorizontalFacing().getOpposite());

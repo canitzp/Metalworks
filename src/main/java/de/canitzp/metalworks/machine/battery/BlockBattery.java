@@ -1,17 +1,12 @@
 package de.canitzp.metalworks.machine.battery;
 
-import de.canitzp.metalworks.Props;
 import de.canitzp.metalworks.block.BlockContainerBase;
 import de.canitzp.metalworks.machine.TileBase;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
-import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.block.statemap.IStateMapper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -20,26 +15,24 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
 
 /**
  * @author canitzp
  */
+@SuppressWarnings("deprecation")
 public class BlockBattery extends BlockContainerBase<BlockBattery> {
 
-    public static PropertyInteger STATE = PropertyInteger.create("state", 0, 10);
+    public static final PropertyInteger STATE = PropertyInteger.create("state", 0, 10);
 
-    private Type batteryType;
+    private final Type batteryType;
 
     public BlockBattery(Type batteryType) {
         super(Material.IRON, "battery_" + batteryType.name);
         this.batteryType = batteryType;
-        this.setEnergeticItem(batteryType.maxEnergy, batteryType.maxTransfer, batteryType.maxTransfer);
+        this.setMachineItemBlock(true);
+        this.setRightClickChecks(false);
         this.setHarvestLevel("pickaxe", 2);
         this.setHardness(4.5F);
         this.setDefaultState(this.blockState.getBaseState().withProperty(BlockDirectional.FACING, EnumFacing.NORTH).withProperty(STATE, 0));
@@ -77,6 +70,7 @@ public class BlockBattery extends BlockContainerBase<BlockBattery> {
         return new BlockStateContainer(this, BlockDirectional.FACING, STATE);
     }
 
+    @Nonnull
     @Override
     public IBlockState getActualState(@Nonnull IBlockState state, IBlockAccess world, BlockPos pos) {
         TileEntity tile = world.getTileEntity(pos);
@@ -86,11 +80,13 @@ public class BlockBattery extends BlockContainerBase<BlockBattery> {
         return super.getActualState(state, world, pos);
     }
 
+    @Nonnull
     @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
+    public IBlockState getStateForPlacement(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ, int meta, @Nonnull EntityLivingBase placer, EnumHand hand) {
         return super.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, hand).withProperty(BlockDirectional.FACING, EnumFacing.getDirectionFromEntityLiving(pos, placer));
     }
 
+    @Nonnull
     @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
         EnumFacing side = state.getValue(BlockDirectional.FACING);
@@ -116,8 +112,9 @@ public class BlockBattery extends BlockContainerBase<BlockBattery> {
     }
 
     public static class Type{
-        public String name;
-        public int maxEnergy, maxTransfer;
+        public final String name;
+        public final int maxEnergy;
+        public final int maxTransfer;
 
         public Type(String name, int maxEnergy, int maxTransfer) {
             this.name = name;
