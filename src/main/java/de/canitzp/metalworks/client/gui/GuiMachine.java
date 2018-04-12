@@ -65,9 +65,9 @@ public class GuiMachine<T extends TileBase> extends GuiContainer {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+        this.drawDefaultBackground();
         GlStateManager.pushMatrix();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        this.drawDefaultBackground();
         Pair<Integer, Integer> invCoords = this.machineInterface.getInventoryLocation(this.tile, this.player);
         if(invCoords != null){
             this.texture.bindTexture(INVENTORY_LOCATION);

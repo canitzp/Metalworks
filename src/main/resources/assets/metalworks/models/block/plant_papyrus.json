@@ -1,0 +1,49 @@
+{
+  "credit": "Made with Blockbench, a free, modern block model editor by JannisX11. Model by Gamer025.",
+  "ambientocclusion": false,
+  "textures": {
+    "crop": "metalworks:blocks/plant/plant_papyrus_03"
+  },
+  "elements": [
+    {
+      "name": "cube",
+      "from": [4, -1, 0],
+      "to": [4, 15, 16],
+      "shade": false,
+      "faces": {
+        "east": {"uv": [0, 0, 16, 16], "texture": "#crop"},
+        "west": {"uv": [0, 0, 16, 16], "texture": "#crop"}
+      }
+    },
+    {
+      "name": "cube",
+      "from": [12, -1, 0],
+      "to": [12, 15, 16],
+      "shade": false,
+      "faces": {
+        "east": {"uv": [0, 0, 16, 16], "texture": "#crop"},
+        "west": {"uv": [0, 0, 16, 16], "texture": "#crop"}
+      }
+    },
+    {
+      "name": "cube",
+      "from": [0, -1, 4],
+      "to": [16, 15, 4],
+      "shade": false,
+      "faces": {
+        "north": {"uv": [0, 0, 16, 16], "texture": "#crop"},
+        "south": {"uv": [0, 0, 16, 16], "texture": "#crop"}
+      }
+    },
+    {
+      "name": "cube",
+      "from": [0, -1, 12],
+      "to": [16, 15, 12],
+      "shade": false,
+      "faces": {
+        "north": {"uv": [0, 0, 16, 16], "texture": "#crop"},
+        "south": {"uv": [0, 0, 16, 16], "texture": "#crop"}
+      }
+    }
+  ]
+}

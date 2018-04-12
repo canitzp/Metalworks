@@ -37,6 +37,7 @@ desc.metalworks:blast_furnace.name=Heats items up to their melt point NL and com
 desc.metalworks:cable_basic.name=Transfer: §c1000 CF/t
 desc.metalworks:super_charger.name=A really fast way to charge up your energetic items. NL Transfer: §c15000 CF/t§7
 desc.metalworks:battery_low.name=The tiniest way to store some energy. NL Orange is input and Black is output. NL Storage: §c100000 CF§7 NL I/O: §c5000 CF§7
+desc.metalworks:bio_generator.name=Uses biological matter off all kinds and liquids to produce a certain amount of CF/t. However it will also produce useless waste.
 desc.metalworks:tank.name=This tank can hold up to 20 buckets of your lovely fluids. NL This can don't push fluids in any direction, you have to pull it out!
 
 container.jei.metalworks.blast_furnace.name=Blast Furnace

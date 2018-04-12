@@ -3,6 +3,8 @@ package de.canitzp.metalworks.machine;
 import de.canitzp.metalworks.Metalworks;
 import de.canitzp.metalworks.Registry;
 import net.minecraft.block.IGrowable;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemEgg;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.IPlantable;
@@ -83,11 +85,16 @@ public class ItemBioGeneratorFuel extends DefaultGeneratorFuel {
         FluidStack water = new FluidStack(FluidRegistry.WATER, 200);
 
         ForgeRegistries.BLOCKS.getValuesCollection().stream().filter(block -> block instanceof IGrowable).filter(block -> !new ItemStack(block).isEmpty())
-                .forEach(block -> reg.register(new ItemBioGeneratorFuel(new ItemStack(block, 1, OreDictionary.WILDCARD_VALUE), waste, water, 75, 5, GeneratorTypes.BIO)));
+                .forEach(block -> reg.register(new ItemBioGeneratorFuel(new ItemStack(block, 1, OreDictionary.WILDCARD_VALUE), waste, water, 75, 10, GeneratorTypes.BIO)));
         ForgeRegistries.ITEMS.getValuesCollection().stream().filter(item -> item instanceof IPlantable)
-                .forEach(item -> reg.register(new ItemBioGeneratorFuel(new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE), waste, water, 75, 5, GeneratorTypes.BIO)));
+                .forEach(item -> reg.register(new ItemBioGeneratorFuel(new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE), waste, water, 75, 10, GeneratorTypes.BIO)));
         ForgeRegistries.ITEMS.getValuesCollection().stream().filter(item -> item instanceof ItemFood)
-                .forEach(item -> reg.register(new ItemBioGeneratorFuel(new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE), waste, water, 150, 5, GeneratorTypes.BIO)));
+                .forEach(item -> reg.register(new ItemBioGeneratorFuel(new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE), waste, water, 150, 25, GeneratorTypes.BIO)));
+        ForgeRegistries.ITEMS.getValuesCollection().stream().filter(item -> item instanceof ItemEgg)
+                .forEach(item -> reg.register(new ItemBioGeneratorFuel(new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE), waste, water, 75, 10, GeneratorTypes.BIO)));
+        reg.register(new ItemBioGeneratorFuel(new ItemStack(Items.WHEAT), waste, water, 150, 20, GeneratorTypes.BIO));
+
+
     }
 
 }

@@ -2,6 +2,7 @@ package de.canitzp.metalworks;
 
 import de.canitzp.metalworks.block.BlockBase;
 import de.canitzp.metalworks.block.cable.basic.BlockCableBasic;
+import de.canitzp.metalworks.block.plant.papyrus.BlockPapyrus;
 import de.canitzp.metalworks.config.ConfEnable;
 import de.canitzp.metalworks.item.*;
 import de.canitzp.metalworks.machine.IGeneratorFuel;
@@ -114,6 +115,7 @@ public class Registry {
     public static BlockBattery lowDensity = new BlockBattery(new BlockBattery.Type("low", 100000, 5000)).addRecipes("ibi", "bbb", "iii", 'i', "ingotIron", 'b', batteryLowDensity).register();
     public static final BlockBioGenerator bioGenerator = new BlockBioGenerator().setRegistrationParameter(ConfEnable.BIO_GENERATOR).addRecipes("scs", "kgk", "scs", 's', "ingotSteel", 'c', "circuitBasic", 'k', cableBasic, 'g', "blockGlass").register();
     public static final BlockTank tank = new BlockTank().register();
+    //public static final BlockPapyrus papyrus = new BlockPapyrus();
 
     public static final ItemToolCollection steelTools = new ItemToolCollection(MATERIAL_STEEL);
     public static final ItemArmorCollection steelArmor = new ItemArmorCollection(ARMOR_STEEL);
@@ -123,6 +125,8 @@ public class Registry {
         IForgeRegistry<Block> reg = event.getRegistry();
 
         BlockBase.BLOCKS.forEach(reg::register);
+
+        //reg.register(papyrus);
     }
 
     @SubscribeEvent
@@ -205,6 +209,8 @@ public class Registry {
     public static void registerModels(ModelRegistryEvent event) {
         ItemBase.ITEMS.forEach(ItemBase::registerClient);
         BlockBase.BLOCKS.forEach(BlockBase::registerClient);
+
+
 
         steelTools.bakeModels();
         steelArmor.bakeModels();

@@ -4,6 +4,7 @@
     -Fixed: -Cable can transfer energy unlimited fast (more or less)
             -Cable networks are now way faster and won't kill the tps anymore
             -Batteries aren't as fps eating as before
+            -Redstone can't be crushed anymore
 
 1.4.1:
     -Fixed: -Batteries aren't saving energy when closing the world
